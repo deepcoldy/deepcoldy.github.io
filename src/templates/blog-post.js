@@ -5,7 +5,8 @@ import get from 'lodash/get'
 
 import Bio from '../components/Bio'
 import { rhythm, scale } from '../utils/typography'
-import 'github-markdown-css/github-markdown.css'
+
+require("prismjs/themes/prism.css")
 
 class BlogPostTemplate extends React.Component {
   render() {
