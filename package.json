@@ -2,9 +2,9 @@
   "name": "gatsby-starter-blog",
   "description": "Starter Gatsby Blog",
   "version": "1.0.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
+  "author": "DeepCold <deepcoldy@gmail.com>",
   "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby-starter-blog/issues"
+    "url": "https://github.com/deepcoldy/deepcoldy.github.io/issues"
   },
   "dependencies": {
     "gatsby": "^1.9.250",
@@ -23,6 +23,7 @@
     "gatsby-source-filesystem": "^1.5.31",
     "gatsby-transformer-remark": "^1.7.40",
     "gatsby-transformer-sharp": "^1.6.22",
+    "github-markdown-css": "^2.10.0",
     "lodash": "^4.17.5",
     "typeface-merriweather": "0.0.43",
     "typeface-montserrat": "0.0.43",
@@ -34,7 +35,7 @@
     "gh-pages": "^1.1.0",
     "prettier": "^1.12.0"
   },
-  "homepage": "https://github.com/gatsbyjs/gatsby-starter-blog#readme",
+  "homepage": "https://deepcoldy.github.io/",
   "keywords": [
     "gatsby"
   ],
@@ -42,7 +43,7 @@
   "main": "n/a",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gatsbyjs/gatsby-starter-blog.git"
+    "url": "git+https://github.com/deepcoldy/deepcoldy.github.io"
   },
   "scripts": {
     "dev": "gatsby develop",
