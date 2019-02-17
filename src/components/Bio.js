@@ -4,7 +4,7 @@ import React from 'react'
 import 'typeface-montserrat'
 import 'typeface-merriweather'
 
-import profilePic from './profile.JPG'
+import profilePic from './profile.jpeg'
 import { rhythm } from '../utils/typography'
 
 class Bio extends React.Component {
