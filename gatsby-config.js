@@ -5,7 +5,7 @@ module.exports = {
     description: 'A starter blog demonstrating what Gatsby can do.',
     siteUrl: 'https://deepcoldy.github.io/',
   },
-  pathPrefix: '/gatsby-starter-blog',
+  pathPrefix: '/deepcoldy.github.io',
   plugins: [
     {
       resolve: `gatsby-source-filesystem`,
