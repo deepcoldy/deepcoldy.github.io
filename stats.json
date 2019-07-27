@@ -45,8 +45,8 @@
       "path---older-2017-03-03-ea48643723926f98ee39.js.map"
     ],
     "path---discovery-2019-04-23": [
-      "path---discovery-2019-04-23-3d7d74412ca1014c1152.js",
-      "path---discovery-2019-04-23-3d7d74412ca1014c1152.js.map"
+      "path---discovery-2019-04-23-a6fa3c5010ef1599f7eb.js",
+      "path---discovery-2019-04-23-a6fa3c5010ef1599f7eb.js.map"
     ],
     "path---older-2015-09-22": [
       "path---older-2015-09-22-05a543ae81e0baefc0ba.js",
@@ -68,6 +68,10 @@
       "component---src-layouts-index-js-f46adf46b12e0ebe0101.js",
       "component---src-layouts-index-js-f46adf46b12e0ebe0101.js.map"
     ],
+    "path---discovery-2019-07-27": [
+      "path---discovery-2019-07-27-7766da3fd96c223ff829.js",
+      "path---discovery-2019-07-27-7766da3fd96c223ff829.js.map"
+    ],
     "path---older-2015-11-03": [
       "path---older-2015-11-03-be50be8077bb12f32bcd.js",
       "path---older-2015-11-03-be50be8077bb12f32bcd.js.map"
@@ -85,8 +89,8 @@
       "path---older-2017-06-08-7cc0188b7c6901976763.js.map"
     ],
     "path---index": [
-      "path---index-cb4e400c687c3465a945.js",
-      "path---index-cb4e400c687c3465a945.js.map"
+      "path---index-6917b3c0cef4bdd81334.js",
+      "path---index-6917b3c0cef4bdd81334.js.map"
     ],
     "path---older-2015-09-11": [
       "path---older-2015-09-11-6098c9962a80478abfae.js",
@@ -171,9 +175,9 @@
       "path---older-2015-09-09-1f7c84ced04514adfc31.js.map"
     ],
     "app": [
-      "app-73661bb178031eeee48b.js",
+      "app-643758808e9830e58e50.js",
       "build-js-styles.css",
-      "app-73661bb178031eeee48b.js.map",
+      "app-643758808e9830e58e50.js.map",
       "build-js-styles.css.map"
     ],
     "path---older-2015-12-25": [
