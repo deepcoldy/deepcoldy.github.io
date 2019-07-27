@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[DeepCold Blog]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://deepcoldy.github.io/</link><generator>RSS for Node</generator><lastBuildDate>Sat, 27 Jul 2019 15:09:22 GMT</lastBuildDate><item><title><![CDATA[React Native 点9图方案]]></title><description><![CDATA[搜了全网，解决方案很少。
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[DeepCold Blog]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://deepcoldy.github.io/</link><generator>RSS for Node</generator><lastBuildDate>Sat, 27 Jul 2019 15:20:17 GMT</lastBuildDate><item><title><![CDATA[React Native 点9图方案]]></title><description><![CDATA[搜了全网，解决方案很少。
 只找到了 react-native-image-capinsets 这个组件。 还有一篇文章 React Native显示点9图片 但是文章介绍的不是很详细，我来把关键步骤解释一下。 这里的top: 是左边黑块距离顶部的y轴距离(px)
 left…]]></description><link>https://deepcoldy.github.io//discovery/2019-04-23/</link><guid isPermaLink="false">https://deepcoldy.github.io//discovery/2019-04-23/</guid><pubDate>Tue, 23 Apr 2019 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;搜了全网，解决方案很少。
 只找到了&lt;a href=&quot;https://github.com/madsleejensen/react-native-image-capinsets&quot;&gt;react-native-image-capinsets&lt;/a&gt;这个组件。&lt;/p&gt;
@@ -51,7 +51,7 @@ right：图片高度 - 右边黑款高度&lt;/p&gt;
 &lt;p&gt;我找了很多人都说更换源可能会好，我按照他们的提示更换为了openwrt.proxy.ustclug.org和另外一个国内的源都没有解决。&lt;/p&gt;
 &lt;p&gt;此时我又看到Telegram里面有人说更新一下会好。&lt;/p&gt;
 &lt;p&gt;于是我把LEDE版本更新到了2.26&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://ws2.sinaimg.cn/large/006tNc79ly1fznkv1kq7zj30vp0u0476.jpg&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/deepcoldy/pic/master/20190727231109.png&quot;&gt;&lt;/p&gt;
 &lt;p&gt;然而除了系统里面的DDNS功能被删除了之外，并没有什么改变。&lt;/p&gt;
 &lt;p&gt;此时我又接到了酷软中心的0.3.7更新和Anyconnect Server的0.9更新。&lt;/p&gt;
 &lt;p&gt;其中Anyconnect Server的更新说到优化了提示文案，确实他把错误文案更改为了:请检查到downloads.openwrt.org的连通,或者更换源地址重试。&lt;/p&gt;
@@ -76,10 +76,10 @@ opkg update&lt;/code&gt;&lt;/pre&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;成功后插件状态截图：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://ws1.sinaimg.cn/large/006tNc79ly1fznl3nvy7uj30pm0mqgot.jpg&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/deepcoldy/pic/master/20190727231136.png&quot;&gt;&lt;/p&gt;
 &lt;p&gt;记得下载证书后在你的设备端认证证书&lt;/p&gt;
 &lt;p&gt;享受吧&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://ws4.sinaimg.cn/large/006tNc79ly1fznlb6t7qgj30n01dsaeo.jpg&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/deepcoldy/pic/master/20190727231201.png&quot;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;https://github.com/koolshare/ledesoft/issues/234&quot;&gt;参考Github链接&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[算法问题-从数组中查找5个出现次数最多的数字]]></title><description><![CDATA[假设有一个随机的数组，要找出出现次数最多的五个数字，以数组的形式输出。 我的答案：  输出结果如下：]]></description><link>https://deepcoldy.github.io//vanilla/2018-11-20/</link><guid isPermaLink="false">https://deepcoldy.github.io//vanilla/2018-11-20/</guid><pubDate>Tue, 20 Nov 2018 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;假设有一个随机的数组，要找出出现次数最多的五个数字，以数组的形式输出。&lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;https://jsfiddle.net/DeepCold/3g6Lxkhm/31/&quot;&gt;我的答案： &lt;/a&gt;&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
@@ -115,7 +115,7 @@ c &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&qu
 console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;c&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
 &lt;p&gt;输出结果如下：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://ws4.sinaimg.cn/large/006tNbRwgy1fxeoqy62b9j3068045dg0.jpg&quot;&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Vue的依赖收集]]></title><description><![CDATA[写了很多注释，看注释就好 订阅者 Dep 订阅者Dep作用是用来存放Watcher观察者对象。
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/deepcoldy/pic/master/20190727231916.png&quot;&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Vue的依赖收集]]></title><description><![CDATA[写了很多注释，看注释就好 订阅者 Dep 订阅者Dep作用是用来存放Watcher观察者对象。
 Dep.target即全局唯一的Watcher 观察者 Watcher 封装]]></description><link>https://deepcoldy.github.io//vue/2018-10-03/</link><guid isPermaLink="false">https://deepcoldy.github.io//vue/2018-10-03/</guid><pubDate>Wed, 03 Oct 2018 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;写了很多注释，看注释就好&lt;/p&gt;
 &lt;h2&gt;订阅者 Dep&lt;/h2&gt;
 &lt;p&gt;订阅者Dep作用是用来存放Watcher观察者对象。
@@ -757,8 +757,8 @@ Taro&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;eventCenter&lt
 	* Intel x86 Atom_64 System Image
 	* Google APIs Intel x86 Atom_64 System Image&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;https://ws2.sinaimg.cn/large/006tNbRwgy1fwa5hcbcrdj30dw091q76.jpg&quot;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;https://ws1.sinaimg.cn/large/006tNbRwgy1fwa5lmzl2wj30dw0b8jv9.jpg&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/deepcoldy/pic/master/20190727231826.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/deepcoldy/pic/master/20190727231838.png&quot;&gt;&lt;/p&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;3. 在.bashrc中添加
 ```bash
@@ -770,7 +770,7 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 4. 配置Genymotion
 路径`/Users/shenhan/Library/Android/sdk`为Android St&lt;/code&gt;&lt;/pre&gt;
       &lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tNbRwgy1fwa5m3u19uj30uk0smdij.jpg&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/deepcoldy/pic/master/20190727231854.png&quot;&gt;&lt;/p&gt;
 &lt;p&gt;参考：&lt;a href=&quot;https://facebook.github.io/react-native/docs/getting-started.html&quot;&gt;Getting Started - React Native&lt;/a&gt;&lt;/p&gt;
 &lt;h3&gt;手机调试工具&lt;/h3&gt;
 &lt;p&gt;&lt;a href=&quot;https://play.google.com/store/apps/details?id=host.exp.exponent&quot;&gt;Expo - Google Play 上的 Andr​​oid 应用&lt;/a&gt;
@@ -1151,14 +1151,13 @@ kong+openresty&lt;/p&gt;
 &lt;span class=&quot;token keyword&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;hasOwn&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;obj&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; Object&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; key&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; string&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; boolean &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;hasOwnProperty&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;obj&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; key&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;</content:encoded></item><item><title><![CDATA[Vue 2.3 源码笔记]]></title><description><![CDATA[本文章只针对Vue2.3版本，后续源码和api都可能产生变化，阅读时请因地制宜。 入口文件 Vue 2.3的入口文件叫做runtime-with-compiler.js (此文件名可能会随着版本变化)
- 流程图 文件关联  引入    引入  
+      &lt;/div&gt;</content:encoded></item><item><title><![CDATA[Vue 2.3 源码笔记]]></title><description><![CDATA[本文章只针对Vue2.3版本，后续源码和api都可能产生变化，阅读时请因地制宜。 入口文件 Vue 2.3的入口文件叫做runtime-with-compiler.js (此文件名可能会随着版本变化) 流程图 文件关联  引入    引入  
 observer的index.js…]]></description><link>https://deepcoldy.github.io//older/2017-06-08/</link><guid isPermaLink="false">https://deepcoldy.github.io//older/2017-06-08/</guid><pubDate>Thu, 08 Jun 2017 18:29:15 GMT</pubDate><content:encoded>&lt;p&gt;本文章只针对Vue2.3版本，后续源码和api都可能产生变化，阅读时请因地制宜。&lt;/p&gt;
 &lt;h2&gt;入口文件&lt;/h2&gt;
-&lt;p&gt;Vue 2.3的入口文件叫做runtime-with-compiler.js (此文件名可能会随着版本变化)
-&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tNc79ly1fgctem88ywj30f0071gm9.jpg&quot;&gt;&lt;/p&gt;
+&lt;p&gt;Vue 2.3的入口文件叫做runtime-with-compiler.js (此文件名可能会随着版本变化)&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/deepcoldy/pic/master/20190727231750.png&quot;&gt;&lt;/p&gt;
 &lt;h3&gt;流程图&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&quot;https://ws1.sinaimg.cn/large/006tNc79ly1fgctinftemj315k14qac9.jpg&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/deepcoldy/pic/master/20190727231804.png&quot;&gt;&lt;/p&gt;
 &lt;h3&gt;文件关联&lt;/h3&gt;
 &lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;src/core/instance/init.js&lt;/code&gt; 引入 &lt;code class=&quot;language-text&quot;&gt;src/core/instance/inject.js&lt;/code&gt;  引入 &lt;code class=&quot;language-text&quot;&gt;src/core/observer/index.js&lt;/code&gt;
 observer的index.js
@@ -1274,32 +1273,26 @@ brew &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; &lt;span 
 &lt;span class=&quot;token function&quot;&gt;moment&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token parameter&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
 	&lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;moment&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;time&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;</content:encoded></item><item><title><![CDATA[Vue书写注意事项（规范）——整理]]></title><description><![CDATA[注释 例如下图，Vue的data数据时最多的，如果编写成流水账的形式将非常难以维护。
- 
-优化后：
- 
-可看到，注释充分利用每行空间。用对象的形式归类数据。 scss 既然引入了scss，就一定要用包裹的形式，伪类再也不要写成 的形式了，下图是推荐的写法。
- class…]]></description><link>https://deepcoldy.github.io//older/2017-06-06/</link><guid isPermaLink="false">https://deepcoldy.github.io//older/2017-06-06/</guid><pubDate>Tue, 06 Jun 2017 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;注释&lt;/h3&gt;
-&lt;p&gt;例如下图，Vue的data数据时最多的，如果编写成流水账的形式将非常难以维护。
-&lt;img src=&quot;https://ws4.sinaimg.cn/large/006tNbRwly1fg00577bvvj31h80tddjt.jpg&quot;&gt;
-优化后：
-&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tKfTcly1fg4lht6qfej30j5069wet.jpg&quot;&gt;
-可看到，注释充分利用每行空间。用对象的形式归类数据。&lt;/p&gt;
+      &lt;/div&gt;</content:encoded></item><item><title><![CDATA[Vue书写注意事项（规范）——整理]]></title><description><![CDATA[注释 例如下图，Vue的data数据时最多的，如果编写成流水账的形式将非常难以维护。 优化后： 可看到，注释充分利用每行空间。用对象的形式归类数据。 scss 既然引入了scss，就一定要用包裹的形式，伪类再也不要写成 的形式了，下图是推荐的写法。 class…]]></description><link>https://deepcoldy.github.io//older/2017-06-06/</link><guid isPermaLink="false">https://deepcoldy.github.io//older/2017-06-06/</guid><pubDate>Tue, 06 Jun 2017 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;注释&lt;/h3&gt;
+&lt;p&gt;例如下图，Vue的data数据时最多的，如果编写成流水账的形式将非常难以维护。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/deepcoldy/pic/master/20190727231456.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;优化后：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/deepcoldy/pic/master/20190727231518.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;可看到，注释充分利用每行空间。用对象的形式归类数据。&lt;/p&gt;
 &lt;h3&gt;scss&lt;/h3&gt;
-&lt;p&gt;既然引入了scss，就一定要用包裹的形式，伪类再也不要写成&lt;code class=&quot;language-text&quot;&gt;::after&lt;/code&gt;的形式了，下图是推荐的写法。
-&lt;img src=&quot;https://ws1.sinaimg.cn/large/006tNc79ly1fgci0aezj2j30a80aujs1.jpg&quot;&gt;&lt;/p&gt;
+&lt;p&gt;既然引入了scss，就一定要用包裹的形式，伪类再也不要写成&lt;code class=&quot;language-text&quot;&gt;::after&lt;/code&gt;的形式了，下图是推荐的写法。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/deepcoldy/pic/master/20190727231532.png&quot;&gt;&lt;/p&gt;
 &lt;h3&gt;class命名&lt;/h3&gt;
-&lt;p&gt;有些人喜欢使用css类去命名html的class，这是非常不讨喜的行为：如下图fl是float的缩写。
-&lt;img src=&quot;https://ws4.sinaimg.cn/large/006tNc79ly1fhfy8jpzbtj30cz03874l.jpg&quot;&gt;
-下图mt3是margin-top3的缩写
-&lt;img src=&quot;https://ws2.sinaimg.cn/large/006tNc79ly1fhfy5pzb4kj30hl044t98.jpg&quot;&gt;
-看着很难受对吧，看看类似的css更难受。
-&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tNc79ly1fhfyawobk9j30b30aymxo.jpg&quot;&gt;
-&lt;img src=&quot;https://ws4.sinaimg.cn/large/006tNc79ly1fhfybtutqej307x0h0q3n.jpg&quot;&gt;
-这样的代码谁接手维护，谁倒霉。
-通常推荐的写法是通过功能来定义class名，特别是vue拥有scoped功能(组件内的css可以只在组件内生效)。我们就可以将公用的class类定义的简单点，组件内的class按功能分类。
-所以个人推荐使用&lt;a href=&quot;http://elemefe.github.io/postcss-salad/&quot;&gt;salad&lt;/a&gt;的写法。&lt;/p&gt;
-&lt;h3&gt;完成中。。。&lt;/h3&gt;</content:encoded></item><item><title><![CDATA[使用Webhook+nodejs将Git项目代码自动部署服务器]]></title><description><![CDATA[前言 公司前段时间加入了webpack+vue，由于忙于写业务，始终没有投入全部精力去优化项目。话虽这么说，但还是一边开发一边在优化开发体验的。
+&lt;p&gt;有些人喜欢使用css类去命名html的class，这是非常不讨喜的行为：如下图fl是float的缩写。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/deepcoldy/pic/master/20190727231608.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;下图mt3是margin-top3的缩写&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/deepcoldy/pic/master/20190727231646.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;看着很难受对吧，看看类似的css更难受。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/deepcoldy/pic/master/20190727231703.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/deepcoldy/pic/master/20190727231715.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;这样的代码谁接手维护，谁倒霉。
+通常推荐的写法是通过功能来定义class名，特别是vue拥有scoped功能(组件内的css可以只在组件内生效)。我们就可以将公用的class类定义的简单点，组件内的class按功能分类。&lt;/p&gt;
+&lt;p&gt;所以个人推荐使用&lt;a href=&quot;http://elemefe.github.io/postcss-salad/&quot;&gt;salad&lt;/a&gt;的写法。&lt;/p&gt;</content:encoded></item><item><title><![CDATA[使用Webhook+nodejs将Git项目代码自动部署服务器]]></title><description><![CDATA[前言 公司前段时间加入了webpack+vue，由于忙于写业务，始终没有投入全部精力去优化项目。话虽这么说，但还是一边开发一边在优化开发体验的。
 不讲别的，先讲讲标题说的是什么吧。
 如果你也苦于每天在不断地在本机与服务器之间git push & git pull…]]></description><link>https://deepcoldy.github.io//older/2017-05-16/</link><guid isPermaLink="false">https://deepcoldy.github.io//older/2017-05-16/</guid><pubDate>Tue, 16 May 2017 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;前言&lt;/h2&gt;
 &lt;p&gt;公司前段时间加入了webpack+vue，由于忙于写业务，始终没有投入全部精力去优化项目。话虽这么说，但还是一边开发一边在优化开发体验的。
@@ -1307,8 +1300,8 @@ brew &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; &lt;span 
 如果你也苦于每天在不断地在本机与服务器之间git push &amp;#x26; git pull，如果你用的开发机build速度过于缓慢，那么我觉得有必要研究一下自动化服务器部署了。当然我讨论的离perfect还很远，只满足了单一项目的需要。&lt;/p&gt;
 &lt;h2&gt;正篇&lt;/h2&gt;
 &lt;h3&gt;Webhook&lt;/h3&gt;
-&lt;p&gt;先确认你使用的git托管服务支持Webhook，并且自身有使用权限，我这边使用的是公司搭建的GitLab
-&lt;img src=&quot;https://ws2.sinaimg.cn/large/006tKfTcly1ffvgfq29i4j30v00pmn0f.jpg&quot;&gt;&lt;/p&gt;
+&lt;p&gt;先确认你使用的git托管服务支持Webhook，并且自身有使用权限，我这边使用的是公司搭建的GitLab&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/deepcoldy/pic/master/20190727231404.png&quot;&gt;&lt;/p&gt;
 &lt;p&gt;确认你有使用权限之后，我们就要开始搭建接收git请求的服务端了。我这边使用的当然是Node，你也可以选择用别的后端语言。&lt;/p&gt;
 &lt;h3&gt;编写Node服务&lt;/h3&gt;
 &lt;p&gt;我图方便，使用了&lt;a href=&quot;https://www.npmjs.com/package/node-gitlab-webhook&quot;&gt;node-gitlab-webhook&lt;/a&gt;该npm包，先引入。&lt;/p&gt;
@@ -1393,8 +1386,8 @@ handler&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span cl
 &lt;p&gt;使用最常见的&lt;a href=&quot;https://github.com/Unitech/pm2&quot;&gt;PM2&lt;/a&gt;，安装和使用就不说了，直接到github看。
 &lt;code class=&quot;language-text&quot;&gt;pm2 start [filename].js --watch #此命令会检测文件变化自动重启服务&lt;/code&gt;&lt;/p&gt;
 &lt;h3&gt;最后&lt;/h3&gt;
-&lt;p&gt;再去配置一下gitlab上的事件。
-&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tKfTcly1fg4k6egpcuj30q703naa7.jpg&quot;&gt;&lt;/p&gt;
+&lt;p&gt;再去配置一下gitlab上的事件&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/deepcoldy/pic/master/20190727231427.png&quot;&gt;&lt;/p&gt;
 &lt;h2&gt;小记&lt;/h2&gt;
 &lt;p&gt;这种方式还有一些不完善的地方，但是已经可以凑合使用了，在服务器端运行节省了我开发机的资源和时间，同时也避免了多人开发时的本地node_moudel版本不一致带来的问题。之后我会再开一篇文章去完善一下这个项目。&lt;/p&gt;
 &lt;h3&gt;参考文章&lt;/h3&gt;
@@ -1738,8 +1731,10 @@ gksudo gedit /var/www/testphp.php&lt;/p&gt;
 &lt;/div&gt;</content:encoded></item><item><title><![CDATA[ng-style]]></title><description><![CDATA[通过ng-style改变样式 具体情境： 一个列表的开头里面是 比如 这个开头有一张背景图 随着序号的增加，到10号时，字会超出背景范围 如何让数字达到10的同时缩小字体呢？ 此时用到angular的ng-style就很方便了 先介绍一下ng-style Expression…]]></description><link>https://deepcoldy.github.io//older/2015-09-29/</link><guid isPermaLink="false">https://deepcoldy.github.io//older/2015-09-29/</guid><pubDate>Tue, 29 Sep 2015 00:00:00 GMT</pubDate><content:encoded>&lt;h1&gt;通过ng-style改变样式&lt;/h1&gt;
 &lt;p&gt;具体情境：&lt;/p&gt;
 &lt;p&gt;一个列表的开头里面是&lt;code class=&quot;language-text&quot;&gt;Number&lt;/code&gt;比如&lt;code class=&quot;language-text&quot;&gt;1``2``3``4&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;这个开头有一张背景图&lt;img src=&quot;http://ww3.sinaimg.cn/large/74311666jw1ewjegr35gnj201l023mwz.jpg&quot; alt=&quot;数字1&quot;&gt;&lt;/p&gt;
-&lt;p&gt;随着序号的增加，到10号时，字会超出背景范围&lt;img src=&quot;http://ww3.sinaimg.cn/large/74311666jw1ewjejo3pb9j201m01zq2r.jpg&quot; alt=&quot;数字10&quot;&gt;&lt;/p&gt;
+&lt;p&gt;这个开头有一张背景图&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/deepcoldy/pic/master/20190727231259.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;随着序号的增加，到10号时，字会超出背景范围&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/deepcoldy/pic/master/20190727231324.png&quot;&gt;&lt;/p&gt;
 &lt;p&gt;如何让数字达到10的同时缩小字体呢？&lt;/p&gt;
 &lt;h2&gt;此时用到angular的ng-style就很方便了&lt;/h2&gt;
 &lt;h4&gt;先介绍一下ng-style&lt;/h4&gt;
