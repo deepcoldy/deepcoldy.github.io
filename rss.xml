@@ -1,4 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[DeepCold Blog]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://deepcoldy.github.io/</link><generator>RSS for Node</generator><lastBuildDate>Thu, 05 Dec 2019 05:01:32 GMT</lastBuildDate><item><title><![CDATA[前端项目在Docker中实现 Hot Reload]]></title><description><![CDATA[通常情况 这样写会有一些问题，比如node_modules怎么安装。 node_modules如果只是安装在本机，那么是无法用此方式同步到Docker中的。 注意：选择 这种方式是不行的 可以使用 但是这样会导致每次重启都重新安装依赖，非常低效。 解决方式 由于version…]]></description><link>https://deepcoldy.github.io//discovery/2019-10-22/</link><guid isPermaLink="false">https://deepcoldy.github.io//discovery/2019-10-22/</guid><pubDate>Tue, 22 Oct 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;通常情况&lt;/h3&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[DeepCold Blog]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://deepcoldy.github.io/</link><generator>RSS for Node</generator><lastBuildDate>Thu, 05 Dec 2019 05:06:23 GMT</lastBuildDate><item><title><![CDATA[MacOS输入法卡顿]]></title><description><![CDATA[公司电脑在长时间使用后，无论是使用搜狗输入法还是苹果自带拼音输入法，打字时都会出现明显的延迟。 表象就是快速输入字母，文字候选框要等大概几秒钟才会出现。 系统版本Catalina 10.15 遂打开「活动监视器」查看CPU和内存占用情况。 发现在打字时，有个 疯狂占用CPU…]]></description><link>https://deepcoldy.github.io//discovery/2019-12-05/</link><guid isPermaLink="false">https://deepcoldy.github.io//discovery/2019-12-05/</guid><pubDate>Thu, 05 Dec 2019 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;公司电脑在长时间使用后，无论是使用搜狗输入法还是苹果自带拼音输入法，打字时都会出现明显的延迟。&lt;/p&gt;
+&lt;p&gt;表象就是快速输入字母，文字候选框要等大概几秒钟才会出现。&lt;/p&gt;
+&lt;p&gt;系统版本Catalina 10.15&lt;/p&gt;
+&lt;p&gt;遂打开「活动监视器」查看CPU和内存占用情况。&lt;/p&gt;
+&lt;p&gt;发现在打字时，有个&lt;code class=&quot;language-text&quot;&gt;Report Crash&lt;/code&gt;疯狂占用CPU。&lt;/p&gt;
+&lt;p&gt;通过系统日志&lt;code class=&quot;language-text&quot;&gt;tail -F /var/log/system.log&lt;/code&gt;可以看到：&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Dec  5 11:57:46 PM80253170 com.apple.xpc.launchd[1] (com.apple.appstoreagent[18329]): Service exited with abnormal code: 1
+Dec  5 11:57:46 PM80253170 com.apple.xpc.launchd[1] (com.apple.appstoreagent): Service only ran for 5 seconds. Pushing respawn out by 5 seconds.&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;p&gt;通过此日志得出结论跟苹果账户有关。&lt;/p&gt;
+&lt;h3&gt;解决方案：&lt;/h3&gt;
+&lt;p&gt;系统设置-Apple ID-概览-退出Apple ID-重启电脑&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://discussions.apple.com/thread/250768095&quot;&gt;原贴链接&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;重启后系统日志中确实没有该报错了，&lt;code class=&quot;language-text&quot;&gt;Report Crash&lt;/code&gt;的CPU占用降低了一半以上。&lt;/p&gt;
+&lt;p&gt;继续查看系统日志，发现出现了另一个报错：&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Dec  5 12:06:21 PM80253170 com.apple.xpc.launchd[1] (com.teclink.agentuser.peruser): Service only ran for 1 seconds. Pushing respawn out by 9 seconds.
+Dec  5 12:06:31 PM80253170 com.apple.xpc.launchd[1] (com.teclink.agentuser.peruser[2691]): Service exited due to SIGSEGV | sent by exc handler[2691]&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;p&gt;由于该报错没有找到解决方案。&lt;/p&gt;
+&lt;p&gt;遂尝试关闭&lt;code class=&quot;language-text&quot;&gt;Report Crash&lt;/code&gt;。&lt;/p&gt;
+&lt;h3&gt;关闭Report Crash&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;launchctl unload -w /System/Library/LaunchAgents/com.apple.ReportCrash.plist
+sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.ReportCrash.Root.plist&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+&lt;p&gt;关闭后系统重新流畅了起来。虽然治标不治本，使用上没有影响就好。&lt;/p&gt;
+&lt;h3&gt;打开Report Crash&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot;&gt;
+      &lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;launchctl load -w /System/Library/LaunchAgents/com.apple.ReportCrash.plist
+sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.ReportCrash.Root.plist&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;</content:encoded></item><item><title><![CDATA[前端项目在Docker中实现 Hot Reload]]></title><description><![CDATA[通常情况 这样写会有一些问题，比如node_modules怎么安装。 node_modules如果只是安装在本机，那么是无法用此方式同步到Docker中的。 注意：选择 这种方式是不行的 可以使用 但是这样会导致每次重启都重新安装依赖，非常低效。 解决方式 由于version…]]></description><link>https://deepcoldy.github.io//discovery/2019-10-22/</link><guid isPermaLink="false">https://deepcoldy.github.io//discovery/2019-10-22/</guid><pubDate>Tue, 22 Oct 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;通常情况&lt;/h3&gt;
 &lt;div class=&quot;gatsby-highlight&quot;&gt;
       &lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;version: &amp;#39;3
   services:
@@ -68,39 +100,7 @@ volumes:
 &lt;h3&gt;总结&lt;/h3&gt;
 &lt;p&gt;在Docker中开发前端应用多少会遇到一些水土不服，要解决这些问题还是要详细阅读官方文档，灵活运用。&lt;/p&gt;
 &lt;p&gt;我在搭建过程中也能感到，前端的基础设施与后端的割裂，解决方案少只能自己摸索。&lt;/p&gt;
-&lt;p&gt;当然相信会越来越好。&lt;/p&gt;</content:encoded></item><item><title><![CDATA[MacOS输入法卡顿]]></title><description><![CDATA[公司电脑在长时间使用后，无论是使用搜狗输入法还是苹果自带拼音输入法，打字时都会出现明显的延迟。 表象就是快速输入字母，文字候选框要等大概几秒钟才会出现。 系统版本Catalina 10.15 遂打开「活动监视器」查看CPU和内存占用情况。 发现在打字时，有个 疯狂占用CPU…]]></description><link>https://deepcoldy.github.io//discovery/2019-12-05/</link><guid isPermaLink="false">https://deepcoldy.github.io//discovery/2019-12-05/</guid><pubDate>Tue, 22 Oct 2019 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;公司电脑在长时间使用后，无论是使用搜狗输入法还是苹果自带拼音输入法，打字时都会出现明显的延迟。&lt;/p&gt;
-&lt;p&gt;表象就是快速输入字母，文字候选框要等大概几秒钟才会出现。&lt;/p&gt;
-&lt;p&gt;系统版本Catalina 10.15&lt;/p&gt;
-&lt;p&gt;遂打开「活动监视器」查看CPU和内存占用情况。&lt;/p&gt;
-&lt;p&gt;发现在打字时，有个&lt;code class=&quot;language-text&quot;&gt;Report Crash&lt;/code&gt;疯狂占用CPU。&lt;/p&gt;
-&lt;p&gt;通过系统日志&lt;code class=&quot;language-text&quot;&gt;tail -F /var/log/system.log&lt;/code&gt;可以看到：&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Dec  5 11:57:46 PM80253170 com.apple.xpc.launchd[1] (com.apple.appstoreagent[18329]): Service exited with abnormal code: 1
-Dec  5 11:57:46 PM80253170 com.apple.xpc.launchd[1] (com.apple.appstoreagent): Service only ran for 5 seconds. Pushing respawn out by 5 seconds.&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
-&lt;p&gt;通过此日志得出结论跟苹果账户有关。&lt;/p&gt;
-&lt;h3&gt;解决方案：&lt;/h3&gt;
-&lt;p&gt;系统设置-Apple ID-概览-退出Apple ID-重启电脑&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://discussions.apple.com/thread/250768095&quot;&gt;原贴链接&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;重启后系统日志中确实没有该报错了，&lt;code class=&quot;language-text&quot;&gt;Report Crash&lt;/code&gt;的CPU占用降低了一半以上。&lt;/p&gt;
-&lt;p&gt;继续查看系统日志，发现出现了另一个报错：&lt;/p&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Dec  5 12:06:21 PM80253170 com.apple.xpc.launchd[1] (com.teclink.agentuser.peruser): Service only ran for 1 seconds. Pushing respawn out by 9 seconds.
-Dec  5 12:06:31 PM80253170 com.apple.xpc.launchd[1] (com.teclink.agentuser.peruser[2691]): Service exited due to SIGSEGV | sent by exc handler[2691]&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
-&lt;p&gt;由于该报错没有找到解决方案。&lt;/p&gt;
-&lt;p&gt;遂尝试关闭&lt;code class=&quot;language-text&quot;&gt;Report Crash&lt;/code&gt;。&lt;/p&gt;
-&lt;h3&gt;关闭Report Crash&lt;/h3&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;launchctl unload -w /System/Library/LaunchAgents/com.apple.ReportCrash.plist
-sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.ReportCrash.Root.plist&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;
-&lt;p&gt;关闭后系统重新流畅了起来。虽然治标不治本，使用上没有影响就好。&lt;/p&gt;
-&lt;h3&gt;打开Report Crash&lt;/h3&gt;
-&lt;div class=&quot;gatsby-highlight&quot;&gt;
-      &lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;launchctl load -w /System/Library/LaunchAgents/com.apple.ReportCrash.plist
-sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.ReportCrash.Root.plist&lt;/code&gt;&lt;/pre&gt;
-      &lt;/div&gt;</content:encoded></item><item><title><![CDATA[CentOS安装mysql]]></title><description><![CDATA[CentOS安装mysql 常遇到如下报错：
+&lt;p&gt;当然相信会越来越好。&lt;/p&gt;</content:encoded></item><item><title><![CDATA[CentOS安装mysql]]></title><description><![CDATA[CentOS安装mysql 常遇到如下报错：
  安装与启动 MariaDB与Mysql是不同的，根据自己选择安装，别搞混了。 注意，CentOS 默认安装的是MariaDB。 所以我这边直接安装mariadb。 安装MariaDB 如果不安装 ，会报错： 登陆 将root…]]></description><link>https://deepcoldy.github.io//discovery/2019-10-21/</link><guid isPermaLink="false">https://deepcoldy.github.io//discovery/2019-10-21/</guid><pubDate>Mon, 21 Oct 2019 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;CentOS安装mysql&lt;/h2&gt;
 &lt;p&gt;常遇到如下报错：
 &lt;code class=&quot;language-text&quot;&gt;ERROR 2002 (HY000): Can&amp;#39;t connect to local MySQL server through socket &amp;#39;/var/lib/mysql/mysql.sock&amp;#39; (2)&lt;/code&gt;&lt;/p&gt;

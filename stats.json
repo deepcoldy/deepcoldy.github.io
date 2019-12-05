@@ -41,8 +41,8 @@
       "path---react-2018-10-23-57480a267f4399f6733d.js.map"
     ],
     "path---discovery-2019-12-05": [
-      "path---discovery-2019-12-05-3d688d0bcc0767cffee2.js",
-      "path---discovery-2019-12-05-3d688d0bcc0767cffee2.js.map"
+      "path---discovery-2019-12-05-0929dccd262b8d38242e.js",
+      "path---discovery-2019-12-05-0929dccd262b8d38242e.js.map"
     ],
     "path---older-2017-03-03": [
       "path---older-2017-03-03-5abb8aad1302d8228b24.js",
@@ -61,8 +61,8 @@
       "component---node-modules-gatsby-plugin-offline-app-shell-js-5c4c5a0f7af9dc69d6d7.js.map"
     ],
     "path---discovery-2019-10-22": [
-      "path---discovery-2019-10-22-8f6e13475921a9a3ab3f.js",
-      "path---discovery-2019-10-22-8f6e13475921a9a3ab3f.js.map"
+      "path---discovery-2019-10-22-beef702ab3c985dbc81a.js",
+      "path---discovery-2019-10-22-beef702ab3c985dbc81a.js.map"
     ],
     "component---src-templates-blog-post-js": [
       "component---src-templates-blog-post-js-cbaba925b58ae66b3a33.js",
@@ -97,8 +97,8 @@
       "path---older-2017-06-08-86425cb3bc5e16f3df36.js.map"
     ],
     "path---index": [
-      "path---index-a2a598c42daa3ba79f10.js",
-      "path---index-a2a598c42daa3ba79f10.js.map"
+      "path---index-c130a2738a87d34c387e.js",
+      "path---index-c130a2738a87d34c387e.js.map"
     ],
     "path---older-2015-09-11": [
       "path---older-2015-09-11-021a9403ec8f6cca1cfa.js",
@@ -183,13 +183,13 @@
       "path---older-2015-09-09-ac00fa7be6832efc30a6.js.map"
     ],
     "path---discovery-2019-10-21": [
-      "path---discovery-2019-10-21-ee19923164f0d62d7977.js",
-      "path---discovery-2019-10-21-ee19923164f0d62d7977.js.map"
+      "path---discovery-2019-10-21-f244bffaf84b72dcef8a.js",
+      "path---discovery-2019-10-21-f244bffaf84b72dcef8a.js.map"
     ],
     "app": [
-      "app-cf71a3d883c2ffe277bd.js",
+      "app-b0b4e0e53bd2bc3e74b3.js",
       "build-js-styles.css",
-      "app-cf71a3d883c2ffe277bd.js.map",
+      "app-b0b4e0e53bd2bc3e74b3.js.map",
       "build-js-styles.css.map"
     ],
     "path---older-2015-12-25": [
