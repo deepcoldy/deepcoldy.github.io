@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>bots.json Configuration - botmux 文档</title>
+<script>{;const saved = localStorage.getItem('rspress-theme-appearance');const preferDark = window.matchMedia('(prefers-color-scheme: dark)').matches;const isDark = !saved || saved === 'auto' ? preferDark : saved === 'dark';document.documentElement.classList.toggle('dark', isDark);document.documentElement.classList.toggle('rp-dark', isDark);document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';}</script>
+<link href="/botmux/static/css/styles.788f7d0799.css" rel="stylesheet">
+<script defer src="/botmux/static/js/styles.b78d054ff9.js"></script>
+<script defer src="/botmux/static/js/lib-react.9b7f575772.js"></script>
+<script defer src="/botmux/static/js/lib-router.00d9fd057a.js"></script>
+<script defer src="/botmux/static/js/805.3fccb5178c.js"></script>
+<script defer src="/botmux/static/js/index.6a4f4ae2e1.js"></script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Rspress v2.0.13">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs">
+<meta property="og:image" content="https://magic-builder.tos-cn-beijing.volces.com/uploads/1780767592455_botmux-logo.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://magic-builder.tos-cn-beijing.volces.com/uploads/1780767592455_botmux-logo.svg">
+<meta name="theme-color" content="#06b6d4">
+<link rel="icon" href="https://magic-builder.tos-cn-beijing.volces.com/uploads/1780767592185_botmux-favicon.svg" type="image/svg+xml">
+<meta property="og:title" content="bots.json Configuration - botmux 文档">
+<meta name="description" content="Configure bots via ~/.botmux/bots.json. Run botmux setup to create it interactively, or edit it by hand. The file is an array; each element is a bot (in production, one bot maps to one dedicated daemon process). There are many fields, listed below grouped by purpose. The vast majority are optional — just larkAppId / larkAppSecret is enough to get running, and you add the rest as needed.">
+<meta property="og:description" content="Configure bots via ~/.botmux/bots.json. Run botmux setup to create it interactively, or edit it by hand. The file is an array; each element is a bot (in production, one bot maps to one dedicated daemon process). There are many fields, listed below grouped by purpose. The vast majority are optional — just larkAppId / larkAppSecret is enough to get running, and you add the rest as needed."></head>
+
+  <body>
+    <div id="__rspress_root"><link rel="preload" as="image" href="https://magic-builder.tos-cn-beijing.volces.com/uploads/1780767592185_botmux-favicon.svg"/><header class="rp-nav"><div class="rp-nav__left"><div class="rp-nav__title"><a href="/botmux/en/" class="rp-nav__title__link rp-link"><div class="rp-nav__title__logo"><img src="https://magic-builder.tos-cn-beijing.volces.com/uploads/1780767592185_botmux-favicon.svg" alt="logo" id="logo" class="rspress-logo rp-nav__title__logo-image"/></div><span>botmux 文档</span></a></div></div><div class="rp-nav__right"><button class="rp-search-button"><div class="rp-search-button__content"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21" class="rp-search-button__icon"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg><span class="rp-search-button__word">Search</span></div><div class="rp-search-button__hotkey" style="opacity:0"><span></span><span>K</span></div></button><div class="rp-search-button--mobile"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg></div><div class="rp-nav__others"><div class="rp-nav-menu__divider"></div><li class="rp-nav-menu__item"><div class="rp-nav-menu__item__container">English<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-menu__item__icon"><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--center"><li class="rp-hover-group__item" style="padding-left:8px" data-depth="0"><a href="/botmux/bots-json.html" class="rp-hover-group__item__link rp-link" aria-label="简体中文" lang="zh" hrefLang="zh" rel="alternate">简体中文</a></li><li class="rp-hover-group__item rp-hover-group__item--active" style="padding-left:8px" data-depth="0"><a href="/botmux/en/bots-json.html" class="rp-hover-group__item__link rp-link" aria-label="English" lang="en" hrefLang="en" rel="alternate">English</a></li></ul></li><div class="rp-switch-appearance"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" class="rp-switch-appearance__icon rp-switch-appearance__icon--sun"><path fill="currentColor" d="m7.001 15.848-1.226 1.226a.58.58 0 0 0 0 .818.58.58 0 0 0 .818 0l1.226-1.226a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0m-.352-8.735a.584.584 0 0 0 .825-.825L6.237 5.051a.584.584 0 0 0-.825.825zM5.011 11.07h-1.75a.584.584 0 0 0 0 1.167h1.75c.324 0 .584-.26.584-.583a.585.585 0 0 0-.584-.584m7.003-5.835c.324 0 .584-.26.584-.584V2.9a.58.58 0 0 0-.584-.584.58.58 0 0 0-.583.583V4.65c0 .323.262.584.583.584m5.616 1.621 1.226-1.225a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0l-1.226 1.225a.58.58 0 0 0 0 .818.576.576 0 0 0 .818 0m3.138 4.214h-1.75a.58.58 0 0 0-.584.584c0 .324.26.584.583.584h1.751a.584.584 0 1 0 0-1.167m-3.389 5.124a.584.584 0 0 0-.825.825l1.238 1.238a.584.584 0 0 0 .825-.826zm-5.365-9.795a5.256 5.256 0 0 0-5.257 5.258 5.256 5.256 0 0 0 5.257 5.257 5.256 5.256 0 0 0 5.257-5.257 5.256 5.256 0 0 0-5.257-5.258m0 11.675a.58.58 0 0 0-.583.583v1.751a.582.582 0 1 0 1.167 0v-1.75a.584.584 0 0 0-.584-.584"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" viewBox="0 0 19 19" class="rp-switch-appearance__icon rp-switch-appearance__icon--moon"><path fill="currentColor" d="M9.166 0a9.2 9.2 0 0 1 1.857.188.834.834 0 0 1 .042 1.623 4.47 4.47 0 1 0 5.457 5.457l.048-.135a.834.834 0 0 1 1.575.177q.186.902.188 1.856A9.168 9.168 0 1 1 9.166 0"></path></svg></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__sm"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg></button><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__md"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"><div class="rp-nav-menu__others-mobile__container"><div class="rp-nav-hamburger__md__hover-group"><div class="rp-nav-screen-appearance"><div class="rp-nav-screen-appearance__left">Theme</div><div class="rp-nav-screen-appearance__right"></div></div><div class="rp-nav-screen-langs"><div class="rp-nav-screen-langs__left">Languages</div><div class="rp-nav-screen-langs__right">English<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-screen-langs__icon "><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div></div><div class="rp-nav-screen-langs-group" style="display:grid;grid-template-rows:0fr;transition:grid-template-rows 0.2s ease-out"><div class="rp-nav-screen-langs-group__inner"><a href="/botmux/bots-json.html" class="rp-nav-screen-langs-group__item rp-link" hrefLang="zh" lang="zh" rel="alternate">简体中文</a><span class="rp-nav-screen-langs-group__item rp-nav-screen-langs-group__item--active" aria-current="page" aria-disabled="true">English</span></div></div><div class="rp-nav-screen-divider"></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div></div></ul></button></div></header><div class="rp-doc-layout__menu"><div class="rp-sidebar-menu"><button type="button" class="rp-sidebar-menu__left"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M4 6h24v2H4zm0 18h24v2H4zm0-12h24v2H4zm0 6h24v2H4z"></path></svg><span>Menu</span></button><button type="button" class="rp-sidebar-menu__right"><span class="rp-sidebar-menu__right__text">ON THIS PAGE</span><svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-sidebar-menu__right__icon" style="transform:rotate(0deg);transition:transform 0.2s ease-out"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></button></div></div><div class="rp-doc-layout__container"><aside class="rp-doc-layout__sidebar rp-scrollbar"><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Getting Started</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/index.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Introduction</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/quickstart.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">5-Minute Quickstart</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/prerequisites.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Prerequisites</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Core Concepts</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/architecture.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Architecture</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/session-model.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Session &amp; Topic Model</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Features</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/cards.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Streaming Cards</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/web-terminal.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Web Terminal</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/multi-bot.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Multi-Bot Collaboration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/multi-topic.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Multi-Topic Orchestration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/whiteboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Local Whiteboard</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/roles.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Roles &amp; Teams</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/tmux.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">tmux Session Persistence</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/adopt.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Adopt a Session</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/relay.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Relay a Session</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/group.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">One-Click Session Groups</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/doc-comment.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Feishu Doc Comment Entry</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/schedule.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Scheduled Tasks</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/oncall.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">On-Call Mode</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/sandbox.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">File Sandbox</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/voice.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Voice Summary</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/dashboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Dashboard</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/webhook.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Webhook Ingress</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/workflow.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Workflow (Experimental)</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/hooks.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Lifecycle Hooks</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/skill-cli.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Skill + CLI Interaction</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Command Reference</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/slash-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Slash Commands</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/cli-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">CLI Commands</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Configuration</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/bots-json.html" class="rp-sidebar-item rp-sidebar-item--active rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">bots.json</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/env.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Environment &amp; File Locations</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/adapters.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">CLI Adapters</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Practices &amp; Troubleshooting</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/best-practices.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Best Practices</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/pitfalls.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Common Pitfalls</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/faq.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">FAQ / Troubleshooting</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/about.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">About &amp; Resources</span></div><div class="rp-sidebar-item__right"></div></a></div></div></aside><div class="rp-doc-layout__doc"><main class="rp-doc-layout__doc-container"><div class="rp-doc rspress-doc"><!--$--><h1 class="rp-toc-include" id="botsjson-configuration"><a href="#botsjson-configuration" class="rp-header-anchor rp-link" aria-hidden="true">#</a>bots.json Configuration<!-- --> </h1>
+<p>Configure bots via <code>~/.botmux/bots.json</code>. Run <code>botmux setup</code> to create it interactively, or edit it by hand. The file is an array; each element is a bot (in production, one bot maps to one dedicated daemon process).</p>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">[</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;larkAppId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;cli_xxx_bot1&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;larkAppSecret&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;secret_1&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;name&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;claude-main&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;cliId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;claude-code&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;model&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;sonnet&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;lang&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;zh&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;workingDir&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;~/projects&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;allowedUsers&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> [</span><span style="color:var(--shiki-token-string-expression)">&quot;alice@company.com&quot;</span><span style="color:var(--shiki-foreground)">]</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;allowedChatGroups&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> [</span><span style="color:var(--shiki-token-string-expression)">&quot;oc_xxx_team&quot;</span><span style="color:var(--shiki-foreground)">]</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;oncallChats&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> [{ </span><span style="color:var(--shiki-token-keyword)">&quot;chatId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;oc_xxx_oncall&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-keyword)"> &quot;workingDir&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;~/projects/foo&quot;</span><span style="color:var(--shiki-foreground)"> }]</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  }</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;larkAppId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;cli_xxx_bot2&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;larkAppSecret&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;secret_2&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;cliId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;codex&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;model&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;gpt-5-codex&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;workingDir&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;~/work&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;autoStartOnNewTopic&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> true</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">]</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>There are many fields, listed below grouped by purpose. The vast majority are <strong>optional</strong> — just <code>larkAppId</code> / <code>larkAppSecret</code> is enough to get running, and you add the rest as needed.</p>
+<h2 class="rp-toc-include" id="required"><a href="#required" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Required</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody><tr><td><code>larkAppId</code></td><td>Lark app App ID</td></tr><tr><td><code>larkAppSecret</code></td><td>Lark app App Secret</td></tr></tbody></table></div>
+<h2 class="rp-toc-include" id="cli-and-model"><a href="#cli-and-model" class="rp-header-anchor rp-link" aria-hidden="true">#</a>CLI and model</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody><tr><td><code>name</code></td><td>Process name suffix, e.g. <code>claude-main</code> → <code>botmux-claude-main</code>; leave empty to default to <code>botmux-&lt;index&gt;</code></td></tr><tr><td><code>cliId</code></td><td>CLI adapter, defaults to <code>claude-code</code>. See <a href="/botmux/en/adapters.html" class="rp-link">Multi-CLI adapters</a></td></tr><tr><td><code>model</code></td><td>Model name used to launch the CLI (e.g. <code>claude --model opus</code>); leave empty to use the CLI default. Multiple bots with the same <code>cliId</code> can run different models. Each adapter&#x27;s <code>modelChoices</code> are the candidates offered in <code>botmux setup</code></td></tr><tr><td><code>cliPathOverride</code></td><td>Absolute path to the CLI entry point, for wrapping a wrapper / router (ccr, claude-w, aiden-x-claude, etc.)</td></tr><tr><td><code>disableCliBypass</code></td><td>When <code>true</code>, the CLI&#x27;s auto-approve / sandbox-bypass flags (<code>--yolo</code>, <code>--dangerously-*</code>) are not appended automatically; omitted / <code>false</code> keeps the original behavior</td></tr><tr><td><code>backendType</code></td><td>Session backend, one of <code>pty</code> / <code>tmux</code> / <code>herdr</code> / <code>zellij</code>. Leave empty to <strong>auto-detect</strong>: chooses <code>tmux</code> if tmux is available, otherwise <code>pty</code> (<code>herdr</code> and <code>zellij</code> are never auto-selected and must be specified explicitly). <code>tmux</code> / <code>herdr</code> / <code>zellij</code> are all persistent sessions and fall back to <code>pty</code> automatically if the corresponding binary probe fails (<code>zellij</code> requires ≥ 0.44); <code>pty</code> attaches directly to the process and does not persist across restarts. See <a href="/botmux/en/tmux.html" class="rp-link">tmux backend</a></td></tr><tr><td><code>launchShell</code></td><td>Shell used to launch the CLI, overriding the daemon&#x27;s <code>$SHELL</code>: a shell name (<code>zsh</code> / <code>bash</code> / <code>sh</code>) or an absolute path (e.g. <code>/usr/bin/zsh</code>). For when the login <code>$SHELL</code> (e.g. bash) has an rcfile that <code>exec</code>-trampolines into another shell (<code>exec zsh</code>), pre-empting the CLI under botmux&#x27;s <code>bash -i</code> launch so the session never starts (bare-shell <code>parse error</code>) — pinning it launches under that shell directly, bypassing the skipped rcfile. <strong>Note</strong>: PATH / nvm / pnpm must then live in the chosen shell&#x27;s rcfiles (e.g. <code>.zshrc</code> / <code>.zprofile</code>). Empty = use <code>$SHELL</code>. Takes effect next session; <code>tmux</code> / <code>zellij</code> backends only (<code>pty</code> execs the CLI directly and is unaffected). Also configurable in the dashboard (&quot;Bot defaults → Launch shell&quot;) or via <code>/config launchShell &lt;value&gt;</code></td></tr><tr><td><code>lang</code></td><td>The bot&#x27;s UI language, <code>zh</code> / <code>en</code>; leave empty to fall back to the <code>BOTMUX_LANG</code> / <code>LANG</code> environment variable</td></tr><tr><td><code>customPassthroughCommands</code></td><td>On top of the fixed passthrough allowlist and the current CLI adapter&#x27;s default-allowed commands, additionally pass through slash commands to the underlying CLI, e.g. <code>[&quot;/export&quot;]</code> (Claude Code / Codex default-allow <code>/goal</code>). Auto-normalized (a missing <code>/</code> is added, lowercased, only <code>[a-z0-9:_-]</code> kept, deduplicated); entries that would shadow a botmux daemon command (e.g. <code>/status</code>) are dropped and have no effect even if configured. Use <code>/list-slash-command</code> to view the full allowlist. See <a href="/botmux/en/slash-commands.html" class="rp-link">Slash commands</a></td></tr><tr><td><code>env</code></td><td>Per-bot process environment variables <code>{ &quot;KEY&quot;: &quot;value&quot; }</code>, injected into this bot&#x27;s CLI process. Most common use: run a bot on GLM / a third-party Anthropic·OpenAI-compatible provider (see example below); also handy for <code>HTTPS_PROXY</code> or a CLI feature flag. Values accept string / number / boolean; botmux-reserved keys (<code>BOTMUX_</code>, <code>LARK_APP_</code>, …) are ignored. Injected <strong>per session</strong> (effective from the next session), never written to the shared tmux server env, so it can&#x27;t leak across bots. Also editable in the dashboard (&quot;Bot defaults → Environment variables&quot;)</td></tr></tbody></table></div>
+<h3 class="rp-toc-include" id="run-a-bot-on-glm--a-third-party-provider-per-bot-env"><a href="#run-a-bot-on-glm--a-third-party-provider-per-bot-env" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Run a bot on GLM / a third-party provider (per-bot env)</h3>
+<p>Run one bot on a GLM Coding Plan (or any Anthropic-compatible provider) while another keeps using official Claude — give the former an <code>env</code>:</p>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;cliId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;claude-code&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;env&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;ANTHROPIC_BASE_URL&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;https://api.z.ai/api/anthropic&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;ANTHROPIC_AUTH_TOKEN&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;your GLM Coding Plan key&quot;</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<ul>
+<li>For GLM in China, use <code>https://open.bigmodel.cn/api/anthropic</code> for <code>ANTHROPIC_BASE_URL</code>.</li>
+<li>For an OpenAI-protocol CLI like Codex, set <code>OPENAI_BASE_URL</code> / <code>OPENAI_API_KEY</code> (the provider&#x27;s OpenAI-compatible endpoint) instead of <code>ANTHROPIC_*</code>.</li>
+<li><strong>Isolation</strong>: env is injected per-session into the CLI process, consistently across backends (tmux / zellij inject it per-pane, never into the shared server env), so one bot&#x27;s provider config can&#x27;t leak into another&#x27;s.</li>
+<li><strong>Security</strong>: values live in <code>bots.json</code> and the process environment in plaintext — not a secret vault; chat surfaces like <code>/config get</code> mask the values (the owner-authenticated dashboard editor shows real values).</li>
+<li>Takes effect from the next <strong>session</strong>.</li>
+</ul>
+<h2 class="rp-toc-include" id="working-directory"><a href="#working-directory" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Working directory</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody><tr><td><code>workingDir</code></td><td>Default working directory, supports a comma-separated list. Recursively searches <strong>downward</strong> for git repositories from this directory (up to 3 levels), never scans upward</td></tr><tr><td><code>workingDirs</code></td><td>Array form of working directories (<code>[&quot;~/a&quot;, &quot;~/b&quot;]</code>); takes precedence over the comma-separated form of <code>workingDir</code> when explicitly configured</td></tr><tr><td><code>defaultWorkingDir</code></td><td>Default directory for a single repository: with no oncall and no sibling session in the same group, enters it directly and skips the repo selection card. <code>/cd</code> can still switch mid-session. Purely a runtime fallback — does not write state and does not change the permission model</td></tr></tbody></table></div>
+<h2 class="rp-toc-include" id="permissions-and-authorization"><a href="#permissions-and-authorization" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Permissions and authorization</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody><tr><td><code>allowedUsers</code></td><td>The operate-permission list (<strong>full email</strong> or <code>ou_xxx</code>). When <code>allowedChatGroups</code> is configured, at least one is required to serve as owner</td></tr><tr><td><code>allowedChatGroups</code></td><td>Conversable groups (<code>oc_xxx</code>). Any member of the group can converse (only <code>canTalk</code>); sensitive operations are still controlled by <code>allowedUsers</code></td></tr><tr><td><code>oncallChats</code></td><td>Oncall bindings, <code>[{ &quot;chatId&quot;: &quot;oc_xxx&quot;, &quot;workingDir&quot;: &quot;~/projects/foo&quot; }]</code>. See <a href="/botmux/en/oncall.html" class="rp-link">oncall</a></td></tr><tr><td><code>defaultOncall</code></td><td>The bot&#x27;s default: the first new topic in a new group chat is automatically bound to oncall. <code>{ &quot;enabled&quot;: true, &quot;workingDir&quot;: &quot;~/foo&quot;, &quot;since&quot;: &lt;epoch ms&gt; }</code>; older groups that already existed before <code>since</code> are unaffected</td></tr><tr><td><code>globalGrants</code></td><td>Global conversable list (<code>ou_xxx</code>, people or bots). Can converse in any group, only <code>canTalk</code></td></tr><tr><td><code>chatGrants</code></td><td>Per-group, per-user authorization <code>{ &quot;oc_xxx&quot;: [&quot;ou_yyy&quot;] }</code>, only grants <code>canTalk</code>. Usually written by the <code>/grant</code> card, but can also be configured by hand</td></tr><tr><td><code>messageQuota</code></td><td>Message-quota switch <code>{ &quot;defaultLimit&quot;: N }</code>: once a positive integer is configured, a <code>/grant</code> without a number applies an N-message quota; if not configured, authorization is unlimited. Only constrains talk authorization, does not affect <code>canOperate</code></td></tr><tr><td><code>restrictGrantCommands</code></td><td>When <code>true</code>, people granted only via per-user authorization (<code>chatGrants</code> / <code>globalGrants</code>) are disabled from <strong>all slash commands</strong> and can only have plain conversations; owner / <code>allowedUsers</code> / oncall / whole-group members are unaffected. Defaults to <code>false</code></td></tr><tr><td><code>autoGrantRequestCards</code></td><td>Enabled by default. Set to <code>false</code> to stop automatically sending <code>/grant</code> request cards to the owner when an unauthorized person or external bot @mentions this bot in a group and the talk gate blocks it; the message is dropped silently instead</td></tr></tbody></table></div>
+<h2 class="rp-toc-include" id="file-sandbox"><a href="#file-sandbox" class="rp-header-anchor rp-link" aria-hidden="true">#</a>File sandbox</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody><tr><td><code>sandbox</code></td><td>When <code>true</code>, launch new sessions in the Linux file sandbox. Writes are isolated and must be landed with <code>/land</code></td></tr><tr><td><code>sandboxHidePaths</code></td><td>Paths masked inside the sandbox with empty dirs/files so the bot cannot read them, e.g. <code>[&quot;~/.ssh&quot;, &quot;~/.botmux/bots.json&quot;]</code></td></tr><tr><td><code>sandboxReadonlyPaths</code></td><td>Extra existing paths mounted read-only inside the sandbox, useful for shared source snapshots, reference repos, or generated docs the bot should inspect but not modify</td></tr><tr><td><code>sandboxNetwork</code></td><td>Network policy for sandboxed sessions. Omitted / <code>true</code> keeps current network and proxy access; <code>false</code> adds <code>--unshare-net</code> and blocks normal network egress</td></tr></tbody></table></div>
+<h2 class="rp-toc-include" id="cards-and-terminal"><a href="#cards-and-terminal" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Cards and terminal</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody><tr><td><code>brandLabel</code></td><td>Branding text at the bottom of the card. <code>undefined</code> = default <code>botmux</code> link; <code>&quot;&quot;</code> = hidden; any other string = rendered as-is (supports markdown). Purely cosmetic, does not affect routing / permissions</td></tr><tr><td><code>disableStreamingCard</code></td><td>When <code>true</code>, no real-time streaming session card is sent at all (the Web Terminal still runs and the final reply still arrives via <code>botmux send</code>, there&#x27;s just no auto-refreshing status card). For users who find the real-time card noisy</td></tr><tr><td><code>silentTurnReactions</code></td><td>When <code>true</code>, card-off sessions no longer add GoGoGo / DONE reactions to the triggering message. Only affects the lightweight status reactions used when <code>disableStreamingCard</code> or <code>noCardChats</code> suppresses live cards; defaults to <code>false</code></td></tr><tr><td><code>receivedReactionEmoji</code></td><td>Feishu emoji_type for the &quot;received&quot; reaction in card-off sessions; <code>undefined</code> = default <code>GoGoGo</code> (冲!). Free-form string; a bad value just silently fails to attach (best-effort)</td></tr><tr><td><code>doneReactionEmoji</code></td><td>Feishu emoji_type for the &quot;done&quot; reaction in card-off sessions; <code>undefined</code> = default <code>DONE</code> (✅). Set it equal to <code>receivedReactionEmoji</code> to keep the marker unchanged on turn-end — handy for CLIs whose idle detection can fire early (e.g. Pi), avoiding a premature, misleading ✅</td></tr><tr><td><code>writableTerminalLinkInCard</code></td><td>When <code>true</code>, the card body directly embeds a <strong>writable</strong> terminal link (with token, anyone who can see the card can operate it); by default it&#x27;s hidden behind a &quot;Get write permission&quot; button and sent privately to whoever clicks. Meaningless when <code>disableStreamingCard</code> is enabled</td></tr><tr><td><code>privateCard</code></td><td>When <code>true</code>, <code>/card</code> uses an ephemeral private card visible only to <code>allowedUsers</code> (talk grantees and the bare triggerer don&#x27;t receive it), only effective in plain <code>group</code> chats, and cannot live-update. Only affects the <code>/card</code> command itself</td></tr></tbody></table></div>
+<h2 class="rp-toc-include" id="proactive-start"><a href="#proactive-start" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Proactive start</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody><tr><td><code>autoStartOnGroupJoin</code></td><td>When <code>true</code>, the bot starts working automatically when added to a new group containing at least one <code>allowedUsers</code> member (no @ needed). Requires subscribing the <code>im.chat.member.bot.added_v1</code> event for this app in the Lark admin console</td></tr><tr><td><code>autoStartOnGroupJoinPrompt</code></td><td>Paired with the above: the first-round prompt for proactive start; if empty / blank, opens with an empty message and lets the bot read the group context itself. Meaningless when <code>autoStartOnGroupJoin</code> is off</td></tr><tr><td><code>autoStartOnNewTopic</code></td><td>When <code>true</code>, the first message of every new topic in a topic group starts working automatically without an @ (no effect in plain groups). Defaults to passive (only @ triggers)</td></tr></tbody></table></div>
+<h2 class="rp-toc-include" id="summary-command"><a href="#summary-command" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Summary command</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody><tr><td><code>summaryRange</code></td><td>History range used by the explicit <code>@bot /summary</code> command. <code>limit</code> is the latest N messages in a regular group, defaulting to 50; <code>sinceHours</code> is the latest N hours in a regular group, defaulting to 24. Set either field to <code>0</code> to remove that limit. Topic groups always read the current topic/thread history, then apply the summary window</td></tr></tbody></table></div>
+<p>Example:</p>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;summaryRange&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;limit&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 50</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;sinceHours&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 24</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<ul>
+<li>Only the explicit <code>@bot /summary</code> command triggers a summary. Messages that do not mention the bot still follow the existing group/topic routing rules and are not woken up by keywords.</li>
+<li>The dashboard &quot;/summary Range&quot; controls this <code>summaryRange</code> field.</li>
+<li>If an earlier <code>@same bot /summary</code> exists before the current trigger, the summary window includes only messages after that earlier command and up to the current trigger; otherwise botmux falls back to <code>limit</code> / <code>sinceHours</code>.</li>
+<li><code>limit</code> and <code>sinceHours</code> are also safety caps. If both are <code>0</code>, that dimension is not limited.</li>
+</ul>
+<h2 class="rp-toc-include" id="legacy-content-trigger-config"><a href="#legacy-content-trigger-config" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Legacy content trigger config</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody><tr><td><code>contentTriggers</code></td><td><strong>Legacy / no longer active.</strong> Older builds used this field for keyword / regex triggers without an @mention, but current message routing no longer wakes a bot from <code>contentTriggers</code>. The parser keeps this field only for <code>bots.json</code> compatibility: if an old dashboard-managed trigger named <code>dashboard-default-summary-trigger</code> exists, botmux may read its <code>limit</code> / <code>sinceHours</code> as a fallback for <code>summaryRange</code>. New configs should use <code>summaryRange</code></td></tr></tbody></table></div>
+<h2 class="rp-toc-include" id="voice"><a href="#voice" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Voice</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody><tr><td><code>voice</code></td><td>The bot&#x27;s voice-engine override, merged field-by-field on top of the global <code>voice</code> block in <code>~/.botmux/config.json</code> (per-bot takes precedence). When valid voice credentials are present, a &quot;🔊 Voice summary&quot; button appears on reply cards. See <a href="/botmux/en/voice.html" class="rp-link">Voice summary</a></td></tr></tbody></table></div>
+<h2 class="rp-toc-include" id="runtime-state-auto-maintained-do-not-edit"><a href="#runtime-state-auto-maintained-do-not-edit" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Runtime state (auto-maintained, do not edit)</h2>
+<p>The following fields are written by botmux itself and persisted into <code>bots.json</code> alongside authorizations / switches. They are listed only for reference — <strong>do not edit them by hand</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody><tr><td><code>defaultOncallAutoboundChats</code></td><td>The chat_ids that <code>defaultOncall</code> has already auto-bound (append-only). Once recorded, it won&#x27;t auto-bind again even if later unbound</td></tr><tr><td><code>quotaState</code></td><td>Scope-level message-quota counters <code>{ &quot;chat:&lt;cid&gt;:&lt;oid&gt;&quot; | &quot;global:&lt;oid&gt;&quot;: { limit, used } }</code>; when exhausted, automatically revokes the corresponding scope&#x27;s authorization</td></tr><tr><td><code>noCardChats</code></td><td>The &quot;don&#x27;t send streaming cards in this group&quot; list written by <code>/card off|on</code></td></tr></tbody></table></div>
+<blockquote>
+<p><strong>Configuration precedence</strong>: the <code>BOTS_CONFIG</code> environment variable → <code>~/.botmux/bots.json</code>. Run <code>botmux restart</code> after editing to take effect.</p>
+</blockquote><!--/$--></div><footer class="rp-doc-footer"><div class="rp-doc-footer__edit"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/en/bots-json.md" target="_blank" rel="noopener noreferrer" class="rp-edit-link rp-link">Edit this page</a><div class="rp-last-updated"><p>Last Updated<!-- -->: <span>7/5/2026, 10:13:38 PM</span></p></div></div><div class="rp-doc-footer__divider"></div><div class="rp-prev-next-page"><a href="/botmux/en/cli-commands.html" class="rp-prev-next-page__item rp-prev-next-page__prev rp-link"><span class="rp-prev-next-page__item__desc">Previous page</span><span class="rp-prev-next-page__item__title"><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon rp-prev-next-page__rotate_180"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg><span>CLI Commands</span></span></a><a href="/botmux/en/env.html" class="rp-prev-next-page__item rp-prev-next-page__next rp-link"><span class="rp-prev-next-page__item__desc">Next page</span><span class="rp-prev-next-page__item__title"><span>Environment &amp; File Locations</span><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></span></a></div></footer></main></div><aside class="rp-doc-layout__outline rp-scrollbar"><div class="rp-outline"><div class="rp-outline__title">ON THIS PAGE<svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg></div><nav class="rp-outline__toc rp-scrollbar"><a href="#required" class="rp-toc-item rp-link" title="Required" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Required</span></a><a href="#cli-and-model" class="rp-toc-item rp-link" title="CLI and model" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">CLI and model</span></a><a href="#run-a-bot-on-glm--a-third-party-provider-per-bot-env" class="rp-toc-item rp-link" title="Run a bot on GLM / a third-party provider (per-bot env)" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Run a bot on GLM / a third-party provider (per-bot env)</span></a><a href="#working-directory" class="rp-toc-item rp-link" title="Working directory" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Working directory</span></a><a href="#permissions-and-authorization" class="rp-toc-item rp-link" title="Permissions and authorization" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Permissions and authorization</span></a><a href="#file-sandbox" class="rp-toc-item rp-link" title="File sandbox" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">File sandbox</span></a><a href="#cards-and-terminal" class="rp-toc-item rp-link" title="Cards and terminal" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Cards and terminal</span></a><a href="#proactive-start" class="rp-toc-item rp-link" title="Proactive start" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Proactive start</span></a><a href="#summary-command" class="rp-toc-item rp-link" title="Summary command" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Summary command</span></a><a href="#legacy-content-trigger-config" class="rp-toc-item rp-link" title="Legacy content trigger config" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Legacy content trigger config</span></a><a href="#voice" class="rp-toc-item rp-link" title="Voice" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Voice</span></a><a href="#runtime-state-auto-maintained-do-not-edit" class="rp-toc-item rp-link" title="Runtime state (auto-maintained, do not edit)" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Runtime state (auto-maintained, do not edit)</span></a></nav><div class="rp-outline__divider"></div><div class="rp-outline__bottom"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/en/bots-json.md" target="_blank" rel="noopener noreferrer" class="rp-outline__action-row rp-edit-link rp-link"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"></path></svg><span>Edit this page</span></a></div></div></aside></div></div>
+    <div id="__rspress_modal_container"></div>
+  </body>
+</html>
