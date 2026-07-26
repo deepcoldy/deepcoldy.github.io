@@ -47,26 +47,43 @@ url: /botmux/en/adapters.md
 
 # Multi-CLI Adapters
 
-botmux bridges different CLIs through adapters, selected via `cliId` in `bots.json`. One-click switching, process isolation.
+botmux bridges different CLIs / agents through adapters, selected via `cliId` in `bots.json` — one-click switching. **Local adapters each run as their own process** (under the default tmux backend you can `tmux attach` into the real process; explicit pty/zellij/herdr backends differ); a few are integrated over API / remotely (e.g. Mira, riff) and are not local processes.
 
-## Supported CLIs
+**Applies to**: when you want to switch the underlying CLI, or wire up a new tool, and need its `cliId` and whether it takes a `model` param.
+**Doesn't apply**: wrappers / gateways (ccr, aiden x claude, …) don't need a new adapter — see [Wrapper / gateway integration](#wrapper--gateway-integration) below.
 
-| `cliId` | CLI | Supports model param |
-|---------|-----|:--:|
-| `claude-code` | Claude Code (default) | ✅ |
-| `codex` | Codex | ✅ |
-| `codex-app` | Codex App | |
-| `cursor` | Cursor (cursor-agent) | ✅ |
-| `gemini` | Gemini | ✅ |
-| `opencode` | OpenCode | ✅ |
-| `coco` | CoCo / Trae (requires ≥ 0.120.32) | ✅ |
-| `aiden` | Aiden | |
-| `antigravity` | Antigravity (agy) | |
-| `hermes` | Hermes | |
-| `copilot` | GitHub Copilot (copilot) | ✅ |
-| `kiro-cli` | Kiro (kiro-cli) | |
+## Supported CLIs / Agents
 
-> There are also community-contributed integrations such as MTR, ttadk, and Mira. The `model` field only takes effect for adapters that support a model parameter; others ignore it.
+The table lists the current built-in adapters (the **authoritative source** for `cliId`s is [`src/adapters/cli/registry.ts`](https://github.com/deepcoldy/botmux/blob/master/src/adapters/cli/registry.ts), which changes across versions):
+
+| `cliId` | CLI / Agent | Integration | `model` |
+|---------|-----|-----|:--:|
+| `claude-code` | Claude Code (default) | local process | ✅ |
+| `codex` | Codex CLI | local process | ✅ |
+| `codex-app` | Codex App | local process (app-server protocol) | |
+| `gemini` | Gemini | local process | ✅ |
+| `cursor` | Cursor (cursor-agent) | local process | ✅ |
+| `opencode` | OpenCode | local process | ✅ |
+| `antigravity` | Antigravity (agy) | local process | |
+| `copilot` | GitHub Copilot | local process | ✅ |
+| `grok` | Grok (grok-cli) | local process | ✅ |
+| `kimi` | Kimi Code | local process | ✅ |
+| `kiro-cli` | Kiro | local process | |
+| `pi` | Pi | local process | |
+| `oh-my-pi` | Oh-My-Pi (Pi fork) | local process | ✅ |
+| `aiden` | Aiden | local process | |
+| `coco` | CoCo / Trae (requires ≥ 0.120.32) | local process | ✅ |
+| `traex` | TRAE CLI (traex) | local process | ✅ |
+| `mtr` | MTR | local process | |
+| `hermes` | Hermes | local process | |
+| `genius` | Genius | local process | ✅ |
+| `seed` | Seed (Claude Code fork) | local process | ✅ |
+| `relay` | Relay (new release of Seed) | local process | ✅ |
+| `mira` | Mira APP | API / remote | |
+| `mir` | Mir CLI (local mircli + MCP bridge) | local process | |
+| `riff` | riff | cloud agent (API) | |
+
+> The `model` field only takes effect for adapters that support a model parameter; others ignore it. Mir CLI's extra prerequisites (login / miramcp) are in the section below.
 
 ## Mir CLI and MCP Bridge
 
@@ -102,7 +119,7 @@ or disable it only for BotMux:
 MIRCLI_AUTO_START_MIRAMCP=0 botmux start
 ```
 
-## Wrapping a wrapper / gateway integration
+## Wrapper / gateway integration
 
 In many cases you don't run the native CLI directly but wrap it with a gateway / router (internal proxy + SSO, model routing, etc.), such as `ccr`, `ttadk`, `aiden x claude`, `aiden x codex`. In this case you **don't need a new adapter**: `cliId` still holds the real underlying CLI (`claude-code` / `codex` …), and you only swap the launch entry point for a **wrapper script**, pointing to it with `cliPathOverride` (the "CLI executable path override" when editing a bot in `botmux setup` is exactly this).
 
@@ -606,6 +623,8 @@ url: /botmux/en/bots-json.md
 
 Configure bots via `~/.botmux/bots.json`. Run `botmux setup` to create it interactively, or edit it by hand. The file is an array; each element is a bot (in production, one bot maps to one dedicated daemon process).
 
+> **Most fields are optional** — just `larkAppId` / `larkAppSecret` is enough to run; add the rest as needed. **Applies to**: manually tuning CLI / model / working dir / permissions / sandbox, etc.; for everyday config the dashboard's Bot Config page is preferred (it edits the same `bots.json`). Run `botmux restart` to apply changes.
+
 ```json
 [
   {
@@ -650,7 +669,7 @@ There are many fields, listed below grouped by purpose. The vast majority are **
 | `model` | Model name used to launch the CLI (e.g. `claude --model opus`); leave empty to use the CLI default. Multiple bots with the same `cliId` can run different models. Each adapter's `modelChoices` are the candidates offered in `botmux setup` |
 | `cliPathOverride` | Absolute path to the CLI entry point, for wrapping a wrapper / router (ccr, claude-w, aiden-x-claude, etc.) |
 | `disableCliBypass` | When `true`, the CLI's auto-approve / sandbox-bypass flags (`--yolo`, `--dangerously-*`) are not appended automatically; omitted / `false` keeps the original behavior |
-| `backendType` | Session backend, one of `pty` / `tmux` / `herdr` / `zellij`. Leave empty to **auto-detect**: chooses `tmux` if tmux is available, otherwise `pty` (`herdr` and `zellij` are never auto-selected and must be specified explicitly). `tmux` / `herdr` / `zellij` are all persistent sessions and fall back to `pty` automatically if the corresponding binary probe fails (`zellij` requires ≥ 0.44); `pty` attaches directly to the process and does not persist across restarts. See [tmux backend](/botmux/en/tmux.md) |
+| `backendType` | Session backend, one of `pty` / `tmux` / `herdr` / `zellij`. **Leave empty to default to `tmux`** (PTY auto-fallback is retired): when a persistent backend (tmux/herdr/zellij) isn't available on this host it **hard-gates** and posts a card asking you to install it — it does **not** silently downgrade to pty (`zellij` requires ≥ 0.44). `pty` is an explicit fallback only (`backendType:"pty"` or `BACKEND_TYPE=pty`) — attaches directly to the process and **does not survive daemon restarts**. See [tmux backend](/botmux/en/tmux.md) |
 | `launchShell` | Shell used to launch the CLI, overriding the daemon's `$SHELL`: a shell name (`zsh` / `bash` / `sh`) or an absolute path (e.g. `/usr/bin/zsh`). For when the login `$SHELL` (e.g. bash) has an rcfile that `exec`-trampolines into another shell (`exec zsh`), pre-empting the CLI under botmux's `bash -i` launch so the session never starts (bare-shell `parse error`) — pinning it launches under that shell directly, bypassing the skipped rcfile. **Note**: PATH / nvm / pnpm must then live in the chosen shell's rcfiles (e.g. `.zshrc` / `.zprofile`). Empty = use `$SHELL`. Takes effect next session; `tmux` / `zellij` backends only (`pty` execs the CLI directly and is unaffected). Also configurable in the dashboard ("Bot defaults → Launch shell") or via `/config launchShell <value>` |
 | `lang` | The bot's UI language, `zh` / `en`; leave empty to fall back to the `BOTMUX_LANG` / `LANG` environment variable |
 | `customPassthroughCommands` | On top of the fixed passthrough allowlist and the current CLI adapter's default-allowed commands, additionally pass through slash commands to the underlying CLI, e.g. `["/export"]` (Claude Code / Codex default-allow `/goal`). Auto-normalized (a missing `/` is added, lowercased, only `[a-z0-9:_-]` kept, deduplicated); entries that would shadow a botmux daemon command (e.g. `/status`) are dropped and have no effect even if configured. Use `/list-slash-command` to view the full allowlist. See [Slash commands](/botmux/en/slash-commands.md) |
@@ -1048,6 +1067,10 @@ url: /botmux/en/env.md
 
 # Environment Variables and File Locations
 
+Most configuration goes through `bots.json` / the dashboard — you **usually don't need env vars**. Only a few machine-level switches (bind address / port / backend type / external host) live in `~/.botmux/.env`. This page also lists botmux's key file locations for backup / troubleshooting.
+
+**Applies to**: the dashboard / web terminal won't open or you need to change the bind address, pin a port, switch the pty/tmux backend, or find where config / logs / credentials live.
+
 ## Environment variables (set in `~/.botmux/.env`)
 
 | Variable | Default | Description |
@@ -1057,7 +1080,7 @@ url: /botmux/en/env.md
 | `WEB_EXTERNAL_HOST` | *(auto-detect LAN IP)* | External hostname/IP used in terminal links (for public/intranet-domain access, see [Web Terminal](/botmux/en/web-terminal.md)) |
 | `WEB_EXTERNAL_PORT` | *(local proxy port)* | External port used in terminal links, overriding the local proxy port (`8800 + botIndex`) so a relay host can listen on a different port number; in a multi-bot setup it's the base port, with the actual port being `WEB_EXTERNAL_PORT + botIndex` (see [Web Terminal](/botmux/en/web-terminal.md)) |
 | `SESSION_DATA_DIR` | `~/.botmux/data` | Session and queue storage directory |
-| `BACKEND_TYPE` | *(auto-detect)* | `pty` forces a downgrade to pure pty mode |
+| `BACKEND_TYPE` | *(default tmux)* | Explicitly set `pty` to fall back to a pure pty backend (the default is always tmux — no auto-fallback to pty; an unavailable tmux hard-gates with a card). pty doesn't survive daemon restarts |
 | `BOTMUX_FORWARD_FOLLOWUP_WAIT_MS` | `1500` | Milliseconds to hold a new topic for a root-linked clarification from the same user in the same chat; `0` disables it, maximum `10000` |
 | `DEBUG` | *(unset)* | Set to `1` to enable debug logging |
 | `GITHUB_TOKEN` | *(unset)* | Auth token for GitHub Releases API requests made by botmux itself, including dashboard changelog, update checks, and restart-report. Takes precedence over `GH_TOKEN`. |
@@ -1098,19 +1121,43 @@ url: /botmux/en/faq.md
 
 > Compiled from the README and high-frequency questions in the community group, and continuously expanded. For more pitfalls, see [Common Pitfalls](/botmux/en/pitfalls.md).
 
-## The bot receives no messages at all — what do I do?
+## Troubleshooting "the bot doesn't reply" (the #1 question)
+
+Match your **symptom** first — the root cause differs:
+
+| Symptom | Likely cause | Jump |
+|------|-----------|------|
+| **No reaction at all** (not even an emoji) | Event subscription / release / long connection not working | [A. No messages received at all](#a-no-messages-received-at-all) |
+| Only **I (owner)** can trigger it; others get an auth card / no reply | Only operate permission granted, no talk permission | [B. Others can't use it / auth card](#b-others-cant-use-it--auth-card) |
+| Must **@ it** to get a reply / want auto-reply without @ | Group @ policy | [B. Others can't use it / auth card](#b-others-cant-use-it--auth-card) |
+| Shows 🟡 "working" but **the result never comes back** (terminal has output) | Terminal CLI session: model didn't call `botmux send` (`codex-app` auto-forwards — it's the exception) | [C. Terminal has output but nothing sent to Lark](#c-terminal-has-output-but-nothing-sent-to-lark) |
+| Session **won't start** / first message errors `zsh: parse error` | Login shell startup file jumps shells | [Session won't start](#sessions-never-start--the-first-message-errors-with-zsh-parse-error-near-n) |
+
+### A. No messages received at all
 
 Check these in order (PersonalAgent comes configured correctly by default; normally you don't need to touch it):
 
-1. **Event subscription**: Open Platform → Events & Callbacks → you should subscribe to `im.message.receive_v1` + `card.action.trigger`, with the delivery method set to "Long connection (WebSocket)", and the daemon must be running.
+1. **Event subscription**: Open Platform → Events & Callbacks → subscribe to `im.message.receive_v1` + `card.action.trigger`, with delivery method "Long connection (WebSocket)", and the daemon must be running.
 2. **Bot capability**: Open Platform → App Features → Bot should already be enabled.
-3. **Release**: The app must have a version created and published (availability "visible only to myself" passes automatically).
-4. **Exclusive long connection**: Confirm this bot isn't having its long connection grabbed by another app at the same time.
+3. **Release**: the app must have a version created and published (availability "visible only to myself" passes automatically). After changing permissions / events you **must re-publish** for them to take effect.
+4. **Exclusive long connection**: confirm this bot isn't having its long connection grabbed by another app.
 5. After confirming, run `botmux restart` (from a clean shell).
 
-## The bot has output in the terminal, but nothing was sent to Lark?
+> To have an agent triage it, see [Common Pitfalls · General troubleshooting approach](/botmux/en/pitfalls.md#general-troubleshooting-approach) (`botmux logs` to find the spawn command and reproduce locally + the web terminal for the real error).
 
-Terminal stdout ≠ sent to Lark. You must explicitly run `botmux send` (with one of `--mention-back` / `--mention` / `--no-mention`) for the group to see it. If the model only `echo`s/`print`s or forgets to call `botmux send`, nothing goes out. Use a heredoc for multi-line content; don't write it as `"line one\nline two"`.
+### B. Others can't use it / auth card
+
+botmux has two permission layers (see [permissions](#how-are-permissions-divided-who-can-operate-it)): **talk permission** (who can ask) and **operate permission** (who can `/cd` `/restart` / tap buttons). By default only the owner has talk permission, so others get refused / see an auth card.
+
+* **Let a whole group use it**: give the bot `allowedChatGroups` (everyone in that group can talk), or authorize a specific group with `/grant`.
+* **Group @ policy** (must-@ vs no-@): multi-person groups require @ by default; no-@-in-topic / no-@-whole-group can be configured in the group @ policy. Note a 1-on-1 "you + 1 bot" group is @-free already.
+* **On-call scenario** (a new group per ticket, everyone asks @-free): see [On-Call Mode](/botmux/en/oncall.md).
+
+### C. Terminal has output but nothing sent to Lark
+
+**This applies only to terminal CLI sessions that require explicit sending** (Claude Code / Codex CLI / Gemini / CoCo, etc.): terminal stdout ≠ sent to Lark, so the model must explicitly run `botmux send` (with one of `--mention-back` / `--mention` / `--no-mention`) for the group to see it. Just `echo`ing/`print`ing or forgetting `botmux send` means nothing goes out. Use a heredoc for multi-line content; don't write it as `"line one\nline two"`.
+
+> ⚠️ **Exception: `codex-app` (Codex App app-server protocol)** — its final assistant message is **auto-forwarded** back to Lark by botmux, so **don't call `botmux send` for normal replies** (that would double-send); use it only for mid-turn pushes / attachments / cross-bot @mentions.
 
 ## `botmux history` reports 400 / Lark gateway 411?
 
@@ -1147,7 +1194,7 @@ Use `botmux bots list` or the `<available_bots>` block to find the target bot's 
 
 ## Does restarting the daemon lose context?
 
-With **tmux** installed, no — the CLI process stays resident in a tmux session, and after `botmux restart` the next message automatically re-attaches, with no need for `--resume`. Without tmux, it runs in pty mode, and a restart reloads everything.
+With **tmux** installed, no — tmux is the default backend, the CLI process stays resident in a tmux session, and after `botmux restart` the next message automatically re-attaches, with no need for `--resume`. ⚠️ Without tmux it does **not** silently downgrade to pty; it hard-gates and posts a card asking you to install tmux. Only an explicit `BACKEND_TYPE=pty` (or per-bot `backendType:"pty"`) uses pty, and pty sessions **do not survive daemon restarts** — a restart reloads everything.
 
 ## Does a session keep running if I don't close it? Is there automatic reclamation?
 
@@ -1630,7 +1677,7 @@ url: /botmux/en/pitfalls.md
 
 # Common Pitfalls and How to Avoid Them
 
-> High-frequency, battle-tested pitfalls from the community group, sorted by how often they occur and their impact.
+> High-frequency, battle-tested pitfalls from the community group, sorted by how often they occur and their impact. **When something misbehaves after install / upgrade, scan here first** — most are known pitfalls, not new problems; for pure triage steps see [General troubleshooting approach](#general-troubleshooting-approach) at the end.
 
 ## Bot permissions / app creation (most common)
 
@@ -1696,16 +1743,30 @@ url: /botmux/en/prerequisites.md
 
 # Prerequisites
 
+Before installing botmux, make sure these are in place — **many "installed but won't connect / sessions won't start" issues trace back to a missing prerequisite here** (Node version, CLI not logged in, not on PATH).
+
+**Applies to**: any machine that will run the botmux daemon (dev machine / devbox / server).
+**Doesn't apply**: if you only @ a bot in a group someone else already set up — you don't need to install anything locally.
+
 ## Runtime environment
 
-* **Node.js ≥ 22**
-* **AI coding CLI / local agent app**: at least one installed and authenticated, with the executable on your `PATH`:
-  * `claude` (Claude Code), `codex`, `cursor-agent` (Cursor), `gemini`, `opencode`, `coco` (Trae / CoCo), `agy` (Antigravity), `hermes`, etc.
-* **tmux ≥ 3.x** (optional): once installed, session persistence is enabled automatically — restarting the daemon doesn't interrupt the CLI.
+* **Node.js ≥ 22** (`node -v` to check; below 22 causes native-module / syntax errors).
+* **AI coding CLI / local agent app**: at least one **installed and authenticated**, with the executable on your `PATH`:
+  * `claude` (Claude Code), `codex`, `cursor-agent` (Cursor), `gemini`, `opencode`, `coco` (Trae / CoCo), `agy` (Antigravity), `hermes`, etc. (full `cliId` list in [CLI Adapters](/botmux/en/adapters.md)).
+  * ⚠️ botmux is only a bridge — it doesn't manage login. **Run the CLI once in a terminal to confirm it can chat** before wiring it into botmux.
+* **tmux ≥ 3.x** (**the default backend — strongly recommended to install**): **in the default configuration** the session backend is tmux, so you need it to start sessions — when tmux isn't available botmux **no longer silently downgrades to pty**; it hard-gates the session and posts a card asking you to install tmux (see [tmux Session Persistence](/botmux/en/tmux.md)). To run a tmux-free environment, pick an explicit backend: `BACKEND_TYPE=pty` / per-bot `backendType` (`pty`/`herdr`/`zellij`) — pty doesn't survive daemon restarts; herdr/zellij need their own binaries. (riff is a cloud agent and doesn't occupy a local backend.)
 
 ## Recommended deployment
 
-We recommend deploying on an **always-on dev machine** (rather than a laptop), so the daemon stays online long-term, tmux sessions persist, and you can remote-control from your phone anytime. Pair it with `botmux autostart enable` for automatic recovery across restarts.
+Deploy on an **always-on dev machine / devbox** (rather than a laptop), so the daemon stays online long-term, tmux sessions persist, and you can remote-control from your phone anytime. Pair it with `botmux autostart enable` for automatic recovery across restarts.
+
+## Common failures
+
+* `node -v` < 22 → upgrade Node (install 22+ via nvm / fnm; make sure the botmux shell's startup file picks it up).
+* CLI not on PATH / not logged in → sessions won't start or the first message gets no response; get the CLI working manually first, then see [FAQ · session won't start](/botmux/en/faq.md).
+* CLI installed but botmux can't find it → PATH not effective in a non-interactive shell, see [Common Pitfalls](/botmux/en/pitfalls.md).
+
+**Next**: once the environment is ready, go to the [5-Minute Quickstart](/botmux/en/quickstart.md).
 
 
 
@@ -1715,7 +1776,9 @@ url: /botmux/en/quickstart.md
 
 # 5-minute quick setup
 
-> 💡 **TL;DR**: `npm i -g botmux` → `botmux setup` to scan a QR code and create the app, pick a CLI, fill in the working directory → `botmux start` → `botmux autostart enable` → add the bot to a group and start chatting.
+> 💡 **TL;DR**: `npm i -g botmux` → `botmux setup` (**a single Lark QR scan** creates the app + configures all permissions + publishes) → `botmux start` → `botmux autostart enable` → add the bot to a group and start chatting.
+
+**Before you start**: confirm the [Prerequisites](/botmux/en/prerequisites.md) (Node ≥ 22, target CLI installed and logged in) — a missing prerequisite here is the most common cause of "installed but won't connect."
 
 ## Step 1 · Install
 
@@ -1723,7 +1786,7 @@ url: /botmux/en/quickstart.md
 npm install -g botmux
 ```
 
-Requires **Node.js ≥ 22**, with at least one AI coding CLI already installed and signed in locally (`claude` / `codex` / `cursor-agent` / `gemini` / `opencode` / `coco` / `agy`, etc.). Installing **tmux** (≥3.x) is recommended — once installed, session persistence is enabled automatically.
+Requires **Node.js ≥ 22**, with at least one AI coding CLI already installed and signed in locally (`claude` / `codex` / `cursor-agent` / `gemini` / `opencode` / `coco` / `agy`, etc.). **The default session backend is tmux (≥3.x), so install it** — when it's unavailable botmux hard-gates with a card instead of silently downgrading to pty; only pick an explicit backend (`BACKEND_TYPE=pty` or per-bot `backendType`: `pty`/`herdr`/`zellij`) if you truly need a tmux-free environment (riff is a cloud agent and doesn't occupy a local backend).
 
 ## Step 2 · Configure (`botmux setup`)
 
@@ -2151,7 +2214,9 @@ url: /botmux/en/session-model.md
 
 # Session & Topic Model
 
-The key to understanding botmux is figuring out "which session a given message lands in."
+The key to understanding botmux is figuring out "which session a given message lands in" — **confusions like "why does every @ feel like a fresh start that lost my context" and "how does a new group pull in history" all trace back to this**.
+
+**Applies to**: when you're unsure which session a message went to, want to control new-vs-reused sessions, or are configuring in-group permissions.
 
 ## Three group shapes
 
@@ -2185,6 +2250,14 @@ Each reply creates a **new** streaming card; the previous card freezes at its fi
 | **Owner-only** | `/grant` / `/revoke` to authorize others | owner |
 
 This tiered model lets you confidently add the bot to an on-call group: everyone can ask, but only the owner can change session state, and an external member clicking by mistake won't mess up the session.
+
+## Common confusions
+
+* **"Every @ feels like starting over, losing context"**: in a **topic group**, different topics are different sessions — what feels like a follow-up actually opened a new topic = a new session. To keep going, reply **in the same topic**; to truly reuse one session, see below.
+* **A new group / topic can't pull in earlier chat**: a new session starts clean by default. To have it read group history, just say "look at the earlier chat history" (the bot needs group-message read permission, see [FAQ](/botmux/en/faq.md)).
+* **Switch the underlying CLI while keeping context**: not possible today — there's **no lossless hot-swap across CLIs**; native session history isn't translated into another CLI. To switch CLIs, start a new bot / session and have the old bot emit a handoff summary. ([`/relay`](/botmux/en/relay.md) moves the **same session** to another group without changing the CLI; [`/adopt`](/botmux/en/adopt.md) attaches an existing local tmux/zellij / resumable session into Lark, also without changing the CLI.)
+
+**Next**: permission details in [FAQ · permissions](/botmux/en/faq.md); moving a session to another group in [Relay](/botmux/en/relay.md).
 
 
 

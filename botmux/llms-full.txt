@@ -47,26 +47,43 @@ url: /botmux/adapters.md
 
 # 多 CLI 适配器
 
-botmux 通过适配器桥接不同 CLI，`bots.json` 里用 `cliId` 选择。一键切换，进程隔离。
+botmux 通过适配器桥接不同 CLI / Agent，`bots.json` 里用 `cliId` 选择，一键切换。**本地适配器各自运行进程**（默认 tmux 后端下可 `tmux attach` 进真进程；显式 pty/zellij/herdr 后端另说）；也有少数通过 API / 远端接入的 Agent（如 Mira、riff），不是本地进程。
 
-## 支持的 CLI
+**适用**：想换底层 CLI、或接一个新工具时查 `cliId` 和它是否吃 `model` 参数。
+**不适用**：套 wrapper / 网关（ccr、aiden x claude 等）不需要新适配器——见下方 [套 wrapper / 网关接入](#套-wrapper--网关接入)。
 
-| `cliId` | CLI | 支持 model 参数 |
-|---------|-----|:--:|
-| `claude-code` | Claude Code（默认） | ✅ |
-| `codex` | Codex | ✅ |
-| `codex-app` | Codex App | |
-| `cursor` | Cursor（cursor-agent） | ✅ |
-| `gemini` | Gemini | ✅ |
-| `opencode` | OpenCode | ✅ |
-| `coco` | CoCo / Trae（需 ≥ 0.120.32） | ✅ |
-| `aiden` | Aiden | |
-| `antigravity` | Antigravity（agy） | |
-| `hermes` | Hermes | |
-| `copilot` | GitHub Copilot（copilot） | ✅ |
-| `kiro-cli` | Kiro（kiro-cli） | |
+## 支持的 CLI / Agent
 
-> 还有社区贡献的 MTR、ttadk、Mira 等接入方式。`model` 字段只对支持模型参数的适配器生效，其它会忽略。
+下表为当前内置适配器（`cliId` 的**权威事实源**是 [`src/adapters/cli/registry.ts`](https://github.com/deepcoldy/botmux/blob/master/src/adapters/cli/registry.ts)，随版本增减）：
+
+| `cliId` | CLI / Agent | 接入方式 | 支持 `model` |
+|---------|-----|-----|:--:|
+| `claude-code` | Claude Code（默认） | 本地进程 | ✅ |
+| `codex` | Codex CLI | 本地进程 | ✅ |
+| `codex-app` | Codex App | 本地进程（app-server 协议） | |
+| `gemini` | Gemini | 本地进程 | ✅ |
+| `cursor` | Cursor（cursor-agent） | 本地进程 | ✅ |
+| `opencode` | OpenCode | 本地进程 | ✅ |
+| `antigravity` | Antigravity（agy） | 本地进程 | |
+| `copilot` | GitHub Copilot | 本地进程 | ✅ |
+| `grok` | Grok（grok-cli） | 本地进程 | ✅ |
+| `kimi` | Kimi Code | 本地进程 | ✅ |
+| `kiro-cli` | Kiro | 本地进程 | |
+| `pi` | Pi | 本地进程 | |
+| `oh-my-pi` | Oh-My-Pi（Pi fork） | 本地进程 | ✅ |
+| `aiden` | Aiden | 本地进程 | |
+| `coco` | CoCo / Trae（需 ≥ 0.120.32） | 本地进程 | ✅ |
+| `traex` | TRAE CLI（traex） | 本地进程 | ✅ |
+| `mtr` | MTR | 本地进程 | |
+| `hermes` | Hermes | 本地进程 | |
+| `genius` | Genius | 本地进程 | ✅ |
+| `seed` | Seed（Claude Code fork） | 本地进程 | ✅ |
+| `relay` | Relay（Seed 新版） | 本地进程 | ✅ |
+| `mira` | Mira APP | API / 远端 | |
+| `mir` | Mir CLI（本地 mircli + MCP bridge） | 本地进程 | |
+| `riff` | riff | 云 Agent（API） | |
+
+> `model` 字段只对支持模型参数的适配器生效，其它忽略。Mir CLI 的额外前置（登录 / miramcp）见下方专节。
 
 ## Mir CLI 与 MCP Bridge
 
@@ -604,6 +621,8 @@ url: /botmux/bots-json.md
 
 通过 `~/.botmux/bots.json` 配置机器人。运行 `botmux setup` 交互式创建，或手动编辑。文件是一个数组，每个元素是一个 bot（生产环境一个 bot 对应一个独立 daemon 进程）。
 
+> **多数字段可选**——只填 `larkAppId` / `larkAppSecret` 就能跑起来，其余按需增配。**适用**：想手动调 CLI / 模型 / 工作目录 / 权限 / 沙箱等；日常配置更推荐用 dashboard 的 Bot 配置页（改的是同一份 `bots.json`）。改完 `botmux restart` 生效。
+
 ```json
 [
   {
@@ -648,7 +667,7 @@ url: /botmux/bots-json.md
 | `model` | 启动 CLI 用的模型名（如 `claude --model opus`）；留空走 CLI 默认。同一 `cliId` 的多个 bot 可跑不同模型。各适配器的 `modelChoices` 是 `botmux setup` 里给出的候选 |
 | `cliPathOverride` | CLI 入口绝对路径，用于套 wrapper / router（ccr、claude-w、aiden-x-claude 等） |
 | `disableCliBypass` | `true` 时不自动追加 CLI 的免审批 / 沙箱绕过参数（`--yolo`、`--dangerously-*`）；缺省 / `false` 保持原行为 |
-| `backendType` | 会话后端，可选 `pty` / `tmux` / `herdr` / `zellij`。留空**自动检测**：tmux 可用选 `tmux`，否则 `pty`（`herdr`、`zellij` 不会被自动选中，需显式指定）。`tmux` / `herdr` / `zellij` 都是持久会话，对应二进制探测失败时自动回落 `pty`（`zellij` 需 ≥ 0.44）；`pty` 直连进程、不跨重启持久。见 [tmux 后端](/botmux/tmux.md) |
+| `backendType` | 会话后端，可选 `pty` / `tmux` / `herdr` / `zellij`。**留空默认 `tmux`**（PTY 已退役自动回落）：tmux/herdr/zellij 这类持久后端在本机不可用时**硬拦截**、弹卡提示安装，**不再静默降级 pty**（`zellij` 需 ≥ 0.44）。`pty` 仅作显式兜底（`backendType:"pty"` 或 `BACKEND_TYPE=pty`）——直连进程、**不跨 daemon 重启存活**。见 [tmux 后端](/botmux/tmux.md) |
 | `launchShell` | 启动 CLI 用的 shell，覆盖 daemon 的 `$SHELL`：填 shell 名（`zsh` / `bash` / `sh`）或绝对路径（如 `/usr/bin/zsh`）。用于登录 `$SHELL`（如 bash）的 rc 文件里有 `exec zsh` 之类跳转、在 botmux 的 `bash -i` 启动里把 CLI 顶掉、导致会话起不来（裸壳里 `parse error`）的场景——指定后直接用它启动、绕开被跳过的 rc。**注意**：PATH / nvm / pnpm 等要放进所选 shell 的 rc（如 `.zshrc` / `.zprofile`）。留空＝用 `$SHELL`。下个会话生效；仅 `tmux` / `zellij` 后端（`pty` 直接 exec CLI，本就不受影响）。也可在 dashboard「机器人默认设置 → 启动 Shell」或 `/config launchShell <值>` 配置 |
 | `lang` | 该 bot 的界面语言 `zh` / `en`；留空回落 `BOTMUX_LANG` / `LANG` 环境变量 |
 | `customPassthroughCommands` | 在固定透传白名单和当前 CLI adapter 默认放行命令之上，额外放行透传给底层 CLI 的 slash 命令，如 `["/export"]`（Claude Code / Codex 的 `/goal` 已默认放行）。自动归一化（缺失的 `/` 自动补、转小写、仅留 `[a-z0-9:_-]`、去重）；会遮蔽 botmux daemon 命令（如 `/status`）的项会被丢弃，配了也不生效。用 `/list-slash-command` 查看完整放行清单。见 [斜杠命令](/botmux/slash-commands.md) |
@@ -1048,6 +1067,10 @@ url: /botmux/env.md
 
 # 环境变量与文件位置
 
+绝大多数配置走 `bots.json` / dashboard，**不需要动环境变量**。只有少数机器级开关（绑定地址 / 端口 / 后端类型 / 外网地址）走 `~/.botmux/.env`。本页也列出 botmux 的关键文件位置，方便备份 / 排查。
+
+**适用**：dashboard / Web 终端打不开或要改绑定地址、要指定端口、要换 pty/tmux 后端、找配置 / 日志 / 凭证在哪。
+
 ## 环境变量（写在 `~/.botmux/.env`）
 
 | 变量 | 默认 | 说明 |
@@ -1057,7 +1080,7 @@ url: /botmux/env.md
 | `WEB_EXTERNAL_HOST` | *(自动探测局域网 IP)* | 终端链接中的外部主机名/IP（公网/内网域名访问见 [Web 终端](/botmux/web-terminal.md)） |
 | `WEB_EXTERNAL_PORT` | *(取本机代理端口)* | 终端链接中的外部端口，覆盖本机代理端口（`8800 + botIndex`），让中转主机可监听不同端口号；多 bot 时为基准端口，实际取 `WEB_EXTERNAL_PORT + botIndex`（见 [Web 终端](/botmux/web-terminal.md)） |
 | `SESSION_DATA_DIR` | `~/.botmux/data` | 会话和队列存储目录 |
-| `BACKEND_TYPE` | *(自动检测)* | `pty` 强制降级到纯 pty 模式 |
+| `BACKEND_TYPE` | *(默认 tmux)* | 显式设 `pty` 用纯 pty 后端兜底（默认始终 tmux，不再自动回落 pty；tmux 不可用会硬拦截弹卡）。pty 不跨 daemon 重启存活 |
 | `BOTMUX_FORWARD_FOLLOWUP_WAIT_MS` | `1500` | 话题群新消息等待补充说明的毫秒数；命中同用户、同群且 `root_id` 指向首条消息时合并，设为 `0` 关闭，最大 `10000` |
 | `DEBUG` | *(未设置)* | 设为 `1` 启用调试日志 |
 | `GITHUB_TOKEN` | *(未设置)* | GitHub Releases API 认证 token。用于 Dashboard changelog、更新检查、restart-report 等 botmux 自身发起的 GitHub 请求。优先级高于 `GH_TOKEN`。 |
@@ -1098,19 +1121,43 @@ url: /botmux/faq.md
 
 > 综合自 README 与社区交流群高频问题，持续补充中。更多坑见 [常见踩坑](/botmux/pitfalls.md)。
 
-## 机器人完全收不到消息怎么办？
+## 「机器人不回复」怎么排查？（最高频问题）
+
+先按**症状**对号入座，不同症状根因不同：
+
+| 症状 | 大概率根因 | 跳转 |
+|------|-----------|------|
+| 发消息**完全没反应**（连表情都没有） | 事件订阅 / 发版 / 长连接没通 | [A. 完全收不到消息](#a-完全收不到消息) |
+| 只有**我（owner）**能触发，别人 @ 弹授权卡 / 不回 | 只配了操作权、没配对话权 | [B. 别人不能用 / 弹授权卡](#b-别人不能用--弹授权卡) |
+| 群里**必须 @ 才回** / 想免 @ 自动回 | 群 @ 策略 | [B. 别人不能用 / 弹授权卡](#b-别人不能用--弹授权卡) |
+| 有 🟡「工作中」但**结果没发出来**（终端里有输出） | 终端 CLI 会话：模型没调 `botmux send`（`codex-app` 是自动转发、属例外） | [C. 终端有输出但没发飞书](#c-终端有输出但没发飞书) |
+| 会话**起不来** / 首条消息报 `zsh: parse error` | 登录 shell 启动文件跳转 | [会话起不来](#会话怎么都起不来--首条消息报-zsh-parse-error) |
+
+### A. 完全收不到消息
 
 按顺序自查（PersonalAgent 默认配好，正常不用动）：
 
 1. **事件订阅**：开放平台 → 事件与回调 → 应订阅 `im.message.receive_v1` + `card.action.trigger`，方式为「长连接 (WebSocket)」，且 daemon 已在跑。
 2. **机器人能力**：开放平台 → 应用功能 → 机器人 应已开通。
-3. **发版**：应用要创建并发布过版本（可用性「仅自己可见」自动通过）。
+3. **发版**：应用要创建并发布过版本（可用性「仅自己可见」自动通过）。改完权限 / 事件**必须重新发版**才生效。
 4. **长连接独占**：确认这个 Bot 没被别的应用同时抢长连接。
 5. 确认后 `botmux restart`（在干净 shell 里）。
 
-## 机器人在终端有输出，但没发到飞书？
+> 想让 agent 帮你自查，见 [常见踩坑 · 排查通用手法](/botmux/pitfalls.md#排查通用手法)（`botmux logs` 找 spawn 命令本地复现 + Web 终端看真实报错）。
 
-终端 stdout ≠ 已发飞书。必须显式执行 `botmux send`（并带 `--mention-back` / `--mention` / `--no-mention` 之一），群里才看得到。模型只 `echo`/`print` 或忘了调 `botmux send` 就不会发出。多行内容用 heredoc，别写成 `"第一行\n第二行"`。
+### B. 别人不能用 / 弹授权卡
+
+botmux 权限分两层（详见 [权限怎么分](#权限怎么分谁能操作)）：**对话权**（谁能问）和**操作权**（谁能 `/cd` `/restart` 点按钮）。默认只有 owner 有对话权，所以别人 @ 会被拒 / 弹授权卡。
+
+* **让整个群都能用**：给 bot 配 `allowedChatGroups`（该群全员可对话），或用 `/grant` 授权指定群。
+* **群 @ 策略**（必须 @ vs 免 @）：默认多人群必须 @；话题内免 @ / 全群免 @ 可在群 @ 策略里配。注意「1 个人 + 1 个 bot」的 1v1 群本来就免 @。
+* **oncall 场景**（每工单一个新群、全员免 @ 直接问）：见 [Oncall 模式](/botmux/oncall.md)。
+
+### C. 终端有输出但没发飞书
+
+**这条只针对需要显式发送的终端 CLI 会话**（Claude Code / Codex CLI / Gemini / CoCo 等）：终端 stdout ≠ 已发飞书，模型必须显式执行 `botmux send`（并带 `--mention-back` / `--mention` / `--no-mention` 之一），群里才看得到。只 `echo`/`print` 或忘调 `botmux send` 就不会发出。多行内容用 heredoc，别写成 `"第一行\n第二行"`。
+
+> ⚠️ **例外：`codex-app`（Codex App app-server 协议）**——它的最终 assistant message 由 botmux **自动转发**回飞书，**常规回复不要调 `botmux send`**（否则会重复发送），仅在中途主动推送 / 发附件 / 跨 bot @ 时才用。
 
 ## `botmux history` 报 400 / 飞书网关 411？
 
@@ -1147,7 +1194,7 @@ url: /botmux/faq.md
 
 ## daemon 重启会丢上下文吗？
 
-装了 **tmux** 就不会——CLI 进程常驻 tmux session，`botmux restart` 后下次消息自动 re-attach，无需 `--resume`。没装 tmux 则走 pty 模式，重启会重载。
+装了 **tmux** 就不会——tmux 是默认后端，CLI 进程常驻 tmux session，`botmux restart` 后下次消息自动 re-attach，无需 `--resume`。⚠️ 没装 tmux **不会自动降级 pty**，而是硬拦截弹卡让你装 tmux；只有显式 `BACKEND_TYPE=pty`（或 per-bot `backendType:"pty"`）才用 pty，且 pty 会话**不跨 daemon 重启存活**、重启会重载。
 
 ## 会话不关会一直跑吗？有自动回收吗？
 
@@ -1630,7 +1677,7 @@ url: /botmux/pitfalls.md
 
 # 常见踩坑与规避
 
-> 来自社区交流群的高频实战坑，按出现频率与影响排序。
+> 来自社区交流群的高频实战坑，按出现频率与影响排序。**遇到「装完 / 升级后行为异常」先扫这里**，多数是已知坑而非新问题；纯排查手法见文末 [排查通用手法](#排查通用手法)。
 
 ## 机器人权限 / 应用创建（最常见）
 
@@ -1696,16 +1743,30 @@ url: /botmux/prerequisites.md
 
 # 前置要求
 
+装 botmux 之前，先确认这几样齐了——**「装完连不上 / 会话起不来」很多都是这里缺件**（Node 版本、CLI 没登录、PATH 里找不到）。
+
+**适用**：任何要跑 botmux daemon 的机器（开发机 / devbox / 服务器）。
+**不适用**：你只是在别人已部署好的群里 @ 机器人用——那不需要本机装任何东西。
+
 ## 运行环境
 
-* **Node.js ≥ 22**
-* **AI 编程 CLI / 本地 Agent 应用**：至少一种已安装并完成认证，可执行文件在 `PATH` 中：
-  * `claude`（Claude Code）、`codex`、`cursor-agent`（Cursor）、`gemini`、`opencode`、`coco`（Trae / CoCo）、`agy`（Antigravity）、`hermes` 等
-* **tmux ≥ 3.x**（可选）：安装后自动启用会话常驻——daemon 重启不中断 CLI。
+* **Node.js ≥ 22**（`node -v` 确认；低于 22 会有原生模块 / 语法报错）。
+* **AI 编程 CLI / 本地 Agent 应用**：至少一种**已安装并完成认证**、可执行文件在 `PATH` 中：
+  * `claude`（Claude Code）、`codex`、`cursor-agent`（Cursor）、`gemini`、`opencode`、`coco`（Trae / CoCo）、`agy`（Antigravity）、`hermes` 等（完整 `cliId` 见 [多 CLI 适配器](/botmux/adapters.md)）。
+  * ⚠️ botmux 只是桥接层，不代管登录——**先在终端里手动跑一次该 CLI 确认能对话**，再接 botmux。
+* **tmux ≥ 3.x**（**默认后端，强烈建议装**）：**默认配置下**会话后端就是 tmux，装了才能起会话——tmux 不可用时 botmux **不再静默降级 pty**，而是硬拦截并弹卡提示装 tmux（见 [tmux 会话常驻](/botmux/tmux.md)）。要跑无 tmux 环境，可显式选别的后端：`BACKEND_TYPE=pty` / per-bot `backendType`（`pty`/`herdr`/`zellij`）——pty 不跨 daemon 重启存活；herdr/zellij 需各自二进制。（riff 是云 Agent，不占本地后端。）
 
 ## 推荐部署形态
 
-推荐部署在**常开的开发机**上（而非笔记本），这样 daemon 长期在线、tmux 会话常驻、随时手机遥控。配合 `botmux autostart enable` 实现重启自恢复。
+推荐部署在**常开的开发机 / devbox** 上（而非笔记本），这样 daemon 长期在线、tmux 会话常驻、随时手机遥控。配合 `botmux autostart enable` 实现重启自恢复。
+
+## 常见失败
+
+* `node -v` < 22 → 升级 Node（nvm / fnm 装 22+，注意让 botmux 所在 shell 的启动文件能读到）。
+* CLI 没在 PATH / 没登录 → 会话起不来或首条消息无响应；先手动跑通 CLI，再看 [FAQ · 会话起不来](/botmux/faq.md)。
+* 装了 CLI 但 botmux 找不到 → PATH 在非交互 shell 里没生效，见 [常见踩坑](/botmux/pitfalls.md)。
+
+**下一步**：环境齐了就去 [5 分钟快速接入](/botmux/quickstart.md)。
 
 
 
@@ -1715,7 +1776,9 @@ url: /botmux/quickstart.md
 
 # 5 分钟快速接入
 
-> 💡 **TL;DR**：`npm i -g botmux` → `botmux setup` 扫码建应用、选 CLI、填工作目录 → `botmux start` → `botmux autostart enable` → 拉机器人进群开聊。
+> 💡 **TL;DR**：`npm i -g botmux` → `botmux setup`（**一次飞书扫码**连续建应用 + 配全权限 + 发版）→ `botmux start` → `botmux autostart enable` → 拉机器人进群开聊。
+
+**开始前**：先确认 [前置要求](/botmux/prerequisites.md)（Node ≥ 22、目标 CLI 已装并登录）——这里缺件是「装完连不上」最常见的原因。
 
 ## Step 1 · 安装
 
@@ -1723,7 +1786,7 @@ url: /botmux/quickstart.md
 npm install -g botmux
 ```
 
-要求 **Node.js ≥ 22**，且本地已安装并登录好至少一种 AI 编程 CLI（`claude` / `codex` / `cursor-agent` / `gemini` / `opencode` / `coco` / `agy` 等）。推荐安装 **tmux**（≥3.x），装了就自动启用会话常驻。
+要求 **Node.js ≥ 22**，且本地已安装并登录好至少一种 AI 编程 CLI（`claude` / `codex` / `cursor-agent` / `gemini` / `opencode` / `coco` / `agy` 等）。**默认会话后端是 tmux（≥3.x），需装好**——不可用时会硬拦截弹卡、不再自动降级 pty；确需无 tmux 环境才用 `BACKEND_TYPE=pty` 或 per-bot `backendType`（`pty`/`herdr`/`zellij`）等显式后端（riff 是云 Agent，不占本地后端）。
 
 ## Step 2 · 配置（`botmux setup`）
 
@@ -2151,7 +2214,9 @@ url: /botmux/session-model.md
 
 # 会话与话题模型
 
-理解 botmux 的关键是搞清"一条消息落到哪个会话"。
+理解 botmux 的关键是搞清「一条消息落到哪个会话」——**「为什么每次 @ 都像新开、丢了上下文」「新群怎么拉到历史」这类困惑，根子都在这**。
+
+**适用**：搞不清消息去了哪个会话、想控制新开 vs 复用、或配群内权限时。
 
 ## 三种群形态
 
@@ -2185,6 +2250,14 @@ url: /botmux/session-model.md
 | **owner 专属** | `/grant` `/revoke` 授权他人 | owner |
 
 这套分层让你能放心把机器人拉进值班群：所有人能问，但只有 owner 能改会话状态，外部成员误点也不会把会话搞乱。
+
+## 常见困惑
+
+* **「每次 @ 都像重新开始、丢上下文」**：在**话题群**里，不同话题是不同会话——你以为在追问，其实开了新话题 = 新会话。想接着聊就在**同一条话题**里回复；确实要复用同一会话见下。
+* **新群 / 新话题拉不到之前的聊天**：新会话默认从干净状态起。要它读群历史，直接说「看下之前的聊天记录」（需机器人有群消息读取权限，见 [FAQ](/botmux/faq.md)）。
+* **想换底层 CLI 又保留上下文**：目前**做不到跨 CLI 无损热切**——原生会话历史不会翻译到另一种 CLI。要换 CLI 就开新 bot / 新 session，并让原 bot 输出一份 handoff 摘要交接。（[`/relay`](/botmux/relay.md) 是把**同一个会话**整体搬到另一个群、不换 CLI；[`/adopt`](/botmux/adopt.md) 是把本机已有 tmux/zellij / 可恢复会话接进飞书，也不换 CLI。）
+
+**下一步**：权限细节见 [FAQ · 权限怎么分](/botmux/faq.md)；把会话搬到别的群见 [会话接力](/botmux/relay.md)。
 
 
 
