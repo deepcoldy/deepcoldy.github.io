@@ -157,20 +157,35 @@ url: /botmux/adopt.md
 
 # 会话接入（Adopt）
 
-把**已经在本地 tmux 里跑着**的 CLI 进程无缝接入 botmux，在手机上通过飞书查看进度和交互。
+把**已经在本地 tmux 里跑着**的 CLI 进程无缝接入 botmux，在手机上通过飞书查看进度和交互。典型场景：公司电脑 tmux 里 Claude Code 写到一半要走，手机飞书发 `/adopt` 就能接着看、接着发。
 
 <video src="https://magic-builder.tos-cn-beijing.volces.com/uploads/1780421531476_adopt-video.aud.mp4" controls preload="metadata" style={{width:'100%',borderRadius:'8px'}} />
 
 ```
 /adopt              # 扫描本机 tmux，弹出选择卡片
-/adopt 0:2.0        # 直接接入指定 tmux pane
+/adopt 0:2.0        # 直接接入指定 tmux pane（session:window.pane）
 ```
 
-## 三种动作
+> 选择卡片只列**当前 bot 所绑 CLI** 的会话（Pi bot 不会列出 Codex/TRAE 的 pane），且排除 botmux 自己的 `bmx-*` 常驻会话。
 
-* **共享模式**：接入后，本地终端（如 iTerm2）和飞书双向同步——流式卡片实时显示终端输出，飞书聊天框输入直接透传到终端。本地的 tmux 全程保持连接。
-* **一键接管**：点流式卡片上的「🔄 接管」，botmux 以 `--resume` 重建会话，转为标准 botmux 会话。
-* **安全断开**：点「⏏ 断开」，botmux 退出观察，原 CLI 不受影响。
+## 它是「桥接」，不是接管
+
+adopt 采用**零打扰桥接**：botmux 只旁路观察 pane（`tmux pipe-pane` 读输出、`send-keys` 写输入），**从不 attach、不 zoom、不 group** 你本地的 tmux——你在 iTerm2 里的会话全程不受影响。
+
+* **共享模式**：接入后，本地终端（如 iTerm2）和飞书双向同步——流式卡片实时显示终端输出，飞书聊天框输入直接透传到终端。本地 tmux 全程保持连接、毫发无损。
+* **安全断开**：点流式卡片上的「⏏ 断开」（或发 `/close`），botmux 退出观察、清掉自己这侧的 worker，**绝不结束你的 CLI**——原进程继续在你本地 tmux 里跑。
+
+> ⚠️ 卡片上旧的「🔄 接管」按钮**已停用**：桥接模式下不再渲染，历史卡片点了也是空操作。以 `--resume` 完整重建为标准 botmux 会话的能力（`/adopt --takeover`）仍在路线图上、尚未上线。当前 adopt 始终是「共享桥接」这一种形态。
+
+## 边界与注意
+
+adopt 会话的生命周期在**你的机器上**，不归 botmux 管，因此有几条硬边界：
+
+* **不能接力（`/relay`）**：CLI 在你电脑里跑，botmux 控不了它的 tmux 生命周期，接力会被拒。要换群继续，用新会话 + 交接。
+* **不能 resume**：adopt 会话不支持 `--resume` 重建。
+* **CLI 退出即结束**：adopt 模式下 botmux **不做自动重启**——被接入的 CLI 自己退出后，会话随之结束（卡片冻结、worker 收掉），不会像常驻会话那样重开。
+* **沙盒 bot 不能 adopt**：沙盒要包住一个从头启动的 CLI，无法套在一个已在跑的进程上（fail-closed 拒绝）。
+* **daemon 重启后的恢复很谨慎**：重启时会先核对被接入的宿主 CLI 是否还活着——确认没了才关会话；探测结果不确定（瞬时失败）时保持会话关闭，**要等下一次 restore pass（例如再次重启 daemon）才重新验证**，不会在下一条消息到来时自动复验。
 
 ## 典型用法
 
@@ -867,13 +882,25 @@ url: /botmux/cards.md
 
 ![实时流式卡片](https://magic-builder.tos-cn-beijing.volces.com/uploads/1780419090587_img_v3_0212a_553ca347-4a93-491f-a2ef-30d00a374cdg.jpg)
 
-* **终端画面实时截图刷新到卡片**：xterm 无头渲染成图，**原样还原 CLI 的 TUI**（边框、配色、光标都在），不再把输出转成 Markdown。可一键「显示 / 隐藏输出」「导出文字」「上 / 下翻屏」。
-* **状态实时指示**：🟡 启动中 → 正在分析 → 🔵 工作中 / 执行中 → 🟢 等待输入；额度用满会标「限额已达 · 可重试」。
-* **卡片上直接操作**：打开（可写）终端、🔑 取操作链接、重启 / 关闭 / 接管会话、重发上一条任务。
-* **每轮一张新卡片**：上一轮卡片冻结存档，对话历史清晰可回溯；会话用 [`/relay`](/botmux/relay.md) 搬到别的群后，原卡片也会自动冻结为存档。
-* **关闭时给「可恢复」卡片**：附上 CLI 原生 resume 命令，随时点回来继续。
+* **终端画面实时截图刷新到卡片**：xterm 无头渲染成图，**原样还原 CLI 的 TUI**（边框、配色都在），不再把输出转成 Markdown。可一键「显示 / 隐藏输出」「导出文字」「上 / 下半屏」。
+* **状态实时指示**：卡片头部颜色即状态（飞书卡片 template，不是正文里的 emoji 圆点）——**启动中…**（黄）→ **工作中**（蓝）→ **等待输入**（绿）；额度用满标 **限额已达**（红），可重试时变 **可重试**（绿）。
+* **卡片上直接操作**：打开 Web 终端、🔑 获取操作链接、关闭会话，额度可重试时还有「🔁 重发上一条任务」。
+* **每轮一张新卡片**：上一轮卡片冻结存档，对话历史清晰可回溯；会话用 [`/relay`](/botmux/relay.md) 搬到别的群后，原卡片也会自动冻结为存档（移除按钮）。
+* **关闭时给「可恢复」卡片**：带「▶️ 恢复会话」按钮随时点回来继续；**该 CLI 若支持原生 resume**（adapter 实现了 `buildResumeCommand` 且有原生 session id），还会附上原生命令（如 `claude --resume <id>`）方便手动恢复；不支持时只给 botmux 的恢复按钮 + 一句提示。
 
-> 卡片正文是终端画面的**实时截图（图片）**，不是文本渲染。CLI 主动发的消息（通过 `botmux send`）则是独立的富文本 / 图文消息，可带图片、文件、@mention；需要完全自定义展示时也可以用 `--card-file` / `--card-json` 发送原始 interactive 卡片 JSON（纯展示 + open\_url 跳转，会触发回调的交互控件——回调按钮/下拉/输入/表单等——都会被拒绝）。
+> **打开终端 = 只读**：卡片主按钮「🖥️ 打开 Web 终端」是只读查看；要**可写操作**点「🔑 获取操作链接」——**私密投递**：普通平铺群优先发一张群内「仅你可见」的 ephemeral 卡（不用离开会话），话题/线程或私聊、以及 ephemeral 失败时才走私聊 DM。「🔄 重启」「接管配置」等管理按钮在**会话卡**上，不在每轮的流式卡上。
+
+## 打断 / 纠偏正在跑的一轮
+
+想中途叫停或纠偏，**别等它跑完**：截图模式下卡片底部带一排快捷键——**Esc、^C、Tab、Space、Enter、方向键、⇞ 上半屏 / ⇟ 下半屏**。点 `Esc` 会把 ESC 字节直接写进那个活着的终端（等同你在本地按 Esc），`^C` 同理。打断后再补一句新指令即可。
+
+> 这排快捷键只在\*\*显示输出（截图模式）\*\*且非 `riff` 后端时出现——先「显示输出」才点得到 Esc。默认行为是当前轮不打断、新消息排队（type-ahead），本轮结束再依次输入；要立刻纠偏就用 Esc 先断。
+
+## CLI 主动发的消息
+
+卡片正文是终端画面的**实时截图（图片）**，不是文本渲染。CLI 主动发的消息（通过 `botmux send`）则是独立的富文本 / 图文消息，可带图片、文件、@mention；需要完全自定义展示时也可以用 `--card-file` / `--card-json` 发送原始 interactive 卡片 JSON。
+
+> ⚠️ 原始卡片**只允许纯展示 + open\_url 跳转按钮**：任何会触发回调的控件——回调按钮（带 `value`）、下拉 / 人员选择、日期时间选择、输入框、表单提交——都会被拒绝。这是防止自定义卡片伪造交互回调。
 
 
 
@@ -946,7 +973,7 @@ botmux dashboard
 # 输出: http://<lan-ip>:7891/?t=<token>
 ```
 
-> 每次跑都换一个 token，老 URL 立即失效——一次一密的取链方式。
+> 这是**轮换式登录 token**：一条 URL 有效到下次运行 `botmux dashboard`（那时才轮换、让旧 URL 失效）；token 会持久化、`botmux restart` 后仍有效。成功访问 `?t=` 只是把同一 token 写进 cookie，不消费/作废它，轮换前同一 URL 可重复登录——所以分享链接≈分享登录态，注意保管。默认端口 `7891`，可用 `BOTMUX_DASHBOARD_PORT` 改。
 
 ![Dashboard Groups 面板](https://magic-builder.tos-cn-beijing.volces.com/uploads/1780033300739_dash-groups.png)
 
@@ -954,15 +981,17 @@ botmux dashboard
 
 ## 功能
 
-* **Sessions**：跨所有 bot 列出活跃 + 已关闭会话，可按 CLI / 状态 / adopt / 文本过滤。点进 detail 可「定位到飞书话题」（机器人在原话题发 📍 标记 + 自动开 chat AppLink）、复制各种 ID、关闭会话；支持多选批量关闭。
+* **Sessions**：跨所有 bot 列出活跃 + 已关闭会话，可按 CLI / 状态 / adopt / 文本过滤。点进 detail 可复制各种 ID、关闭会话、多选批量关闭；「定位话题」会让机器人在原话题发一条 **@会话 owner** 的提醒（纯 @、无其它正文）帮你跳回上下文。chat-scope 的会话行还带一个飞书群 AppLink 直达群聊。
 * **Schedules**：列出所有定时任务，可 Run now / Pause / Resume。
-* **Groups**：一键拉新群、拉 bot 入群、自动转让群主、@ 提醒；解散群聊、bot 退群（关联会话自动清理）。
+* **Groups**：一键拉新群（自动 @ 通知被邀请人）、拉 bot 入群、自动转让群主；解散群聊、bot 退群（关联会话自动清理）。
 * **团队 / Roles / Bot Defaults**：团队面板做[跨部署协作](/botmux/roles.md)（邀请别人的部署进团队、跨部署拉群）；Roles 管理各 bot 按群人设；Bot Defaults（Bot 配置）配默认行为（新群 oncall、卡片签名、**默认角色**等）。
-* **Workflows 管控面**：Run List 轮询；Run Detail 看 summary / dangling 红区 / node-activity / event timeline / 并发执行 timeline；可直接 cancel run、批准/拒绝 humanGate；Workflow Catalog 列出所有 workflow 并可带参触发。
+* **Workflows 管控面**：Run List 轮询；Run Detail 看 summary / dangling 红区 / node-activity / event timeline / 并发执行 timeline；可直接 **cancel run**。
+
+> **两件事在 Dashboard 之外**：v3 workflow 的 **humanGate 批准 / 拒绝** 走**飞书审批卡**（不在 Dashboard 上点）；带参触发 workflow 目前是**接入点（Webhook）** 那条路径（见 [接入点](/botmux/webhook.md)），Dashboard 没有「Workflow Catalog 带参触发」页。Dashboard 的 Workflows 面板专注观测与 cancel。
 
 ## 部署细节
 
-dashboard 走单独 pm2 进程 `botmux-dashboard`，跟 daemon 一起起停。每个 daemon 在 `127.0.0.1` 暴露内部 IPC（仅本机），dashboard 进程做反向代理 + HMAC 鉴权（`~/.botmux/.dashboard-secret`，mode 0600，不下发给浏览器）。
+dashboard 走单独 pm2 进程 `botmux-dashboard`，跟 daemon 一起起停。每个 daemon 在 `127.0.0.1` 暴露内部 IPC（仅本机），dashboard 进程做反向代理 + HMAC 鉴权：密钥文件 `~/.botmux/.dashboard-secret`（mode 0600），是 daemon↔dashboard 的内部签名密钥，**不下发给浏览器**（浏览器侧走上面的轮换登录 token）。
 
 
 
@@ -2267,30 +2296,52 @@ url: /botmux/skill-cli.md
 
 # Skill + CLI 交互
 
-CLI 进入 botmux 会话时，自动获得 `~/.botmux/bin` 在 PATH 中，以及一组开箱即用的 Skill。这是 CLI agent **主动**与飞书话题交互的通道。
+CLI 进入 botmux 会话时，自动获得 `~/.botmux/bin` 在 PATH 中，以及一组开箱即用的能力。这是 CLI agent **主动**与飞书话题交互的通道——「终端有输出但没发飞书」的根因往往就是模型没走这个通道（见 [FAQ · C](/botmux/faq.md#c-终端有输出但没发飞书)）。
 
 ## 开箱即用的能力
 
-| 命令 / Skill | 作用 |
+会话内可直接调这些 `botmux` 子命令（session 信息自动推断，无需传 id）：
+
+| 命令 | 作用 |
 |------|------|
 | `botmux send` | 向当前话题发消息（文本 / 图片 / 文件 / interactive 卡片 JSON / @mention） |
 | `botmux history` | 读当前会话历史消息（话题群拉话题内，普通群拉整群） |
-| `botmux quoted <message_id>` | 读取被引用的那条消息（用户用引用 UI @ 机器人时） |
+| `botmux quoted <message_id>` | 读取被引用的那条消息 |
 | `botmux bots list` | 查当前群里的机器人及 open\_id（供 `--mention`） |
 | `botmux schedule` | 增删改查定时任务 |
 
-这些能力通过 `--append-system-prompt` 注入 + Skill 描述自动引导 agent 使用。
+> 这些是最常用的一组；实际可用命令更多（如 `botmux ask` 交互提问、workflow / goal / dispatch 编排入口等），以 `botmux --help` 与注入的 Skill 目录为准。交棒 / 编排另有 `botmux-handoff` / `botmux-orchestrate` 等 **Skill**（是 Skill、不是可执行子命令）。
 
-## 为什么是 Skill + CLI，而不是 MCP
+### `botmux send` 的 @ 决策硬门
 
-相比 Anthropic 官方那套基于 MCP 的方案，Skill + CLI 组合：
-
-* CLI 启动**不用做 MCP 握手**，不占用工具列表 token
-* 对 Claude Code / Codex / Cursor / Gemini / OpenCode / Antigravity **通用**——只要 CLI 能读 system prompt、能跑 shell 命令就行，不依赖任何 MCP 协议支持
+`botmux send` **必须带一个 @ 决策**，否则拒发：`--mention <openId>`（点名）/ `--mention-back`（@ 回触发者）/ `--no-mention`（不 @）。其中 `--no-mention` 与前两者互斥。仅显式 `--top-level` 旗标（或全局关闭硬门）豁免——**普通话题 / 引用回复照样要三选一**。这道门确保「该 @ 的没漏、不该 @ 的不炸群」。
 
 ## wrapper 机制
 
-会话内命令依赖 `~/.botmux/bin/botmux` 这个 wrapper 脚本，daemon 启动时自动写入并加入 worker 的 PATH，**版本始终与 daemon 一致**（不需要单独 `npm i -g`）。session 信息通过祖先进程标记自动推断，agent 无需手动传 session id。
+会话内命令依赖 `~/.botmux/bin/botmux` 这个 wrapper 脚本——**daemon 启动时自动写入**并加入 worker 的 PATH。wrapper 是个极薄的 `exec node <本 daemon 的 dist/cli.js>` shim，所以**版本永远跟 daemon 一致**，不需要单独 `npm i -g`。（`pnpm use:here` 之类是开发期手动改指向，与启动写入同内容、幂等。）
+
+session 信息通过**祖先进程标记**自动推断：worker 启动 CLI 时按子进程 PID 写一份标记（含 sessionId / turnId），agent 侧的命令沿进程树向上找到最近的标记即知道自己属于哪个会话——所以 agent 无需手动传 session id。进程树被打断（detached / `setsid` / 深层嵌套）时回落到 `BOTMUX_SESSION_ID` 环境变量兜底。
+
+## 注入机制（按 CLI 而异）
+
+路由指引与 Skill 目录**注入的通道随 CLI 不同**，不是一刀切：
+
+* **Claude 家族（claude-code / seed / relay）**：路由 / 身份走 `--append-system-prompt`；Skill 走 `--plugin-dir`（不是塞进 system prompt）。
+* **genius**：路由 + Skill 目录都走 `--append-system-prompt`；**grok** 用它的等价开关 `--rules`。
+* **其余大多数 CLI**（codex / gemini / opencode / cursor / coco / traex 等）：默认 `skillInjection=prompt` 模式下，路由与 Skill 目录**内联进首条 prompt**，不占任何 system-prompt 旗标。
+
+> Skill catalog 的注入受 per-bot `skillInjection` 模式影响（genius/grok 同样）：`prompt`（默认）内联精简目录进 prompt、按需 `botmux skill show <name>` 拉全文；`global` 把 skill 文件装进 CLI 共享 skills 目录（你手跑的 CLI 也会看到）；`off` 则不装目录、只留路由指引 + `botmux --help`。配过 `global`/`off` 的机制与上面「内联」不同。
+>
+> 注入指引按当前 locale 动态生成，因此会尊重你设的语言。
+
+## 为什么是 Skill + CLI，而不是 MCP
+
+相比基于 MCP 的方案，Skill + CLI 组合：
+
+* CLI 启动**不用做 MCP 握手**，核心的 `botmux send` / `history` 等通道零 MCP 依赖，也不占用工具列表 token（仅当 adapter 显式开启且插件真的贡献了 MCP server 时才起网关）。
+* **shell / 路由这一层通用**——只要 CLI 能读 system prompt、能跑 shell 命令，`~/.botmux/bin/botmux` + PATH 就能用，覆盖 Claude Code / Codex / Cursor / Gemini / OpenCode 等。
+
+> ⚠️ 但**开箱 Skill 这一层并非对所有 CLI 均等**：少数 CLI（如 Antigravity，只认插件包内的 SKILL.md、不认扁平 `skills/` 目录）只拿到路由指引、不装 Skill 目录。所以「通用」对 shell/路由通道成立，对 Skill 目录是「大多数」而非「全部」。
 
 
 
@@ -2456,7 +2507,7 @@ url: /botmux/tmux.md
 
 # Tmux 会话常驻
 
-安装 tmux 后自动启用。CLI 进程常驻在 tmux session 内，**daemon 重启不中断 CLI**。
+**tmux 是 botmux 的默认后端**（PTY 已退役、不再自动兜底）。装好 tmux 后，CLI 进程常驻在 tmux session 内，**daemon 重启不中断 CLI**——这是「重启会不会丢上下文」这个高频顾虑的答案：不会。
 
 ![tmux 会话管理](https://magic-builder.tos-cn-beijing.volces.com/uploads/1780033301974_tmux.gif)
 
@@ -2464,11 +2515,19 @@ url: /botmux/tmux.md
 
 `botmux restart` 时 worker 进程退出，但 tmux session（及其中的 CLI 进程）保持运行。下次收到消息时 worker 自动 re-attach，**无需 `--resume` 重载上下文**——上下文一直活着，省 token、省时间、不丢状态。
 
+> 恢复是「re-attach 到活着的进程」，不是「用 `--resume` 冷启一个新进程」：daemon 重启后会对存活的常驻会话预先以**空 prompt** 重新 fork（只接管、不触发新回合），后续消息或打开终端时也会按需惰性重连。
+
 | 事件 | tmux session | CLI 进程 |
 |------|-------------|---------|
-| `botmux restart` | 存活 | 存活（下次消息 re-attach） |
-| `/close` 或关闭按钮 | 销毁 | 终止（SIGHUP） |
-| CLI 自行退出 / 崩溃 | 随之关闭 | 已退出（自动用新 session 重启） |
+| `botmux restart` | 存活 | 存活（下次消息 re-attach，不重载上下文） |
+| `/close` 或关闭按钮 | 销毁 | 随 session 一起终止 |
+| CLI 自行退出 / 崩溃 | 随之关闭 | 已退出（在同一 worker 内自动用新 session 重启；每分钟崩溃 >3 次则停止自动重启，避免崩溃循环） |
+
+> `/close` / 关闭按钮走的是 `tmux kill-session`——由 tmux 向 pane 内进程发 SIGHUP 收尾，会话与 CLI 一起消失。
+
+## tmux 不可用会怎样
+
+不会静默降级 pty，而是**硬拦截**：起新会话时若本机 tmux 不可用，botmux 拒绝启动并弹一张卡告诉你装 tmux（`brew install tmux` / `apt-get install -y tmux`），附上 `BACKEND_TYPE=pty` 应急开关。已经活着的常驻会话不受一次性探测失败影响，仍可重连。详见 [前置要求](/botmux/prerequisites.md)。
 
 ## 直接 attach
 
@@ -2479,12 +2538,20 @@ botmux list
 # 手动 attach（会话名 = bmx-<sessionId 前 8 位>）
 tmux attach -t bmx-<前8位>
 # Ctrl+B, D 退出 attach，不影响 CLI 继续运行
+```
 
-# 强制降级到纯 pty 模式（不使用 tmux）
+attach 进去后你看到的就是和本地开发完全一致的终端——这也是 botmux 相比"只读输出"方案的关键区别。飞书话题、Web 终端、本地 tmux 三处看到的是同一个进程，见 [Web 终端](/botmux/web-terminal.md)。
+
+## 其它后端与显式 pty
+
+默认只有 tmux（默认）与 pty（应急）与你日常相关；`zellij` / `herdr` 也是可选后端，按需通过 `BACKEND_TYPE` 或 per-bot `backendType` 显式启用，不影响默认。`riff` 则不同——它**随 riff CLI 配对启用**（`cliId===riff ⇔ backendType===riff`，强制绑定），不能像 zellij/herdr 那样给普通 CLI 单独选。
+
+```bash
+# 显式用纯 pty 模式（不使用 tmux）——仅应急
 BACKEND_TYPE=pty botmux start
 ```
 
-attach 进去后你看到的就是和本地开发完全一致的终端——这也是 botmux 相比"只读输出"方案的关键区别。
+> ⚠️ pty 会话**不跨 daemon 重启存活**：pty 没有可 re-attach 的常驻进程，重启后会话需重载。要「重启不丢上下文」请用默认的 tmux。也可 per-bot 配 `"backendType": "pty"`（见 [bots.json 配置](/botmux/bots-json.md)）。
 
 
 

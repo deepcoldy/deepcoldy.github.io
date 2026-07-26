@@ -157,20 +157,35 @@ url: /botmux/en/adopt.md
 
 # Session Adopt
 
-Seamlessly adopt a CLI process that's **already running in your local tmux** into botmux, so you can view progress and interact via Lark on your phone.
+Seamlessly adopt a CLI process that's **already running in your local tmux** into botmux, so you can view progress and interact via Lark on your phone. Typical scenario: Claude Code is running halfway through a task in the tmux on your office computer and you have to leave — send `/adopt` from Lark on your phone and keep watching and sending.
 
 <video src="https://magic-builder.tos-cn-beijing.volces.com/uploads/1780421531476_adopt-video.aud.mp4" controls preload="metadata" style={{width:'100%',borderRadius:'8px'}} />
 
 ```
 /adopt              # Scan the local tmux and pop up a selection card
-/adopt 0:2.0        # Adopt the specified tmux pane directly
+/adopt 0:2.0        # Adopt the specified tmux pane directly (session:window.pane)
 ```
 
-## Three actions
+> The selection card lists only sessions for the **CLI this bot is bound to** (a Pi bot won't list Codex/TRAE panes), and excludes botmux's own `bmx-*` persistent sessions.
 
-* **Shared mode**: after adopting, the local terminal (e.g., iTerm2) and Lark sync bidirectionally — the streaming card shows terminal output in real time, and input from the Lark chat box passes straight through to the terminal. The local tmux stays connected the whole time.
-* **One-click adopt-over**: tap "🔄 Adopt Over" on the streaming card, and botmux rebuilds the session with `--resume`, converting it into a standard botmux session.
-* **Safe disconnect**: tap "⏏ Disconnect," and botmux stops observing, leaving the original CLI unaffected.
+## It's a "bridge," not a takeover
+
+Adopt uses a **zero-touch bridge**: botmux only observes the pane out of band (`tmux pipe-pane` to read output, `send-keys` to write input) and **never attaches, zooms, or groups** your local tmux — your session in iTerm2 is unaffected the whole time.
+
+* **Shared mode**: after adopting, the local terminal (e.g., iTerm2) and Lark sync bidirectionally — the streaming card shows terminal output in real time, and input from the Lark chat box passes straight through to the terminal. The local tmux stays connected and untouched throughout.
+* **Safe disconnect**: tap "⏏ Disconnect" on the streaming card (or send `/close`), and botmux stops observing and tears down only its own side's worker — it **never ends your CLI**; the original process keeps running in your local tmux.
+
+> ⚠️ The old "🔄 Adopt Over" button on the card is **retired**: it's no longer rendered in bridge mode, and clicking it on a historical card is a no-op. Full rebuild into a standard botmux session via `--resume` (`/adopt --takeover`) is still on the roadmap and not yet shipped. Today, adopt is always the "shared bridge" form.
+
+## Boundaries and caveats
+
+An adopted session's lifecycle lives **on your machine**, outside botmux's control, so a few hard boundaries apply:
+
+* **Cannot be relayed (`/relay`)**: the CLI runs on your computer and botmux doesn't control its tmux lifecycle, so relay is rejected. To continue in another group, use a new session + handoff.
+* **Cannot resume**: an adopted session doesn't support `--resume` rebuild.
+* **Ends when the CLI exits**: in adopt mode botmux does **not** auto-restart — once the adopted CLI exits on its own, the session ends with it (card frozen, worker reaped) rather than respawning like a persistent session.
+* **Sandbox bots can't adopt**: a sandbox has to wrap a CLI it starts from scratch and can't wrap an already-running process (fail-closed rejection).
+* **Restore after a daemon restart is careful**: on restart botmux first re-validates whether the adopted host CLI is still alive — it only closes the session if the target is confirmed gone; on an inconclusive (transient) probe it keeps the session closed and **re-validates on the next restore pass (e.g. another daemon restart)**, not automatically when the next message arrives.
 
 ## Typical usage
 
@@ -865,13 +880,25 @@ Every conversation turn produces a live-updating Lark card, your primary window 
 
 ![Streaming card](https://magic-builder.tos-cn-beijing.volces.com/uploads/1780419090587_img_v3_0212a_553ca347-4a93-491f-a2ef-30d00a374cdg.jpg)
 
-* **Live screenshots of the terminal refreshed onto the card**: xterm renders headlessly into an image that **faithfully reproduces the CLI's TUI** (borders, colors, and cursor are all there), instead of converting output to Markdown. One click to "Show / Hide output," "Export text," and "Scroll up / down."
-* **Live status indicator**: 🟡 Starting → Analyzing → 🔵 Working / Executing → 🟢 Waiting for input; when the quota is used up, it shows "Limit reached · Retryable."
-* **Operate directly from the card**: open a (writable) terminal, 🔑 grab an operation link, restart / close / adopt the session, and resend the last task.
-* **A fresh card per turn**: the previous card freezes as an archive, keeping conversation history clear and traceable; after a session is moved to another group with [`/relay`](/botmux/en/relay.md), the original card also automatically freezes as an archive.
-* **An "recoverable" card on close**: it includes the CLI's native resume command, so you can click back in to continue anytime.
+* **Live screenshots of the terminal refreshed onto the card**: xterm renders headlessly into an image that **faithfully reproduces the CLI's TUI** (borders and colors are all there), instead of converting output to Markdown. One click to "Show / Hide output," "Export text," and "Half-page up / down."
+* **Live status indicator**: the card's header color *is* the status (a Lark card template, not an emoji dot in the body) — **Starting…** (yellow) → **Working** (blue) → **Waiting for input** (green); when the quota is used up it shows **Limit reached** (red), turning to **Retryable** (green) when it can retry.
+* **Operate directly from the card**: open the Web terminal, 🔑 grab an operation link, close the session, and — when the quota is retryable — "🔁 Resend last task."
+* **A fresh card per turn**: the previous card freezes as an archive, keeping conversation history clear and traceable; after a session is moved to another group with [`/relay`](/botmux/en/relay.md), the original card also automatically freezes as an archive (buttons removed).
+* **A "recoverable" card on close**: it carries a "▶️ Resume session" button to click back in anytime; **if the CLI supports native resume** (the adapter implements `buildResumeCommand` and a native session id exists), it also includes the native command (e.g. `claude --resume <id>`) for manual recovery; when unsupported, only botmux's resume button plus a short note is shown.
 
-> The card body is a **live screenshot (image)** of the terminal, not text rendering. Messages the CLI proactively sends (via `botmux send`) are separate rich-text / image-and-text messages that can carry images, files, and @mentions; for fully custom display cards, `--card-file` / `--card-json` can send raw interactive card JSON (display + open\_url only — any callback-firing control, such as callback buttons, dropdowns, inputs, or form submits, is rejected).
+> **Open terminal = read-only**: the card's main "🖥️ Open Web Terminal" button is read-only viewing; for **writable** control, tap "🔑 Get operation link" — delivered **privately**: a flat group prefers an in-chat "visible-to-you" ephemeral card (so you never leave the conversation), falling back to a DM only for topic/thread or p2p chats, or when the ephemeral card fails. Management buttons like "🔄 Restart" and "apply profile" live on the **session card**, not on each turn's streaming card.
+
+## Interrupting / correcting a running turn
+
+To stop or correct it mid-turn, **don't wait for it to finish**: in screenshot mode the card carries a row of quick keys at the bottom — **Esc, ^C, Tab, Space, Enter, arrow keys, ⇞ Half-page up / ⇟ Half-page down**. Tapping `Esc` writes the ESC byte straight into the live terminal (exactly like pressing Esc locally); `^C` likewise. After interrupting, just add a new instruction.
+
+> This quick-key row only appears when **output is shown (screenshot mode)** and the backend isn't `riff` — "Show output" first, then Esc is available. The default behavior is not to interrupt the current turn; new messages queue (type-ahead) and are fed in after the turn ends. To correct immediately, use Esc to break first.
+
+## Messages the CLI proactively sends
+
+The card body is a **live screenshot (image)** of the terminal, not text rendering. Messages the CLI proactively sends (via `botmux send`) are separate rich-text / image-and-text messages that can carry images, files, and @mentions; for fully custom display, `--card-file` / `--card-json` can send raw interactive card JSON.
+
+> ⚠️ Raw cards allow **display-only elements + open\_url buttons only**: any callback-firing control — callback buttons (with a `value`), dropdown / person selects, date-time pickers, inputs, form submits — is rejected. This prevents custom cards from forging interactive callbacks.
 
 
 
@@ -946,7 +973,7 @@ botmux dashboard
 # Output: http://<lan-ip>:7891/?t=<token>
 ```
 
-> Each run rotates a new token, and the old URL is invalidated immediately — a one-time, one-secret way of fetching the link.
+> This is a **rotating login token**: a URL stays valid until the next time you run `botmux dashboard` (which rotates it and invalidates the old URL); the token is persisted and survives a `botmux restart`. A successful `?t=` visit just writes the same token into a cookie — it does not consume or revoke it, so the same URL logs in repeatedly until rotation. Sharing the URL ≈ sharing the login state, so keep it safe. Default port `7891`, overridable via `BOTMUX_DASHBOARD_PORT`.
 
 ![Dashboard Groups panel](https://magic-builder.tos-cn-beijing.volces.com/uploads/1780033300739_dash-groups.png)
 
@@ -954,15 +981,17 @@ botmux dashboard
 
 ## Features
 
-* **Sessions**: lists active + closed sessions across all bots, filterable by CLI / status / adopt / text. Open a detail view to "locate in the Lark topic" (the bot posts a 📍 marker in the original topic + auto-opens a chat AppLink), copy various IDs, and close sessions; multi-select batch close is supported.
+* **Sessions**: lists active + closed sessions across all bots, filterable by CLI / status / adopt / text. Open a detail view to copy various IDs, close sessions, and multi-select batch close; "locate topic" has the bot post an **@-mention of the session owner** in the original topic (a bare @, no other text) to help you jump back to the context. Chat-scope session rows also carry a Lark group AppLink straight to the chat.
 * **Schedules**: lists all scheduled tasks, with Run now / Pause / Resume.
-* **Groups**: one-click create a new group, add bots to a group, auto-transfer group ownership, and @ reminders; disband groups and have bots leave groups (associated sessions are cleaned up automatically).
+* **Groups**: one-click create a new group (auto @-notifies the invited user), add bots to a group, and auto-transfer group ownership; disband groups and have bots leave groups (associated sessions are cleaned up automatically).
 * **Team / Roles / Bot Defaults**: the Team panel handles [cross-deployment collaboration](/botmux/en/roles.md) (invite someone else's deployment into your team, create cross-deployment groups); Roles manages each bot's per-group persona; Bot Defaults (Bot configuration) sets default behaviors (new-group on-call, card signature, **default role**, etc.).
-* **Workflows control panel**: Run List polling; Run Detail shows the summary / dangling red zone / node-activity / event timeline / concurrent-execution timeline; you can cancel a run directly, approve/reject a humanGate; the Workflow Catalog lists all workflows and can trigger them with parameters.
+* **Workflows control panel**: Run List polling; Run Detail shows the summary / dangling red zone / node-activity / event timeline / concurrent-execution timeline; you can **cancel a run** directly.
+
+> **Two things live outside the Dashboard**: a v3 workflow's **humanGate approve / reject** happens on a **Lark approval card** (not clicked in the Dashboard); triggering a workflow with parameters currently goes through the **connector (Webhook)** path (see [Connectors](/botmux/en/webhook.md)) — there is no "Workflow Catalog + parameterized trigger" page in the Dashboard. The Dashboard's Workflows panel focuses on observation and cancel.
 
 ## Deployment details
 
-The dashboard runs as a separate pm2 process `botmux-dashboard`, starting and stopping together with the daemon. Each daemon exposes an internal IPC on `127.0.0.1` (local only), and the dashboard process acts as a reverse proxy + HMAC auth (`~/.botmux/.dashboard-secret`, mode 0600, never sent down to the browser).
+The dashboard runs as a separate pm2 process `botmux-dashboard`, starting and stopping together with the daemon. Each daemon exposes an internal IPC on `127.0.0.1` (local only), and the dashboard process acts as a reverse proxy + HMAC auth: the secret file `~/.botmux/.dashboard-secret` (mode 0600) is the internal daemon↔dashboard signing key and is **never sent down to the browser** (the browser side uses the rotating login token above).
 
 
 
@@ -2267,30 +2296,52 @@ url: /botmux/en/skill-cli.md
 
 # Skill + CLI Interaction
 
-When a CLI enters a botmux session, it automatically gets `~/.botmux/bin` in its PATH, along with a set of ready-to-use Skills. This is the channel through which a CLI agent can **proactively** interact with a Lark topic.
+When a CLI enters a botmux session, it automatically gets `~/.botmux/bin` in its PATH, along with a set of ready-to-use capabilities. This is the channel through which a CLI agent can **proactively** interact with a Lark topic — and "terminal has output but nothing was sent to Lark" usually traces back to the model not using this channel (see [FAQ · C](/botmux/en/faq.md#c-terminal-has-output-but-nothing-sent-to-lark)).
 
 ## Out-of-the-Box Capabilities
 
-| Command / Skill | Purpose |
+Inside a session the agent can call these `botmux` subcommands directly (session info is inferred, no id to pass):
+
+| Command | Purpose |
 |------|------|
 | `botmux send` | Send a message to the current topic (text / image / file / interactive card JSON / @mention) |
 | `botmux history` | Read the current session's message history (topic groups pull within the topic; regular groups pull the whole group) |
-| `botmux quoted <message_id>` | Read the quoted message (when a user @-mentions the bot via the quote UI) |
+| `botmux quoted <message_id>` | Read the quoted message |
 | `botmux bots list` | List the bots in the current group and their open\_id (for `--mention`) |
 | `botmux schedule` | Create, list, update, and delete scheduled tasks |
 
-These capabilities are injected via `--append-system-prompt` plus Skill descriptions that automatically guide the agent to use them.
+> These are the most-used set; the real command surface is larger (e.g. `botmux ask` for interactive questions, and workflow / goal / dispatch orchestration entry points) — see `botmux --help` and the injected Skill catalog for the full list. Handoff / orchestration are separate **Skills** (`botmux-handoff` / `botmux-orchestrate`), which are Skills, not executable subcommands.
 
-## Why Skill + CLI Instead of MCP
+### The @-decision hard gate on `botmux send`
 
-Compared with Anthropic's official MCP-based approach, the Skill + CLI combination:
-
-* The CLI **doesn't need an MCP handshake** on startup, and doesn't consume tool-list tokens
-* It is **universal** across Claude Code / Codex / Cursor / Gemini / OpenCode / Antigravity — all it needs is a CLI that can read a system prompt and run shell commands; it doesn't depend on any MCP protocol support
+A `botmux send` **must carry an @-decision**, or it refuses to send: `--mention <openId>` (name someone), `--mention-back` (@ the triggerer), or `--no-mention` (don't @). `--no-mention` is mutually exclusive with the other two. Only the explicit `--top-level` flag (or globally disabling the gate) is exempt — **ordinary topic / quote replies still have to pick one of the three**. This gate ensures "the ones that should be @-ed aren't missed, and the ones that shouldn't don't spam the group."
 
 ## Wrapper Mechanism
 
-In-session commands rely on the wrapper script at `~/.botmux/bin/botmux`, which the daemon writes automatically at startup and adds to the worker's PATH, so its **version always matches the daemon** (no separate `npm i -g` needed). Session info is inferred automatically from ancestor-process markers, so the agent doesn't need to pass a session id manually.
+In-session commands rely on the wrapper script at `~/.botmux/bin/botmux` — **written automatically by the daemon at startup** and added to the worker's PATH. The wrapper is an extremely thin `exec node <this daemon's dist/cli.js>` shim, so its **version always matches the daemon** and no separate `npm i -g` is needed. (Dev helpers like `pnpm use:here` re-point it manually with identical, idempotent content.)
+
+Session info is inferred automatically from **ancestor-process markers**: when the worker launches the CLI it writes a marker keyed by the child PID (carrying sessionId / turnId), and the agent's commands walk up the process tree to the nearest marker to know which session they belong to — so the agent never passes a session id. If the process tree is broken (detached / `setsid` / deeply nested), it falls back to the `BOTMUX_SESSION_ID` environment variable.
+
+## Injection Mechanism (varies by CLI)
+
+The channel through which routing guidance and the Skill catalog are **injected varies by CLI** — it's not one-size-fits-all:
+
+* **Claude family (claude-code / seed / relay)**: routing / identity via `--append-system-prompt`; Skills via `--plugin-dir` (not stuffed into the system prompt).
+* **genius**: both routing and the Skill catalog go through `--append-system-prompt`; **grok** uses its equivalent flag `--rules`.
+* **Most other CLIs** (codex / gemini / opencode / cursor / coco / traex, etc.): under the default `skillInjection=prompt` mode, routing and the Skill catalog are **inlined into the first prompt**, consuming no system-prompt flag.
+
+> Skill catalog injection is governed by the per-bot `skillInjection` mode (genius/grok too): `prompt` (default) inlines a compact catalog into the prompt and pulls full text on demand via `botmux skill show <name>`; `global` installs the skill files into the CLI's shared skills dir (your hand-run CLI sees them too); `off` installs no catalog, leaving only routing guidance + `botmux --help`. The `global`/`off` mechanics differ from the "inline" case above.
+>
+> Injected guidance is generated dynamically per the current locale, so it respects your configured language.
+
+## Why Skill + CLI Instead of MCP
+
+Compared with an MCP-based approach, the Skill + CLI combination:
+
+* The CLI **doesn't need an MCP handshake** on startup, the core `botmux send` / `history` channels have zero MCP dependency, and it doesn't consume tool-list tokens (a gateway only starts when an adapter explicitly opts in *and* a plugin actually contributes MCP servers).
+* The **shell / routing layer is universal** — as long as a CLI can read a system prompt and run shell commands, `~/.botmux/bin/botmux` + PATH work, covering Claude Code / Codex / Cursor / Gemini / OpenCode, and more.
+
+> ⚠️ But the **out-of-box Skill layer is not equal across every CLI**: a few (e.g. Antigravity, which only recognizes SKILL.md inside plugin bundles, not a flat `skills/` dir) get routing guidance only, without a Skill catalog. So "universal" holds for the shell/routing channel, and is "most" rather than "all" for the Skill catalog.
 
 
 
@@ -2430,7 +2481,7 @@ url: /botmux/en/tmux.md
 
 # Tmux Session Persistence
 
-Automatically enabled once tmux is installed. The CLI process stays persistent inside a tmux session, so **restarting the daemon does not interrupt the CLI**.
+**tmux is botmux's default backend** (PTY is retired and no longer an automatic fallback). Once tmux is installed, the CLI process stays persistent inside a tmux session, so **restarting the daemon does not interrupt the CLI** — which is the answer to the common worry "will a restart lose my context?": it won't.
 
 ![tmux session management](https://magic-builder.tos-cn-beijing.volces.com/uploads/1780033301974_tmux.gif)
 
@@ -2438,11 +2489,19 @@ Automatically enabled once tmux is installed. The CLI process stays persistent i
 
 On `botmux restart`, the worker process exits, but the tmux session (and the CLI process inside it) keeps running. The next time a message arrives, the worker automatically re-attaches, **with no need to reload context via `--resume`** — the context stays alive the whole time, saving tokens, saving time, and losing no state.
 
+> Recovery is "re-attach to a still-running process," not "cold-start a new one with `--resume`": after a daemon restart botmux eagerly re-forks surviving persistent sessions with an **empty prompt** (attach only, no new turn), and also lazily reconnects on the next message or when you open the terminal.
+
 | Event | tmux session | CLI process |
 |------|-------------|---------|
-| `botmux restart` | Survives | Survives (re-attached on next message) |
-| `/close` or close button | Destroyed | Terminated (SIGHUP) |
-| CLI exits / crashes on its own | Closes along with it | Already exited (automatically restarted with a new session) |
+| `botmux restart` | Survives | Survives (re-attached on next message, no context reload) |
+| `/close` or close button | Destroyed | Terminated along with the session |
+| CLI exits / crashes on its own | Closes along with it | Already exited (auto-restarted with a new session within the same worker; > 3 crashes/min stops auto-restart to avoid a crash loop) |
+
+> `/close` / the close button runs `tmux kill-session` — tmux then delivers SIGHUP to the pane's processes, so the session and CLI disappear together.
+
+## What happens when tmux is unavailable
+
+It does not silently downgrade to pty; it **hard-gates**: when starting a new session, if tmux isn't functional on this machine, botmux refuses to start and posts a card telling you to install tmux (`brew install tmux` / `apt-get install -y tmux`), with the `BACKEND_TYPE=pty` escape hatch noted. An already-live persistent session is unaffected by a one-off probe failure and can still reconnect. See [Prerequisites](/botmux/en/prerequisites.md).
 
 ## Attach directly
 
@@ -2453,12 +2512,20 @@ botmux list
 # Manual attach (session name = bmx-<first 8 chars of sessionId>)
 tmux attach -t bmx-<first8>
 # Ctrl+B, D to detach, without affecting the running CLI
+```
 
-# Force fall back to pure pty mode (without using tmux)
+Once you attach, what you see is a terminal exactly identical to your local development — and this is the key difference between botmux and "read-only output" approaches. The Lark topic, the Web terminal, and your local tmux all show the same process; see [Web Terminal](/botmux/en/web-terminal.md).
+
+## Other backends and explicit pty
+
+Only tmux (default) and pty (emergency) are relevant day to day; `zellij` / `herdr` are also available backends, opted into explicitly via `BACKEND_TYPE` or a per-bot `backendType`, and don't change the default. `riff` is different — it is **enabled paired with the riff CLI** (`cliId===riff ⇔ backendType===riff`, a forced binding) and can't be selected for an ordinary CLI the way zellij/herdr can.
+
+```bash
+# Force pure pty mode (without using tmux) — emergency only
 BACKEND_TYPE=pty botmux start
 ```
 
-Once you attach, what you see is a terminal exactly identical to your local development — and this is the key difference between botmux and "read-only output" approaches.
+> ⚠️ A pty session **does not survive a daemon restart**: pty has no persistent process to re-attach to, so the session must reload after a restart. For "restart without losing context," use the default tmux. You can also set `"backendType": "pty"` per bot (see [bots.json configuration](/botmux/en/bots-json.md)).
 
 
 
