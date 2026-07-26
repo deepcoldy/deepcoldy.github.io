@@ -1,0 +1,34 @@
+# 多机器人协作
+
+同一台机器上可运行多个飞书机器人，每个机器人可绑不同的 CLI。把它们拉进同一个群，就能让不同模型"赛博斗蛐蛐"。
+
+<video src="https://magic-builder.tos-cn-beijing.volces.com/uploads/1780421535360_multibot-video.aud.mp4" controls preload="metadata" style={{width:'100%',borderRadius:'8px'}} />
+
+## 路由规则
+
+* **群里只有一个机器人**：无需 @，自动响应。
+* **群里有多个机器人**：用 `@mention` 指定接收方。
+* `@botA @botB /t <prompt>`：让**每个被 @ 的机器人**在同一条消息上各自独立开新话题，各跑各的。
+
+## 让机器人互相认识
+
+现在主路径不再需要手动 `/introduce`：botmux 会默认通过飞书群机器人列表自动发现当前群里的 bot；用 `/group`、Dashboard「新建群」或团队面板拉起的协作群，还会通过团队花名册让跨部署 bot 互相识别。
+
+协作时让模型优先查看：
+
+* `botmux bots list`：列出当前群可协作的 bot、能力标签、`openId`、`mentionable`。
+* 消息里的 `<available_bots>` 块：会随上下文提示哪些 bot 可被接力。
+
+之后 bot 在自己的会话里用 `botmux send --mention <对方 openId>` 显式 @ 对方即可触发接力。
+
+> 跨 bot 协作的硬性事实：**不 `--mention` 对方 bot，对方完全不会被触发**。`/introduce` 仍保留为旧版 / 外部 bot 兜底：只有当 `botmux bots list` 里目标 bot 缺失或 `mentionable=false` 时，再在群里发 `@botA @botB /introduce` 手动登记一次。
+
+## 典型场景
+
+* **代码 review**：让 Claude Code 和 Codex 一起看同一个 MR，观点不同时互相挑刺。
+* **方案评审**：两个 AI 分别出方案，互相找漏洞。
+* **写审分离**：一个写，一个审，迭代收敛。
+
+配置极简：每个机器人一个飞书应用，拉进同一个群即可，进程完全隔离。
+
+> 相关：用 [角色与团队](/botmux/roles.md) 给每个 bot 设人设和能力标签；用 [一键建会话群](/botmux/group.md) 一句话拉多个 bot 进新群；用 [会话接力](/botmux/relay.md) 把会话搬到协作群。

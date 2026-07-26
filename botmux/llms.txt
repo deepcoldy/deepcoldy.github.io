@@ -1,0 +1,40 @@
+# botmux 文档
+
+> 飞书话题群 ↔ AI 编程 CLI 桥接
+
+## Other
+
+- [关于 & 资源](/botmux/about.md): botmux —— 飞书话题群 ↔ AI 编程 CLI 桥接。MIT 协议开源。
+- [多 CLI 适配器](/botmux/adapters.md): botmux 通过适配器桥接不同 CLI，bots.json 里用 cliId 选择。一键切换，进程隔离。
+- [会话接入（Adopt）](/botmux/adopt.md): 把已经在本地 tmux 里跑着的 CLI 进程无缝接入 botmux，在手机上通过飞书查看进度和交互。 <video src="https://magic-builder.tos-cn-beijing.volces.com/uploads/1780421531476_adopt-video.aud.mp4" controls preload="metadata" style={{width:'100%',borderRadius:'8px'}}></video>
+- [通过 API 编程式触发 botmux 任务](/botmux/api-task-trigger.md): 让外部系统（任务编排器、CI、后端服务等）通过 HTTP API 把一段指令交给某个 botmux 机器人执行，并拿回最终结果——机器人在飞书话题里正常跑 CLI，但整个调用是纯程序化的「请求 → 拿结果」，可选完全不打扰飞书。 本文面向调用方开发者，介绍两种执行模式、四态轮询契约、鉴权、取消与故障恢复，并附可直接运行的 curl 示例与客户端伪代码。
+- [架构总览](/botmux/architecture.md): botmux 是一个薄编排层，把"飞书事件"翻译成"CLI 进程的输入/输出"。核心进程与模块：
+- [最佳实践](/botmux/best-practices.md): 按使用场景给推荐配置。基础用法见各功能页；排查类问题见 常见踩坑 与 FAQ。
+- [bots.json 配置](/botmux/bots-json.md): 通过 ~/.botmux/bots.json 配置机器人。运行 botmux setup 交互式创建，或手动编辑。文件是一个数组，每个元素是一个 bot（生产环境一个 bot 对应一个独立 daemon 进程）。 字段较多，按用途分组列出，绝大多数都是可选的——只填 larkAppId / larkAppSecret 就能跑起来，其余按需增配。
+- [实时流式卡片](/botmux/cards.md): 每轮对话生成一张实时更新的飞书卡片，是你在手机/飞书上感知并操控 CLI 的主窗口。 终端画面实时截图刷新到卡片：xterm 无头渲染成图，原样还原 CLI 的 TUI（边框、配色、光标都在），不再把输出转成 Markdown。可一键「显示 / 隐藏输出」「导出文字」「上 / 下翻屏」。状态实时指示：🟡 启动中 → 正在分析 → 🔵 工作中 / 执行中 → 🟢 等待输入；额度用满会标「限额已达 · 可重试」。卡片上直接操作：打开（可写）终端、🔑 取操作链接、重启 / 关闭 / 接管会话、重发上一条任务。每轮一张新卡片：上一轮卡片冻结存档，对话历史清晰可回溯；会话用 /relay 搬到别的群后，原卡片也会自动冻结为存档。关闭时给「可恢复」卡片：附上 CLI 原生 resume 命令，随时点回来继续。 卡片正文是终端画面的实时截图（图片），不是文本渲染。CLI 主动发的消息（通过 botmux send）则是独立的富文本 / 图文消息，可带图片、文件、@mention；需要完全自定义展示时也可以用 --card-file / --card-json 发送原始 interactive 卡片 JSON（纯展示 + open_url 跳转，会触发回调的交互控件——回调按钮/下拉/输入/表单等——都会被拒绝）。
+- [CLI 命令](/botmux/cli-commands.md): 在终端里管理 daemon 和会话。 daemon 在线时，botmux delete 会先请求会话所属 daemon 执行与 /close 一致的生命周期收口：移除内存中的活跃会话、持久化关闭状态，并回收 worker、后端与订阅。仅当所属 daemon 确认不在线时才使用本地收口；在线 daemon 拒绝或 IPC 连接失败时命令返回失败，不会继续本地强杀。
+- [Dashboard 管控面](/botmux/dashboard.md): 命令行 botmux dashboard 出一个一次性 token URL，浏览器里跨所有 daemon / 机器人统一管控。 每次跑都换一个 token，老 URL 立即失效——一次一密的取链方式。
+- [飞书文档评论监听（/watch-comment）](/botmux/doc-comment.md): 把一篇飞书云文档变成会话的输入 / 输出通道：订阅文档后，文档里的评论会作为消息喂进会话，机器人的回复直接发表回该评论的讨论串里。 不用离开正在写的文档，在评论里 @机器人 提个问题、让它改点东西，回复就出现在评论区——适合「边看文档边让 AI 干活」「在文档里就地协作」。
+- [环境变量与文件位置](/botmux/env.md)
+- [FAQ / 排错](/botmux/faq.md): 综合自 README 与社区交流群高频问题，持续补充中。更多坑见 常见踩坑。
+- [一键新建会话群](/botmux/group.md): /group <群名>（别名 /g）：自动新建一个飞书群、邀请你进群、转让群主，整个群作为一个独立的 CLI 会话（chat-scope）。适合给一个项目 / 任务单独开一个干净的协作空间。 机器人回一张卡片：「✅ 已新建群「卡片竞态 bug」👉 <加群链接>」，点进去直接开聊即可——整个群就是一个独立会话。 空群名时用时间戳兜底。建好后不自动开会话，进群找机器人开聊即可。
+- [生命周期 Hooks](/botmux/hooks.md): botmux 可以在关键生命周期事件发生时异步调用外部命令。命令失败、超时或不存在只会写日志，不阻塞 botmux 主流程。
+- [多机器人协作](/botmux/multi-bot.md): 同一台机器上可运行多个飞书机器人，每个机器人可绑不同的 CLI。把它们拉进同一个群，就能让不同模型"赛博斗蛐蛐"。 <video src="https://magic-builder.tos-cn-beijing.volces.com/uploads/1780421535360_multibot-video.aud.mp4" controls preload="metadata" style={{width:'100%',borderRadius:'8px'}}></video>
+- [多话题协作模式](/botmux/multi-topic.md): 多机器人协作 的升级版：把一个大任务交给主 bot，它会自动把任务拆成多个子项目、在群里开多条话题、给每条话题派一组 bot 并行干活（常见「一个写、一个 review」），用一张飞书任务清单当共享进度板，最后收齐结果汇总给你。一个普通群就变成一个并行工作台。
+- [Oncall 模式](/botmux/oncall.md): 把机器人拉进 oncall / 值班 / 报警群，绑定一个项目目录后，群里任何成员都能 @ 机器人提问，无需选仓库、无需开新会话——直接进入这个项目目录开聊。特别适合值班群、报警群、跨团队答疑这类「很多人、随时问、都问同一个项目」的场景。
+- [常见踩坑与规避](/botmux/pitfalls.md): 来自社区交流群的高频实战坑，按出现频率与影响排序。
+- [前置要求](/botmux/prerequisites.md)
+- [5 分钟快速接入](/botmux/quickstart.md): 💡 TL;DR：npm i -g botmux → botmux setup 扫码建应用、选 CLI、填工作目录 → botmux start → botmux autostart enable → 拉机器人进群开聊。
+- [会话接力（Relay）](/botmux/relay.md): 把一个正在运行的 AI 会话从一个群「接力」到另一个群继续——飞书消息历史留在源群，但 AI 的记忆 / 上下文接续过去，换个群无缝继续聊。命令是 /relay。 跑到一半的会话可以整个搬家，上下文一点不丢：私聊里把方案调通了，一键搬进团队群让大家接着这条上下文继续；搬过去是原班 CLI 进程、原班记忆，不是复制一份重开。 与 Adopt 的区别：Adopt 是把本机 tmux 里的进程接进飞书；Relay 是把一个已经在 botmux 里跑的会话从 A 群搬到 B 群。
+- [角色与团队](/botmux/roles.md): 给每个机器人按群设独立人设，并在多机器人协作时形成一份「团队花名册」。命令是 /role。 本页含两套相关但不同的能力：/role 人设（同一个 bot 一套人设、可按群覆盖，见下）与 角色切换（role switch）（一个 bot 拥有多个完整角色、各自独立记忆、用自然语言按话题切换，进阶功能）。
+- [文件沙盒（Sandbox）](/botmux/sandbox.md): 把 AI 编程 CLI 安全地开放给半可信用户的隔离机制——常配合 Oncall 模式 一起用。 开了沙盒后，话题里的人让机器人改代码、跑命令，所有写操作都被隔离：真实文件一个字节都不会被改动；机器人却照常读取真实的项目 / 配置 / 登录态、原生干活（它根本不知道自己在沙盒里）。改完之后由 owner 审阅 diff 卡片，确认无误再「应用到磁盘」落回真实仓库，或直接丢弃。 适合把 oncall / 值班机器人开放给不完全信任的群成员、外部协作者：既让他们用 AI 改东西，又不怕真实仓库被误改、搞乱。
+- [定时任务](/botmux/schedule.md): 支持三种调度类型 + 中文自然语言，到点在创建任务的原话题内续一条消息并执行（不另开 thread，工作目录与创建时一致）。
+- [会话与话题模型](/botmux/session-model.md): 理解 botmux 的关键是搞清"一条消息落到哪个会话"。
+- [Skill + CLI 交互](/botmux/skill-cli.md): CLI 进入 botmux 会话时，自动获得 ~/.botmux/bin 在 PATH 中，以及一组开箱即用的 Skill。这是 CLI agent 主动与飞书话题交互的通道。
+- [斜杠命令](/botmux/slash-commands.md): 在话题里直接发这些命令即可，由 daemon 拦截处理。botmux 不认识的 /xxx 会原样透传给底层 CLI（与 CLI 自身的 slash 命令互不冲突）。随时发 /help 查看完整清单。
+- [Tmux 会话常驻](/botmux/tmux.md): 安装 tmux 后自动启用。CLI 进程常驻在 tmux session 内，daemon 重启不中断 CLI。
+- [语音总结](/botmux/voice.md): 把 AI 的文字回复一键转成语音消息发到飞书群。每条回复卡片底部会出现一个「🔊 语音总结」按钮，点一下，机器人就把这条回复精简成口语、合成语音气泡发到当前话题。 <video src="https://magic-builder.tos-cn-beijing.volces.com/uploads/1780421547656_voice-video.aud.mp4" controls preload="metadata" style={{width:'100%',borderRadius:'8px'}}></video> 按需触发：默认不自动生成，想听才点——避免每条回复都附带一大段语音。先精简、再合成：点击后模型会把原回复压成几句口语（去掉代码、路径、链接等不适合朗读的内容），所以听到的是「讲人话」的总结，而不是把原文照念。有权限门：只有对该机器人有「对话 / 操作」权限的成员能点；其他人点击会收到「需要授权」的提示。每条只生成一次：同一条回复的语音只会生成一次，多人点击也不会刷屏。 语音是可选的高级功能：需要先配置一个语音合成（TTS）引擎；没配置时回复卡片不显示这个按钮。
+- [Web 终端（可交互）](/botmux/web-terminal.md): 每个会话都带一个基于 xterm.js 的 Web 终端，地址形如 http://<WEB_EXTERNAL_HOST>:<端口>。
+- [接入点（Webhook）](/botmux/webhook.md): 让外部系统（监控告警、CI、工单、定时脚本…）通过一个 webhook 触发机器人在群里说话或跑工作流。网关不解析各平台格式，把原始事件原样交给模型自己读——新系统几乎零适配。 在 Dashboard 管控面 的「接入点」页创建和管理。当前为 beta。
+- [本地白板（Whiteboard）](/botmux/whiteboard.md): 同一个飞书群里的多个机器人 / 会话共享一块本地 markdown 白板，用来沉淀跨会话、跨 bot 的「当前项目状态」（目标 / 组织方式 / 核心方案 / 关键进展 / 下一步）。 白板是一份最新状态快照：update 整体覆盖、不堆历史，让后来的 agent 一读就拿到最新共识，而不必翻聊天记录。适合多 agent 协作、长任务断点、跨话题交接。 默认关闭。它是可选增强 —— 不开启时不会创建白板、不绑定会话、不注入 prompt，agent 的读写命令也会被拒绝。
+- [Workflow（实验性）](/botmux/workflow.md): botmux 有两套 workflow 引擎，共享 botmux workflow 命令前缀，但定位不同： ⚠️ 两套引擎的 run 不互通：botmux workflow ls / tail / show / resume / cancel 只看 v0.2 模板 run；v3 即兴 workflow 的运行情况在 Dashboard 的 v3 视图看（每张飞书卡片都带「Web 详情」链接直达）。

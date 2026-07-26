@@ -1,0 +1,34 @@
+# Multi-bot Collaboration
+
+Multiple Lark bots can run on the same machine, and each bot can be bound to a different CLI. Add them to the same group and you can have different models "duke it out" against each other.
+
+<video src="https://magic-builder.tos-cn-beijing.volces.com/uploads/1780421535360_multibot-video.aud.mp4" controls preload="metadata" style={{width:'100%',borderRadius:'8px'}} />
+
+## Routing rules
+
+* **Only one bot in the group**: no @ needed, it responds automatically.
+* **Multiple bots in the group**: use `@mention` to specify the recipient.
+* `@botA @botB /t <prompt>`: have **each @-mentioned bot** independently open a new topic on the same message, each running on its own.
+
+## Letting bots know each other
+
+The main path no longer requires a manual `/introduce`: botmux discovers bots in the current Lark group via the group bot roster by default. Collaboration groups created with `/group`, the Dashboard "New Group" flow, or the Teams panel also use the team roster so cross-deployment bots can recognize each other.
+
+For handoffs, have the model check:
+
+* `botmux bots list`: lists bots in the current group, capability tags, `openId`, and `mentionable`.
+* The `<available_bots>` block in the message context: hints which bots can be relayed to.
+
+After that, a bot can explicitly @ the other from its own session with `botmux send --mention <the other's openId>`, triggering the relay.
+
+> A hard fact about cross-bot collaboration: **if you don't `--mention` the other bot, it won't be triggered at all**. `/introduce` is still kept as a legacy / external-bot fallback: use `@botA @botB /introduce` only when the target is missing from `botmux bots list` or shows `mentionable=false`.
+
+## Typical scenarios
+
+* **Code review**: have Claude Code and Codex review the same MR together, picking holes in each other's views when they disagree.
+* **Design review**: two AIs each propose a solution and find flaws in each other's.
+* **Write/review separation**: one writes, one reviews, iterating to convergence.
+
+Configuration is minimal: one Lark app per bot, add them to the same group, and the processes are fully isolated.
+
+> Related: use [Roles & Teams](/botmux/en/roles.md) to give each bot a persona and capability tags; use [One-click session group](/botmux/en/group.md) to add multiple bots to a new group in one sentence; use [Session Relay](/botmux/en/relay.md) to move a session into a collaboration group.
