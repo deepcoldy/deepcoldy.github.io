@@ -34,7 +34,8 @@
 - [斜杠命令](/botmux/slash-commands.md): 在话题里直接发这些命令即可，由 daemon 拦截处理。只有透传章节里白名单内的命令会原样透传给底层 CLI；其余 daemon 不认识的 /xxx 会被当作普通对话文本按普通消息转发。随时发 /help 查看完整清单。
 - [Tmux 会话常驻](/botmux/tmux.md): tmux 是 botmux 的默认后端（PTY 已退役、不再自动兜底）。装好 tmux 后，CLI 进程常驻在 tmux session 内，daemon 重启不中断 CLI——这是「重启会不会丢上下文」这个高频顾虑的答案：不会。
 - [语音总结](/botmux/voice.md): 把 AI 的文字回复一键转成语音消息发到飞书群。每条回复卡片底部会出现一个「🔊 语音总结」按钮，点一下，机器人就把这条回复精简成口语、合成语音气泡发到当前话题。 <video src="https://magic-builder.tos-cn-beijing.volces.com/uploads/1780421547656_voice-video.aud.mp4" controls preload="metadata" style={{width:'100%',borderRadius:'8px'}}></video> 按需触发：默认不自动生成，想听才点——避免每条回复都附带一大段语音。先精简、再合成：点击后模型会把原回复压成几句口语（去掉代码、路径、链接等不适合朗读的内容），所以听到的是「讲人话」的总结，而不是把原文照念。有权限门：只有对该机器人有「对话 / 操作」权限的成员能点；其他人点击会收到「需要授权」的提示。每条只生成一次：同一条回复的语音只会生成一次，多人点击也不会刷屏。 语音是可选的高级功能：需要先配置一个语音合成（TTS）引擎；没配置时回复卡片不显示这个按钮。
-- [Web 终端（可交互）](/botmux/web-terminal.md): 每个会话都带一个基于 xterm.js 的 Web 终端，地址形如 http://<WEB_EXTERNAL_HOST>:<端口>。
+- [Web 终端（可交互）](/botmux/web-terminal.md): 除 ZMX 后端外，每个会话都带一个基于 xterm.js 的 Web 终端，地址形如 http://<WEB_EXTERNAL_HOST>:<端口>；ZMX 请通过 botmux list 或 zmx attach 进入本机终端，详见 ZMX 后端。
 - [接入点（Webhook）](/botmux/webhook.md): 让外部系统（监控告警、CI、工单、定时脚本…）通过一个 webhook 触发机器人在群里说话或跑工作流。网关不解析各平台格式，把原始事件原样交给模型自己读——新系统几乎零适配。 在 Dashboard 管控面 的「接入点」页创建和管理。当前为 beta。
 - [本地白板（Whiteboard）](/botmux/whiteboard.md): 同一个飞书群里的多个机器人 / 会话共享一块本地 markdown 白板，用来沉淀跨会话、跨 bot 的「当前项目状态」（目标 / 组织方式 / 核心方案 / 关键进展 / 下一步）。 白板是一份最新状态快照：update 整体覆盖、不堆历史，让后来的 agent 一读就拿到最新共识，而不必翻聊天记录。适合多 agent 协作、长任务断点、跨话题交接。 默认关闭。它是可选增强 —— 不开启时不会创建白板、不绑定会话、不注入 prompt，agent 的读写命令也会被拒绝。
 - [Workflow（实验性）](/botmux/workflow.md): botmux 有两套 workflow 引擎，共享 botmux workflow 命令前缀，但定位不同： ⚠️ 两套引擎的 run 不互通：botmux workflow ls / tail / show / resume / cancel 只看 v0.2 模板 run；v3 即兴 workflow 的运行情况在 Dashboard 的 v3 视图看（每张飞书卡片都带「Web 详情」链接直达）。
+- [ZMX 会话后端](/botmux/zmx.md): ZMX 是 botmux 的一个可选持久会话后端。它适合希望用轻量会话 daemon 保住 CLI，并在需要完整终端体验时从本机原生 attach 的 macOS / Linux 主机。 ZMX 是显式 opt-in 后端：botmux 不会自动安装 ZMX，也不会因为它已在 PATH 中就自动选用。

@@ -780,6 +780,8 @@ url: /botmux/bots-json.md
 | `sandboxReadonlyPaths` | 在沙盒内额外只读挂载的已存在路径，适合共享源码快照、参考仓库或生成文档等只允许查看、不允许修改的输入 |
 | `sandboxNetwork` | 沙盒会话的网络策略。缺省 / `true` 保留当前网络和代理访问；`false` 添加 `--unshare-net`，阻断普通网络出口 |
 
+> ZMX 无法执行文件沙盒或实际生效的读隔离，开启这些边界的配置组合会 fail closed，详见 [ZMX 后端边界](/botmux/zmx.md#不支持的组合)。
+
 ## 卡片与终端
 
 | 字段 | 说明 |
@@ -934,7 +936,7 @@ url: /botmux/cli-commands.md
 | `botmux logs [--lines N]` | 查看日志 |
 | `botmux status` | 查看 daemon 状态 |
 | `botmux upgrade` | 升级到最新版本 |
-| `botmux list` (别名 `ls`) | 列出所有活跃会话 |
+| `botmux list` (别名 `ls`) | 交互式列出活跃会话；选中受管 tmux / ZMX 会话后按 Enter 可 attach（脚本使用 `--plain`） |
 | `botmux delete <id>` (别名 `del`/`rm`) | 关闭指定会话，支持 ID 前缀匹配 |
 | `botmux delete all` | 关闭所有活跃会话 |
 | `botmux delete stopped` | 清理进程已退出的僵尸会话 |
@@ -1001,6 +1003,30 @@ botmux dashboard
 * **Workflows 管控面**：Run List 轮询；Run Detail 看 summary / dangling 红区 / node-activity / event timeline / 并发执行 timeline；可直接 **cancel run**。
 
 > **两件事在 Dashboard 之外**：v3 workflow 的 **humanGate 批准 / 拒绝** 走**飞书审批卡**（不在 Dashboard 上点）；带参触发 workflow 目前是**接入点（Webhook）** 那条路径（见 [接入点](/botmux/webhook.md)），Dashboard 没有「Workflow Catalog 带参触发」页。Dashboard 的 Workflows 面板专注观测与 cancel。
+
+## 对外只读查询
+
+Dashboard HTTP 服务提供两个可供看板或外部观测端消费的会话读接口：
+
+* `GET /api/sessions`：当前聚合的 active + closed session rows。
+* `GET /events`：Dashboard 对外 SSE 流，其中 `session.spawned` 的 `body.session` 和 `session.update` 的 `body.patch` 会携带对应的完整值/变更值。每个 daemon 内部还有只绑定 loopback 的 `/api/events`，这是 Dashboard 聚合器的 IPC，不是对外地址。
+
+会话输出中的下列字段都是**可选字段**，消费者必须兼容旧会话/旧 daemon 不返回它们：
+
+| 字段 | 语义 |
+|------|------|
+| `backendType` | 最近一次 worker spawn 时记录的有效后端（`pty` / `tmux` / `herdr` / `zellij` / `zmx`），用于过滤/展示；cold resume 后可能随配置切换 |
+| `backendSessionName` | 仅受管的持久后端会话才有，当前规则为 `bmx-<sessionId 前 8 位>`；PTY、adopt 会话和部分 legacy row 没有该字段。它是确定性定位信息，**不代表对应进程/socket 当前存活** |
+| `titleUpdatedAt` | 标题最后更新的 ISO-8601 时间字符串 |
+| `titleSource` | 标题来源标签：`initial` / `user` / `agent` / `cli` / `dashboard` / `system`。仅供展示和调试，**不是可信的身份/审计字段** |
+
+### `publicReadOnly` 与 token 边界
+
+`publicReadOnly` 默认开启。开启时，`GET /api/sessions` 和 `GET /events` 在 Dashboard 监听地址上可以**无 token** 访问，因此会话名称、标题、后端和 row 中的其它元数据都应按可公开信息对待。
+
+* 全部 POST / PATCH / DELETE 写操作、不在只读白名单中的 GET，以及原始 PTY / 诊断日志，始终需要 `botmux dashboard` 生成的当前 token。白名单是 fail-closed 的：新增 GET 不会因公开只读开启就自动暴露。
+* 每次运行 `botmux dashboard` 都会轮换 token，之前的链接失效。token 只提供 Dashboard 应用层访问权，不代替主机防火墙、VPN 或反向代理鉴权。
+* 不需要无 token 观测时，在 Dashboard 「设置」中关闭「公开只读」。也可先设 `BOTMUX_DASHBOARD_PUBLIC_READONLY=false`；但设置页一旦保存过该开关，`~/.botmux/config.json` 的持久值会优先于环境变量。
 
 ## 部署细节
 
@@ -1141,6 +1167,7 @@ url: /botmux/env.md
 | `BOTMUX_PUBLIC_URL` | *(未设置)* | 自建反代对外基址（`scheme://host[:port]`）。没接中心平台、但自己用 nginx 等把 dashboard 反代到单一公网/内网域名时设它，dashboard / 卡片终端链接改吐 `<基址>/…`、`<基址>/s/<sessionId>`，走 dashboard 前门、无需 per-bot 端口。未设回退本地 `host:port`。必须写在 `~/.botmux/.env`（会话内发起的重启只读文件、不继承 shell） |
 | `BOTMUX_DAEMON_IPC_BASE_PORT` | `7892` | 每个 daemon 的 IPC 端口 = base + botIndex |
 | `BOTMUX_WORKFLOW_RUNS_DIR` | `~/.botmux/workflow-runs` | workflow run 存储目录 |
+| `BOTMUX_DASHBOARD_PUBLIC_READONLY` | `true` | 是否允许无 token 访问 Dashboard 白名单只读 API / SSE；一旦在 Dashboard 设置页保存过该开关，`~/.botmux/config.json` 中的值优先于本环境变量 |
 
 ## 文件位置
 
@@ -2706,7 +2733,7 @@ url: /botmux/web-terminal.md
 
 # Web 终端（可交互）
 
-每个会话都带一个基于 xterm.js 的 Web 终端，地址形如 `http://<WEB_EXTERNAL_HOST>:<端口>`。
+除 ZMX 后端外，每个会话都带一个基于 xterm.js 的 Web 终端，地址形如 `http://<WEB_EXTERNAL_HOST>:<端口>`；ZMX 请通过 `botmux list` 或 `zmx attach` 进入本机终端，详见 [ZMX 后端](/botmux/zmx.md)。
 
 ![Web 终端](https://magic-builder.tos-cn-beijing.volces.com/uploads/1780033301701_web_terminal.gif)
 
@@ -3079,5 +3106,113 @@ botmux workflow cancel wf-abc-123 --reason '依赖外部超时'
 `botmux v3 run <dag.json> [--max-parallel <n>]` 在本地真实 ephemeral worker 池上跑一张**手写的** v3 dag.json，humanGate 走终端 y/N，**无飞书卡片**。仅用于开发 / 调试 v3 编排；正式跑即兴 workflow 请走飞书 `/workflow` + `start`。
 
 > Workflow 是实验性能力，仍在演进。日常用法在飞书里 `/workflow <目标>` 即可；本页其余命令面向运维 / 排障与编排开发。
+
+
+
+---
+url: /botmux/zmx.md
+---
+
+# ZMX 会话后端
+
+[ZMX](https://github.com/neurosnap/zmx) 是 botmux 的一个可选持久会话后端。它适合希望用轻量会话 daemon 保住 CLI，并在需要完整终端体验时从本机原生 attach 的 macOS / Linux 主机。
+
+ZMX 是**显式 opt-in** 后端：botmux 不会自动安装 ZMX，也不会因为它已在 `PATH` 中就自动选用。
+
+## 安装与探测
+
+botmux 要求 **zmx >= 0.7.0**。这个版本下限对应上游 [issue #201](https://github.com/neurosnap/zmx/issues/201) 的修复 —— commit [`8ba312d7` *fix(send): preserve client leadership*](https://github.com/neurosnap/zmx/commit/8ba312d7)，随 [v0.7.0](https://github.com/neurosnap/zmx/releases/tag/v0.7.0)（2026-07-23）发布：`zmx send` 改用独立的 `.Send` IPC tag，只把输入排进 PTY 队列，不再抢占 leader、也不再改写终端尺寸。ZMX 官方支持 macOS 和 Linux。
+
+```bash
+# Homebrew（macOS / Linuxbrew）
+brew install neurosnap/tap/zmx
+
+# 或 mise
+mise use -g github:neurosnap/zmx@latest
+
+# 验证 daemon 用户的 PATH 与控制面
+zmx version
+zmx list
+```
+
+其它环境可从 [ZMX 官方安装说明](https://github.com/neurosnap/zmx#install) 下载对应架构的预编译二进制，并将 `zmx` 放进运行 botmux daemon 的同一系统用户的 `PATH`。
+
+每次启动新 ZMX 会话前，botmux 都会校验可执行文件、版本和 `zmx list` 控制面。任意一项失败都会 **fail closed** 并向会话返回可操作的错误；绝不会悄悄降级到 PTY。
+
+> **⚠️ 从 0.6 升级**：替换磁盘上的 `zmx` 二进制不会替换已经运行的逐会话 daemon；升级到 0.7.0+ 后，请手动关闭并重新创建所有 0.6 会话，再重启 botmux。botmux **不会自动冷迁移**旧会话，只运行 `botmux restart` 也不够。ZMX 的 IPC `Tag` 枚举是 non-exhaustive 的（未知 tag 走 `_` 分支被忽略），所以 0.6 daemon 收到新的 `.Send` tag 会**直接丢弃**，而 `zmx send` 仍然退出码 0 —— 表现为命令成功但输入从未送达。
+
+开发时，默认 `pnpm test` 只跑 mock / 纯函数单测，**不要求本机安装 ZMX**。会启动真实 `zmx` 的覆盖位于 `*.e2e.ts`，只在显式运行 E2E 时参与，并在 ZMX 不可用时自动跳过；这与仓库现有 tmux / Herdr E2E 的处理方式一致。
+
+## 开启 ZMX
+
+推荐只为需要的 bot 在 `~/.botmux/bots.json` 中配置：
+
+```json
+{
+  "name": "codex-zmx",
+  "cliId": "codex",
+  "backendType": "zmx"
+}
+```
+
+若要让本部署的默认后端都改为 ZMX，也可在 `~/.botmux/.env` 中设置：
+
+```bash
+BACKEND_TYPE=zmx
+```
+
+修改后运行 `botmux restart`。单 bot 的 `backendType` 会覆盖部署默认值。
+
+## 运行模型
+
+botmux 为每个受管会话使用确定性名称 `bmx-<sessionId 前 8 位>`。ZMX daemon 持有 CLI 的 PTY；botmux 不再常驻一个假的 attach leader，而是使用三个无 leader 的接口：
+
+* `zmx tail`：只作为低延迟的变化 / 存活信号；botmux 会排空其 stdout，但**不会把正文交给 worker**。当前上游 `zmx tail` 的 ANSI 过滤会删除 UTF-8 多字节，中文 / emoji 不能以这里的字节为准。
+* `zmx send`：把原始输入字节排进 PTY，不 attach、不切换 leader、也不 resize。
+* `zmx history`：唯一权威的纯文本屏幕源。tail / send 会立即唤醒异步采集；即使 tail 对纯中文完全无事件，也有热态 250ms、稳态最迟约 1.5s 的错峰安全轮询。每次 idle 定稿前还会强制补拉一轮（失败时有界重试后使用最后成功快照）。
+
+新会话只在创建时短暂启动一次非交互客户端，随后输出和输入都走上面的接口。这样本地用户执行 `zmx attach` 时可以成为真正的 leader，由本地终端控制尺寸和完整 TUI；botmux 发送飞书输入不会把 leader 抢走。
+
+| 事件 | ZMX session / CLI | botmux 行为 |
+|------|-------------------|-------------|
+| `botmux restart` | 保持存活 | 恢复时分批重建 worker 与 `tail` 观察者，不重起 CLI |
+| 恢复时 backing session 已不存在 | 原进程已不在 | 保留 active / transcript 记录，不当作僵尸销毁；下一条消息时 lazy resume |
+| worker / `tail` 观察者断开 | 保持存活 | 确认 ZMX session 仍在后重建观察者 |
+| `/close` 或关闭按钮 | 销毁 / 终止 | 执行强制 kill，不会只留一个脱管会话 |
+
+## 显示、输入与终端尺寸边界
+
+这条集成刻意选择最终一致的纯文本屏幕语义，行为更接近 tmux 的持久会话生命周期，但不是 tmux 的完整终端镜像：
+
+* ZMX 向 botmux 提供的是 `history` 的**最终一致纯文本屏幕**，不保留颜色、光标状态、OSC 或 alternate screen。采集单会话 single-flight，并在采集中出现新活动时强制补拉，避免并发 history 风暴或漏掉飞行中的尾段。
+* ZMX 后端不提供 botmux 的交互式 Web TUI，也不向 backing PTY 发送 resize。需要 raw ANSI、全屏 TUI 或尺寸协商时，请使用本机 `zmx attach`。
+* 本机 attach 的 leader 负责终端尺寸；没有本机 leader 时沿用 ZMX 会话的既有尺寸。botmux 的 `send` 不会改变它。ZMX 没有提供任何「不当 leader 也能 resize」的接口，所以 botmux 的 `resize()` 是刻意的 no-op。botmux 建会话时用的是非 TTY 客户端，落到 ZMX `getTerminalSize` 的兜底值，因此**受管会话固定跑在 120×24**，CLI 的 TUI 按 120 列折行 —— 这也是飞书侧看到的宽度。需要别的尺寸时用本机 `zmx attach` 接管 leader。
+* 上游 `send` 目前没有投递 ACK / backpressure。botmux 以 1 KiB 分片发送，并在写入任何前缀前拒绝超过 64 KiB 的单次后端输入；结果不确定时不会自动重试，以免把已经入队的输入重复提交。后端会向调用方返回失败，而不是在内部隐藏重试。
+* `zmx history` 只能恢复 ZMX / ghostty 当时仍保留的有界 scrollback；超过上游滚动缓冲预算后，较早输出会被淘汰。它构成最终一致的当前可观察状态，不是无损 transcript 或终端录屏；进程退出后才出现且未被最后一次采集命中的瞬态输出也无法补回。Workflow 的 raw PTY replay log 因此不具备 tmux 的无损语义。
+
+## 在本机进入同一会话
+
+```bash
+botmux list
+```
+
+`botmux list` 会显示每条会话的实际后端。选中 ZMX 会话并按 Enter 会安全 attach 到现有的 `bmx-*` 会话；如果 backing session 已消失，命令会拒绝创建一个空 shell 来冒充原 CLI。
+
+当 daemon 运行在 macOS 上时，还可在 Dashboard 的「设置」中显式开启「本机 CLI 直开」，并保持「附加当前会话」模式。此时飞书卡片的「打开 CLI」按钮会在 iTerm2 / Terminal 中 attach 到同一个 ZMX 会话，而不是启动第二个 CLI。该功能默认关闭，且只允许有操作权限的用户触发。
+
+## 不支持的组合
+
+* **Adopt**：ZMX 不是 `/adopt` 的扫描/接入源；需要 adopt 现有外部会话时，使用 tmux / Herdr / Zellij 支持的路径。
+* **依赖隐藏 OSC 完成事件的 runner**：`codex-app`、`mira`、`mir` 的 final / thread 事件会被纯文本 history 消费掉，因此该组合启动时 fail closed；请为这些 CLI 使用 tmux / PTY。
+* **文件沙盒与读隔离**：ZMX 子 PTY 属于会话 daemon，当前无法套用 botmux 的 bwrap / Seatbelt 文件边界。因此 `sandbox: true`、全局 `BOTMUX_SANDBOX=1`，或旧配置 `readIsolation: true` 与 `backendType: "zmx"` 同时出现时，都会在**所有平台 fail closed**；配置迁移会把 `readIsolation` 统一吸收到 sandbox 请求中，worker 启动门禁也按同一决策拦截。worker 会先向会话返回可操作提示，再拒绝启动。需要真实隔离时，请启用 sandbox 并改用 tmux / PTY；否则明确关闭相应隔离配置。
+
+## 排错
+
+1. 以运行 daemon 的同一用户执行 `zmx version` 和 `zmx list`，确认版本至少为 0.7.0、`PATH` 和 socket 目录可用。
+2. 如果刚从 0.6 升级，手动关闭并重新创建旧会话 daemon；botmux 不做自动冷迁移，仅重启 botmux 不会替换它们。出现 `zmx send` 返回成功但 CLI 没收到输入，优先检查这一项。
+3. 如果显式设了 `ZMX_DIR`，确保 daemon 和本地 attach 的 shell 使用同一值。botmux 会保留 `ZMX_DIR`，但会清掉继承的 `ZMX_SESSION` / `ZMX_SESSION_PREFIX`，避免嵌套会话和名称前缀改写 `bmx-*` 目标。
+4. 查看 `botmux logs`。探测结果不确定时，botmux 会保守拒绝启动/重建，避免重复启动 CLI 或误删仍存活的会话。
+
+Dashboard 的会话查询可返回 ZMX 后端与确定性会话名，但这些字段不等于存活检查。见 [Dashboard 对外只读查询与安全边界](/botmux/dashboard.md#对外只读查询)。
 
 
