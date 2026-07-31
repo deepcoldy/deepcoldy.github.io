@@ -31,7 +31,7 @@
 - [定时任务](/botmux/schedule.md): 支持三种调度类型 + 中文自然语言，到点在创建任务的原话题内续一条消息并执行（不另开 thread，工作目录与创建时一致）。
 - [会话与话题模型](/botmux/session-model.md): 理解 botmux 的关键是搞清「一条消息落到哪个会话」——「为什么每次 @ 都像新开、丢了上下文」「新群怎么拉到历史」这类困惑，根子都在这。 适用：搞不清消息去了哪个会话、想控制新开 vs 复用、或配群内权限时。
 - [Skill + CLI 交互](/botmux/skill-cli.md): CLI 进入 botmux 会话时，自动获得 ~/.botmux/bin 在 PATH 中，以及一组开箱即用的能力。这是 CLI agent 主动与飞书话题交互的通道——「终端有输出但没发飞书」的根因往往就是模型没走这个通道（见 FAQ · C）。
-- [斜杠命令](/botmux/slash-commands.md): 在话题里直接发这些命令即可，由 daemon 拦截处理。botmux 不认识的 /xxx 会原样透传给底层 CLI（与 CLI 自身的 slash 命令互不冲突）。随时发 /help 查看完整清单。
+- [斜杠命令](/botmux/slash-commands.md): 在话题里直接发这些命令即可，由 daemon 拦截处理。只有透传章节里白名单内的命令会原样透传给底层 CLI；其余 daemon 不认识的 /xxx 会被当作普通对话文本按普通消息转发。随时发 /help 查看完整清单。
 - [Tmux 会话常驻](/botmux/tmux.md): tmux 是 botmux 的默认后端（PTY 已退役、不再自动兜底）。装好 tmux 后，CLI 进程常驻在 tmux session 内，daemon 重启不中断 CLI——这是「重启会不会丢上下文」这个高频顾虑的答案：不会。
 - [语音总结](/botmux/voice.md): 把 AI 的文字回复一键转成语音消息发到飞书群。每条回复卡片底部会出现一个「🔊 语音总结」按钮，点一下，机器人就把这条回复精简成口语、合成语音气泡发到当前话题。 <video src="https://magic-builder.tos-cn-beijing.volces.com/uploads/1780421547656_voice-video.aud.mp4" controls preload="metadata" style={{width:'100%',borderRadius:'8px'}}></video> 按需触发：默认不自动生成，想听才点——避免每条回复都附带一大段语音。先精简、再合成：点击后模型会把原回复压成几句口语（去掉代码、路径、链接等不适合朗读的内容），所以听到的是「讲人话」的总结，而不是把原文照念。有权限门：只有对该机器人有「对话 / 操作」权限的成员能点；其他人点击会收到「需要授权」的提示。每条只生成一次：同一条回复的语音只会生成一次，多人点击也不会刷屏。 语音是可选的高级功能：需要先配置一个语音合成（TTS）引擎；没配置时回复卡片不显示这个按钮。
 - [Web 终端（可交互）](/botmux/web-terminal.md): 每个会话都带一个基于 xterm.js 的 Web 终端，地址形如 http://<WEB_EXTERNAL_HOST>:<端口>。
