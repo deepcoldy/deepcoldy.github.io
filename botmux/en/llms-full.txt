@@ -907,8 +907,7 @@ Multiple people on a team, with their own bots working together.
 
 * **A Lark limitation**: bots still are not triggered by each other's regular messages; relay requires an explicit `--mention` to the target bot.
 * **Default discovery**: `botmux bots list` discovers bots in the current group through the group bot roster and shows `mentionable`; models also see relay targets in the `<available_bots>` block.
-* **Team feature (recommended)**: in the Dashboard "Teams" section, tag bots under multiple people's names and pull them into a team for **cross-deployment discovery**, then directly select them to create a group and start collaborating — the main path no longer needs `/introduce`.
-* **Legacy fallback**: only run `@everyone's bot /introduce` when an external bot is missing or shows `mentionable=false`.
+* **Team feature (recommended)**: in the Dashboard "Teams" section, tag bots under multiple people's names and pull them into a team for **cross-deployment discovery**, then directly select them to create a group and start collaborating.
 
 ![Dashboard Teams · cross-deployment collaboration](https://magic-builder.tos-cn-beijing.volces.com/uploads/1780033301213_dash-team.png)
 
@@ -1983,7 +1982,7 @@ Multiple Lark bots can run on the same machine, and each bot can be bound to a d
 
 ## Letting bots know each other
 
-The main path no longer requires a manual `/introduce`: botmux discovers bots in the current Lark group via the group bot roster by default. **Cross-deployment** recognition has two paths, both entering the **same team-trust gate and skipping `/grant`**: one is the federation in the Dashboard "Teams" panel (invite someone else's deployment into the same team, create cross-deployment groups); the other is central-platform team-sync (the platform pushes down teams and groups). A plain `/group` or the Dashboard "New Group" flow creates an ordinary same-deployment group that uses neither path and carries no cross-deployment team trust.
+botmux discovers bots in the current Lark group via the group bot roster by default. **Cross-deployment** recognition has two paths, both entering the **same team-trust gate and skipping `/grant`**: one is the federation in the Dashboard "Teams" panel (invite someone else's deployment into the same team, create cross-deployment groups); the other is central-platform team-sync (the platform pushes down teams and groups). A plain `/group` or the Dashboard "New Group" flow creates an ordinary same-deployment group that uses neither path and carries no cross-deployment team trust.
 
 For handoffs, have the model check:
 
@@ -1992,7 +1991,7 @@ For handoffs, have the model check:
 
 After that, a bot can explicitly @ the other from its own session with `botmux send --mention <the other's openId>`, triggering the relay.
 
-> A hard fact about cross-bot collaboration: **if you don't `--mention` the other bot, it won't be triggered at all**. `/introduce` is still kept as a legacy / external-bot fallback: use `@botA @botB /introduce` only when the target is missing from `botmux bots list` or shows `mentionable=false`.
+> A hard fact about cross-bot collaboration: **if you don't `--mention` the other bot, it won't be triggered at all**.
 
 ## Typical scenarios
 
@@ -3555,7 +3554,7 @@ See [Workflow](/botmux/en/workflow.md) for details.
 
 ## 👥 Multi-Bot Collaboration
 
-`@botA @botB /t <prompt>` (each opens a new topic) · `botmux bots list` (show bots available in the current group) · `@botA @botB /introduce` (legacy / external-bot fallback; usually no longer needed)
+`@botA @botB /t <prompt>` (each opens a new topic) · `botmux bots list` (show bots available in the current group)
 
 ## ⏰ Scheduling & ❓ Help
 
