@@ -9,7 +9,7 @@
 <script defer src="/botmux/static/js/lib-react.9b7f575772.js"></script>
 <script defer src="/botmux/static/js/lib-router.00d9fd057a.js"></script>
 <script defer src="/botmux/static/js/805.746bc2f44c.js"></script>
-<script defer src="/botmux/static/js/index.ac39dff4bc.js"></script>
+<script defer src="/botmux/static/js/index.7daa0f872e.js"></script>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="generator" content="Rspress v2.0.13">
 <meta property="og:type" content="website">
@@ -356,6 +356,75 @@
 
 
 <div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>字段</th><th>说明</th></tr></thead><tbody><tr><td><code>autoStartOnGroupJoin</code></td><td><code>true</code> 时，被拉入含至少一名 <code>allowedUsers</code> 的新群即自动开工（不必 @）。需在飞书后台为该应用订阅 <code>im.chat.member.bot.added_v1</code> 事件</td></tr><tr><td><code>autoStartOnGroupJoinPrompt</code></td><td>配合上面：自动开工的首轮 prompt；留空 / 空白则空消息开场，让 bot 自己读群上下文。<code>autoStartOnGroupJoin</code> 关闭时无意义</td></tr><tr><td><code>autoStartOnNewTopic</code></td><td><code>true</code> 时，话题群里每个新话题的首条消息无需 @ 也自动开工（普通群无效）。默认被动（仅 @ 触发）</td></tr></tbody></table></div>
+<h2 class="rp-toc-include" id="群消息监听"><a href="#群消息监听" class="rp-header-anchor rp-link" aria-hidden="true">#</a>群消息监听</h2>
+<p>让 Bot <strong>主动盯住某个群</strong>：命中条件的群消息无需 @ 就自动拉起一个会话去处理。典型用途是<strong>报警运维</strong>——监控/告警系统本来就有自己的飞书机器人在往群里发告警，把这个 Bot 拉进那个群、开启监听，每条告警自动开工排查，不必额外配 <a href="/botmux/webhook.html" class="rp-link">Webhook 接入点</a>。</p>
+<p>推荐在 <strong>Dashboard「角色 → 消息监听」</strong> 里按群配置（可<strong>预览</strong>最近 24h 命中的消息、<strong>试运行</strong>验证效果）；也可直接写 <code>bots.json</code> 的 <code>messageListeners</code>（键为 <code>chat_id</code>，值为下表配置）：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>字段</th><th>说明</th></tr></thead><tbody><tr><td><code>enabled</code></td><td>是否启用该群的监听。启用时 <code>prompt</code> 必填，否则整条配置被忽略</td></tr><tr><td><code>prompt</code></td><td>监听提示词：告诉 Bot 哪些消息要处理、怎么回复。命中消息会在其<strong>下方新建话题</strong>回复</td></tr><tr><td><code>name</code></td><td>监听名称（可选），如「告警监听」，用于 Dashboard 展示</td></tr><tr><td><code>replyCardTitle</code></td><td>回复卡片标题（可选），留空用默认</td></tr><tr><td><code>workingDir</code></td><td>该监听拉起会话的工作目录（可选），留空用 Bot 默认工作目录</td></tr><tr><td><code>senderPolicy.mode</code></td><td><code>all_except_excluded</code>（黑名单，默认）：处理所有匹配发送者类型、仅排除指定项；<code>include_only</code>（白名单）：只处理 <code>includeSenderOpenIds</code> 里的发送者</td></tr><tr><td><code>senderPolicy.includeSenderTypes</code></td><td>监听的发送者类型：<code>[&quot;user&quot;]</code> / <code>[&quot;bot&quot;]</code> / 两者。<strong>监听第三方告警机器人必须含 <code>&quot;bot&quot;</code></strong></td></tr><tr><td><code>senderPolicy.includeSenderOpenIds</code> / <code>excludeSenderOpenIds</code></td><td>按 <code>open_id</code> 精确白名单 / 黑名单</td></tr><tr><td><code>senderPolicy.excludeSelf</code></td><td>默认 <code>true</code>，始终排除当前 Bot 自己发的消息（防自触发）</td></tr><tr><td><code>messagePolicy.includeMsgTypes</code></td><td>监听的消息类型，默认文本 + 富文本（<code>post</code>）</td></tr></tbody></table></div>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;messageListeners&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;oc_xxxxxxxxxxxxxxxx&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">      &quot;enabled&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> true</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">      &quot;name&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;告警监听&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">      &quot;prompt&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;群里每条告警都是线上事件。定位受影响服务、给出初步排查方向；确认是误报就说明理由。&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">      &quot;senderPolicy&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> { </span><span style="color:var(--shiki-token-keyword)">&quot;mode&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;all_except_excluded&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-keyword)"> &quot;includeSenderTypes&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> [</span><span style="color:var(--shiki-token-string-expression)">&quot;bot&quot;</span><span style="color:var(--shiki-foreground)">] }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="切换代码换行" aria-label="切换代码换行"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="复制代码"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>约定与边界（V1）:</p>
+<ul>
+<li><strong>只处理群聊顶层消息</strong>：已有话题里的普通回复不处理；显式 @ 本 Bot 的消息仍走普通 @ 路由（不重复触发）。</li>
+<li><strong>每条命中消息各拉起一个会话</strong>，回复到该消息下方的新话题。</li>
+<li><strong>触达方式</strong>：实时事件路径覆盖飞书推送到的消息；<strong>其他机器人发的、以及未 @ 的消息，靠约 30s 一次的历史轮询补齐</strong>（即最长约 30s 延迟）。所以监听第三方告警机器人时用黑名单模式（<code>all_except_excluded</code> + 含 <code>&quot;bot&quot;</code>）最稳——白名单按 <code>open_id</code> 匹配，而历史接口里第三方机器人按 <code>app_id</code> 上报、可能解析不出 <code>open_id</code> 从而命中不到。</li>
+</ul>
 <h2 class="rp-toc-include" id="总结命令"><a href="#总结命令" class="rp-header-anchor rp-link" aria-hidden="true">#</a>总结命令</h2>
 
 
@@ -480,7 +549,7 @@
 <div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>字段</th><th>说明</th></tr></thead><tbody><tr><td><code>defaultOncallAutoboundChats</code></td><td><code>defaultOncall</code> 已自动绑过的 chat_id（append-only）。一旦记录，即使后续解绑也不会再次自动绑</td></tr><tr><td><code>quotaState</code></td><td>scope 级消息额度计数 <code>{ &quot;chat:&lt;cid&gt;:&lt;oid&gt;&quot; | &quot;global:&lt;oid&gt;&quot;: { limit, used } }</code>；用满自动收回对应 scope 授权</td></tr><tr><td><code>noCardChats</code></td><td><code>/card off|on</code> 写入的「该群不发流式卡片」名单</td></tr></tbody></table></div>
 <blockquote>
 <p><strong>配置优先级</strong>：<code>BOTS_CONFIG</code> 环境变量 → <code>~/.botmux/bots.json</code>。改完跑 <code>botmux restart</code> 生效。</p>
-</blockquote><!--/$--></div><footer class="rp-doc-footer"><div class="rp-doc-footer__edit"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/zh/bots-json.md" target="_blank" rel="noopener noreferrer" class="rp-edit-link rp-link">编辑此页面</a><div class="rp-last-updated"><p>最后更新于<!-- -->: <span>2026/8/10 11:38:50</span></p></div></div><div class="rp-doc-footer__divider"></div><div class="rp-prev-next-page"><a href="/botmux/cli-commands.html" class="rp-prev-next-page__item rp-prev-next-page__prev rp-link"><span class="rp-prev-next-page__item__desc">上一页</span><span class="rp-prev-next-page__item__title"><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon rp-prev-next-page__rotate_180"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg><span>CLI 命令</span></span></a><a href="/botmux/env.html" class="rp-prev-next-page__item rp-prev-next-page__next rp-link"><span class="rp-prev-next-page__item__desc">下一页</span><span class="rp-prev-next-page__item__title"><span>环境变量与文件位置</span><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></span></a></div></footer></main></div><aside class="rp-doc-layout__outline rp-scrollbar"><div class="rp-outline"><div class="rp-outline__title">目录<svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg></div><nav class="rp-outline__toc rp-scrollbar"><a href="#必填" class="rp-toc-item rp-link" title="必填" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">必填</span></a><a href="#cli-与模型" class="rp-toc-item rp-link" title="CLI 与模型" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">CLI 与模型</span></a><a href="#codex-兼容发行版" class="rp-toc-item rp-link" title="Codex 兼容发行版" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Codex 兼容发行版</span></a><a href="#接入-glm--第三方服务商per-bot-env" class="rp-toc-item rp-link" title="接入 GLM / 第三方服务商（per-bot env）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">接入 GLM / 第三方服务商（per-bot env）</span></a><a href="#codex-app-纯净输入实验性" class="rp-toc-item rp-link" title="Codex App 纯净输入（实验性）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Codex App 纯净输入（实验性）</span></a><a href="#工作目录" class="rp-toc-item rp-link" title="工作目录" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">工作目录</span></a><a href="#权限与授权" class="rp-toc-item rp-link" title="权限与授权" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">权限与授权</span></a><a href="#文件沙盒" class="rp-toc-item rp-link" title="文件沙盒" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">文件沙盒</span></a><a href="#卡片与终端" class="rp-toc-item rp-link" title="卡片与终端" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">卡片与终端</span></a><a href="#主动开工" class="rp-toc-item rp-link" title="主动开工" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">主动开工</span></a><a href="#总结命令" class="rp-toc-item rp-link" title="总结命令" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">总结命令</span></a><a href="#旧内容触发配置" class="rp-toc-item rp-link" title="旧内容触发配置" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">旧内容触发配置</span></a><a href="#语音" class="rp-toc-item rp-link" title="语音" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">语音</span></a><a href="#会议监听角色与群内输出形式" class="rp-toc-item rp-link" title="会议监听角色与群内输出形式" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">会议监听角色与群内输出形式</span></a><a href="#运行时状态自动维护勿手改" class="rp-toc-item rp-link" title="运行时状态（自动维护，勿手改）" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">运行时状态（自动维护，勿手改）</span></a></nav><div class="rp-outline__divider"></div><div class="rp-outline__bottom"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/zh/bots-json.md" target="_blank" rel="noopener noreferrer" class="rp-outline__action-row rp-edit-link rp-link"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"></path></svg><span>编辑此页面</span></a></div></div></aside></div></div>
+</blockquote><!--/$--></div><footer class="rp-doc-footer"><div class="rp-doc-footer__edit"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/zh/bots-json.md" target="_blank" rel="noopener noreferrer" class="rp-edit-link rp-link">编辑此页面</a><div class="rp-last-updated"><p>最后更新于<!-- -->: <span>2026/8/10 11:58:04</span></p></div></div><div class="rp-doc-footer__divider"></div><div class="rp-prev-next-page"><a href="/botmux/cli-commands.html" class="rp-prev-next-page__item rp-prev-next-page__prev rp-link"><span class="rp-prev-next-page__item__desc">上一页</span><span class="rp-prev-next-page__item__title"><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon rp-prev-next-page__rotate_180"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg><span>CLI 命令</span></span></a><a href="/botmux/env.html" class="rp-prev-next-page__item rp-prev-next-page__next rp-link"><span class="rp-prev-next-page__item__desc">下一页</span><span class="rp-prev-next-page__item__title"><span>环境变量与文件位置</span><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></span></a></div></footer></main></div><aside class="rp-doc-layout__outline rp-scrollbar"><div class="rp-outline"><div class="rp-outline__title">目录<svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg></div><nav class="rp-outline__toc rp-scrollbar"><a href="#必填" class="rp-toc-item rp-link" title="必填" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">必填</span></a><a href="#cli-与模型" class="rp-toc-item rp-link" title="CLI 与模型" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">CLI 与模型</span></a><a href="#codex-兼容发行版" class="rp-toc-item rp-link" title="Codex 兼容发行版" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Codex 兼容发行版</span></a><a href="#接入-glm--第三方服务商per-bot-env" class="rp-toc-item rp-link" title="接入 GLM / 第三方服务商（per-bot env）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">接入 GLM / 第三方服务商（per-bot env）</span></a><a href="#codex-app-纯净输入实验性" class="rp-toc-item rp-link" title="Codex App 纯净输入（实验性）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Codex App 纯净输入（实验性）</span></a><a href="#工作目录" class="rp-toc-item rp-link" title="工作目录" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">工作目录</span></a><a href="#权限与授权" class="rp-toc-item rp-link" title="权限与授权" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">权限与授权</span></a><a href="#文件沙盒" class="rp-toc-item rp-link" title="文件沙盒" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">文件沙盒</span></a><a href="#卡片与终端" class="rp-toc-item rp-link" title="卡片与终端" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">卡片与终端</span></a><a href="#主动开工" class="rp-toc-item rp-link" title="主动开工" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">主动开工</span></a><a href="#群消息监听" class="rp-toc-item rp-link" title="群消息监听" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">群消息监听</span></a><a href="#总结命令" class="rp-toc-item rp-link" title="总结命令" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">总结命令</span></a><a href="#旧内容触发配置" class="rp-toc-item rp-link" title="旧内容触发配置" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">旧内容触发配置</span></a><a href="#语音" class="rp-toc-item rp-link" title="语音" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">语音</span></a><a href="#会议监听角色与群内输出形式" class="rp-toc-item rp-link" title="会议监听角色与群内输出形式" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">会议监听角色与群内输出形式</span></a><a href="#运行时状态自动维护勿手改" class="rp-toc-item rp-link" title="运行时状态（自动维护，勿手改）" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">运行时状态（自动维护，勿手改）</span></a></nav><div class="rp-outline__divider"></div><div class="rp-outline__bottom"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/zh/bots-json.md" target="_blank" rel="noopener noreferrer" class="rp-outline__action-row rp-edit-link rp-link"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"></path></svg><span>编辑此页面</span></a></div></div></aside></div></div>
     <div id="__rspress_modal_container"></div>
   </body>
 </html>
