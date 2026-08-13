@@ -1000,7 +1000,7 @@ url: /botmux/bots-json.md
 | `cliPathOverride` | 旧版 CLI 入口覆盖，继续兼容 wrapper / router 和存量自定义二进制。新接入的 Codex 兼容发行版优先用 `cliRuntime`。为支持降级到旧版 BotMux，写入端会同时保存一个与 `cliRuntime.executable` 完全相同的兼容影子；不要手工配置不一致的两者 |
 | `disableCliBypass` | `true` 时不自动追加 CLI 的免审批 / 沙箱绕过参数（`--yolo`、`--dangerously-*`）；缺省 / `false` 保持原行为 |
 | `backendType` | 会话后端，可选 `pty` / `tmux` / `herdr` / `zellij`。**留空默认 `tmux`**（PTY 已退役自动回落）：tmux/herdr/zellij 这类持久后端在本机不可用时**硬拦截**、弹卡提示安装，**不再静默降级 pty**（`zellij` 需 ≥ 0.44）。`pty` 仅作显式兜底（`backendType:"pty"` 或 `BACKEND_TYPE=pty`）——直连进程、**不跨 daemon 重启存活**。见 [tmux 后端](/botmux/tmux.md) |
-| `launchShell` | 启动 CLI 用的 shell，覆盖 daemon 的 `$SHELL`：填 shell 名（`zsh` / `bash` / `sh`）或绝对路径（如 `/usr/bin/zsh`）。用于登录 `$SHELL`（如 bash）的 rc 文件里有 `exec zsh` 之类跳转、在 botmux 的 `bash -i` 启动里把 CLI 顶掉、导致会话起不来（裸壳里 `parse error`）的场景——指定后直接用它启动、绕开被跳过的 rc。**注意**：PATH / nvm / pnpm 等要放进所选 shell 的 rc（如 `.zshrc` / `.zprofile`）。留空＝用 `$SHELL`。下个会话生效；仅 `tmux` / `zellij` 后端（`pty` 直接 exec CLI，本就不受影响）。也可在 dashboard「机器人默认设置 → 启动 Shell」或 `/config launchShell <值>` 配置 |
+| `launchShell` | 启动 CLI 用的 shell，覆盖 daemon 的 `$SHELL`：填 shell 名（`zsh` / `bash` / `fish` / `sh`）或绝对路径（如 `/usr/bin/zsh`）。用于登录 `$SHELL`（如 bash）的 rc 文件里有 `exec zsh` 之类跳转、在 botmux 的 `bash -i` 启动里把 CLI 顶掉、导致会话起不来（裸壳里 `parse error`）的场景——指定后直接用它启动、绕开被跳过的 rc。**注意**：PATH / nvm / pnpm 等要放进所选 shell 的 rc（如 `.zshrc` / `.zprofile`，fish 用户写 `~/.config/fish/config.fish`）。fish 是一等启动 shell：`launchShell: "fish"` 和 fish 绝对路径（如 `/usr/bin/fish`）都支持，`$SHELL` 为 fish 时桌面 PATH 探测也会读 fish，所以 fish 用户无需把 PATH / 环境变量回填到 `.bashrc` / `.zshrc`。下个会话对需要 shell 包装的持久后端（`tmux` / `zellij` / `zmx`）生效；`pty` 直接 exec CLI，本就不受影响。也可在 dashboard「机器人默认设置 → 启动 Shell」或 `/config launchShell <值>` 配置 |
 | `lang` | 该 bot 的界面语言 `zh` / `en`；留空回落 `BOTMUX_LANG` / `LANG` 环境变量 |
 | `customPassthroughCommands` | 在固定透传白名单和当前 CLI adapter 默认放行命令之上，额外放行透传给底层 CLI 的 slash 命令，如 `["/export"]`（Claude Code / Codex 的 `/goal` 已默认放行）。自动归一化（缺失的 `/` 自动补、转小写、仅留 `[a-z0-9:_-]`、去重）；会遮蔽 botmux daemon 命令（如 `/status`）的项会被丢弃，配了也不生效。用 `/list-slash-command` 查看完整放行清单。见 [斜杠命令](/botmux/slash-commands.md) |
 | `env` | 该 bot 的进程环境变量 `{ "KEY": "值" }`，注入到这个 bot 的 CLI 进程。最常见用途：让某个 bot 跑 GLM / 第三方 Anthropic·OpenAI 兼容服务商（见下方示例），也可设 `HTTPS_PROXY` 或 CLI 专属开关。值支持字符串 / 数字 / 布尔；`BOTMUX_` / `LARK_APP_` 等 botmux 保留键会被忽略。按**会话**注入（下个新会话生效），不写入共享 tmux server 全局、不会串到别的 bot。也可在 dashboard「机器人默认设置 → 环境变量」配置 |
@@ -1743,10 +1743,10 @@ botmux 在 tmux 里用 `<$SHELL> -i -c '… 启动 CLI'` 拉起会话，`-i` 会
 
 v2.95.0 起 botmux 会检测这种"会话没真正起来"的情况并发一张诊断卡，不再把消息打进空 shell。修复二选一：
 
-* **配 `launchShell`（推荐）**：给该 bot 指定直接用目标 shell 启动，绕开会跳转的启动文件。`/config launchShell zsh`，或 dashboard「机器人默认设置 → 启动 Shell」，或 `bots.json` 加 `"launchShell": "zsh"`。注意 PATH / nvm 等要放进所选 shell 的启动文件（如 `.zshrc`）。
+* **配 `launchShell`（推荐）**：给该 bot 指定直接用目标 shell 启动，绕开会跳转的启动文件。`/config launchShell zsh`，或 dashboard「机器人默认设置 → 启动 Shell」，或 `bots.json` 加 `"launchShell": "zsh"`。注意 PATH / nvm 等要放进所选 shell 的启动文件（如 `.zshrc`，fish 用户写 `~/.config/fish/config.fish`，fish 已作为一等启动 shell 支持）。
 * **改启动文件**：给跳转加守卫，只在手动开终端时切：`[ -z "$BASH_EXECUTION_STRING" ] && [ -t 1 ] && exec zsh`（PATH / nvm 等导出放在它之前）。
 
-改完 `botmux restart`，重发一条消息即可。仅 `tmux` / `zellij` 后端涉及；`pty` 后端直接启动 CLI，不受影响。
+改完 `botmux restart`，重发一条消息即可。这会影响需要 shell 包装的持久后端（`tmux` / `zellij` / `zmx`）；`pty` 后端直接启动 CLI，不受影响。
 
 ## 把机器人拉进新群能看之前的聊天记录吗？
 
@@ -2203,8 +2203,8 @@ url: /botmux/pitfalls.md
 
 ## 环境变量丢失（高频）
 
-* **bash 用户把变量写在 `.bash_profile` 拿不到**：新 worker 用 `bash -i` 启动，`bash -i` 只读 `.bashrc`。→ 在 `.bashrc` 里 `source ~/.bash_profile`，或直接把变量写进 `.bashrc`（zsh 用户写 `.zshrc`）。这是 `API Error 403` / 网关 token 报错的常见根因。
-* **root 下 Claude 拒绝 `--dangerously-skip-permissions`**：报 "cannot be used with root/sudo privileges"。→ `export IS_SANDBOX=1`（zsh 写 `.zshrc`、bash 写 `.bashrc`；PM2 / systemd / Docker 场景配在对应启动环境）。新版已自动对 root 场景注入。
+* **bash 用户把变量写在 `.bash_profile` 拿不到**：新 worker 用 `bash -i` 启动，`bash -i` 只读 `.bashrc`。→ 在 `.bashrc` 里 `source ~/.bash_profile`，或直接把变量写进 `.bashrc`（zsh 用户写 `.zshrc`，fish 用户写 `~/.config/fish/config.fish`）。这是 `API Error 403` / 网关 token 报错的常见根因。
+* **root 下 Claude 拒绝 `--dangerously-skip-permissions`**：报 "cannot be used with root/sudo privileges"。→ `export IS_SANDBOX=1`（zsh 写 `.zshrc`、bash 写 `.bashrc`、fish 写 `~/.config/fish/config.fish`；PM2 / systemd / Docker 场景配在对应启动环境）。新版已自动对 root 场景注入。
 
 ## 自定义 wrapper / 网关接入
 
