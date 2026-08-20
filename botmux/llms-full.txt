@@ -517,7 +517,8 @@ url: /botmux/api-task-trigger.md
 * **`options.timeoutMs` 范围 `[1000, 300000]`**（1 秒 ~ 5 分钟），越界报 400。不传默认 120000。
 * **`options.model`** / **`options.reasoningEffort`**（可选，**仅对 codex / codex-app / grok 机器人生效**）：按本次触发覆盖模型与推理档位。
   * `model`：该 CLI 的模型 id（≤200 字符）；`reasoningEffort`：`low` / `medium` / `high` / `xhigh`（以及 Codex 部分模型的 `max` / `ultra`）。原样透传，不做降级；目标模型不支持该档位时请求 400。
-  * **仅新建会话生效**：只在这次触发**创建新会话**时冻结；折叠进已有 worker 的续轮不改写。
+  * **仅新建会话生效**：只在这次触发**创建新会话**时记录；折叠进已有 worker 的续轮不改写。
+  * `model` **只驻内存、不落盘**：它在该会话本次生命周期内的每次启动生效，daemon 重启后不恢复——之后按机器人配置的模型启动。`reasoningEffort` 仍随会话持久化。
   * **作用域收窄到带思考强度控制的 CLI**：目标机器人不是 codex/codex-app/grok 时，这两个字段被忽略（不会改动 Claude/Gemini/CoCo 等的模型）。
 
 ### 同步模式（waitForFinalOutput）
@@ -1005,7 +1006,7 @@ url: /botmux/bots-json.md
 |------|------|
 | `name` | 进程名后缀，如 `claude-main` → `botmux-claude-main`；留空默认 `botmux-<序号>` |
 | `cliId` | CLI 适配器，默认 `claude-code`。见 [多 CLI 适配器](/botmux/adapters.md) |
-| `model` | 启动 CLI 用的模型名（如 `claude --model opus`）；留空走 CLI 默认。同一 `cliId` 的多个 bot 可跑不同模型。各适配器的 `modelChoices` 是 `botmux setup` 里给出的候选 |
+| `model` | 启动 CLI 用的模型名（如 `claude --model opus`）；留空走 CLI 默认。同一 `cliId` 的多个 bot 可跑不同模型。各适配器的 `modelChoices` 是 `botmux setup` 里给出的候选。**每次启动 CLI 时都按当前配置解析**（含 resume）：改完（dashboard 或本文件）对**存量会话**也生效，在它下一次启动/恢复时应用；与 `cliId` / `cliRuntime` / `wrapperCli` 不同——那几个在会话创建时冻结，避免中途换掉底层运行时 |
 | `cliRuntime` | Codex 兼容发行版的结构化运行时描述：`{ id, displayName?, executable, update? }`。它复用 `codex` 适配器，但版本、更新源和会话身份都属于该发行版。见 [Codex 兼容发行版](/botmux/adapters.md#codex-兼容发行版) |
 | `cliPathOverride` | 旧版 CLI 入口覆盖，继续兼容 wrapper / router 和存量自定义二进制。新接入的 Codex 兼容发行版优先用 `cliRuntime`。为支持降级到旧版 BotMux，写入端会同时保存一个与 `cliRuntime.executable` 完全相同的兼容影子；不要手工配置不一致的两者 |
 | `disableCliBypass` | `true` 时不自动追加 CLI 的免审批 / 沙箱绕过参数（`--yolo`、`--dangerously-*`）；缺省 / `false` 保持原行为 |

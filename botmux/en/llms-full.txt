@@ -518,7 +518,8 @@ Hard constraints (all validated; violations return 400):
 * **`options.timeoutMs` range `[1000, 300000]`** (1s–5min); out of range returns 400. Defaults to 120000.
 * **`options.model`** / **`options.reasoningEffort`** (optional, **codex / codex-app / grok bots only**): override the model and reasoning level for this trigger.
   * `model`: a model id for that CLI (≤200 chars); `reasoningEffort`: `low` / `medium` / `high` / `xhigh` (plus `max` / `ultra` on some Codex models). Passed through verbatim — no downgrade; the request returns 400 when the target model does not support the effort.
-  * **Fresh-session only**: frozen only when this trigger **creates a new session**; a fold-in to an existing worker does not rewrite it.
+  * **Fresh-session only**: recorded only when this trigger **creates a new session**; a fold-in to an existing worker does not rewrite it.
+  * `model` is **held in memory, never persisted**: it applies to every launch of that session within this daemon's lifetime and is not restored after a daemon restart — later launches use the bot's configured model. `reasoningEffort` is still persisted with the session.
   * **Scoped to CLIs with an explicit reasoning control**: ignored when the target bot is not codex/codex-app/grok (never changes a Claude/Gemini/CoCo bot's model).
 
 ### Sync mode (waitForFinalOutput)
@@ -1008,7 +1009,7 @@ There are many fields, listed below grouped by purpose. The vast majority are **
 |------|------|
 | `name` | Process name suffix, e.g. `claude-main` → `botmux-claude-main`; leave empty to default to `botmux-<index>` |
 | `cliId` | CLI adapter, defaults to `claude-code`. See [Multi-CLI adapters](/botmux/en/adapters.md) |
-| `model` | Model name used to launch the CLI (e.g. `claude --model opus`); leave empty to use the CLI default. Multiple bots with the same `cliId` can run different models. Each adapter's `modelChoices` are the candidates offered in `botmux setup` |
+| `model` | Model name used to launch the CLI (e.g. `claude --model opus`); leave empty to use the CLI default. Multiple bots with the same `cliId` can run different models. Each adapter's `modelChoices` are the candidates offered in `botmux setup`. **Resolved from the current config on every CLI launch**, resume included: a change (dashboard or this file) also applies to **existing sessions**, from their next launch/resume onward. Unlike `cliId` / `cliRuntime` / `wrapperCli`, which are frozen when the session is created so a live conversation never has its runtime swapped underneath it |
 | `cliRuntime` | Structured runtime descriptor for a Codex-compatible distribution: `{ id, displayName?, executable, update? }`. It reuses the `codex` adapter while retaining its own version, update source, and session identity. See [Codex-compatible distributions](/botmux/en/adapters.md#codex-compatible-distributions) |
 | `cliPathOverride` | Legacy CLI entry-point override, retained for wrappers / routers and existing custom binaries. Prefer `cliRuntime` for a new Codex-compatible distribution. To support downgrading BotMux, writers also persist an exact compatibility shadow of `cliRuntime.executable`; do not manually configure mismatched values |
 | `disableCliBypass` | When `true`, the CLI's auto-approve / sandbox-bypass flags (`--yolo`, `--dangerously-*`) are not appended automatically; omitted / `false` keeps the original behavior |
