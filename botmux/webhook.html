@@ -9,7 +9,7 @@
 <script defer src="/botmux/static/js/lib-react.9b7f575772.js"></script>
 <script defer src="/botmux/static/js/lib-router.00d9fd057a.js"></script>
 <script defer src="/botmux/static/js/805.746bc2f44c.js"></script>
-<script defer src="/botmux/static/js/index.e05266f9c3.js"></script>
+<script defer src="/botmux/static/js/index.62d5946044.js"></script>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="generator" content="Rspress v2.0.13">
 <meta property="og:type" content="website">
@@ -95,6 +95,70 @@
 
 <div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>请求头</th><th>含义</th></tr></thead><tbody><tr><td><code>x-botmux-timestamp</code></td><td>Unix 时间戳（±5 分钟容差内）</td></tr><tr><td><code>x-botmux-nonce</code></td><td>每次唯一，用于防重放</td></tr><tr><td><code>x-botmux-signature</code></td><td><code>sha256=&lt;hex&gt;</code> 或 base64url，签名内容 = <code>时间戳</code> + <code>.</code> + <code>原始body</code></td></tr></tbody></table></div>
 <p>适合公网、或本就会签名的发送方（GitHub / Stripe 那类）。</p>
+<h2 class="rp-toc-include" id="幂等重复投递去重"><a href="#幂等重复投递去重" class="rp-header-anchor rp-link" aria-hidden="true">#</a>幂等（重复投递去重）</h2>
+<p>很多上游是 <strong>at-least-once</strong> 语义：网络超时、网关重试都可能把<strong>同一个事件</strong>投递多次。默认情况下 botmux 会把每次合法 POST 都当成新事件，各开一个会话。</p>
+<p>只要请求里带上<strong>幂等键</strong>，botmux 就会把重复投递折叠成一次：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>携带方式</th><th>写法</th><th>说明</th></tr></thead><tbody><tr><td>请求头（推荐）</td><td><code>x-botmux-idempotency-key: &lt;唯一id&gt;</code></td><td>botmux 专属，优先级最高</td></tr><tr><td>请求头</td><td><code>idempotency-key: &lt;唯一id&gt;</code></td><td>IETF draft / Stripe 通用拼法</td></tr><tr><td>请求头</td><td><code>x-idempotency-key: &lt;唯一id&gt;</code></td><td>不少平台（如 EventHub）默认就发这个</td></tr><tr><td>查询参数</td><td><code>…?idempotencyKey=&lt;唯一id&gt;</code></td><td>给只能配 URL、加不了请求头的系统</td></tr><tr><td>请求体字段</td><td>按接入点配一个点号路径（如 <code>event.id</code>）</td><td>唯一 id 在事件 JSON 里时用</td></tr></tbody></table></div>
+<p><strong>上游只要已经在发上面任一请求头，就不需要做任何改造。</strong>三个头按表中顺序取第一个非空值。</p>
+<h3 class="rp-toc-include" id="行为"><a href="#行为" class="rp-header-anchor rp-link" aria-hidden="true">#</a>行为</h3>
+<ul>
+<li><strong>首次</strong>：正常投递，响应带 <code>idempotency: {key, action:&quot;accepted&quot;}</code>。</li>
+<li><strong>重复</strong>（同键 + 同 body）：<strong>不投递</strong>，返回 <code>200 {ok:true, action:&quot;ignored&quot;, idempotency:{action:&quot;duplicate&quot;, firstTriggerId}}</code>。<code>firstTriggerId</code> 是真正跑起来的那一轮，方便对账。
+<blockquote>
+<p>这里刻意返回 <strong>2xx 而不是 4xx</strong>：at-least-once 的发送方看到非 2xx 会认为「没投成功」继续重试，返错只会造成重试风暴。</p>
+</blockquote>
+</li>
+<li><strong>同键但 body 不同</strong>：说明这个键不是可靠的唯一标识（上游 bug）。此时<strong>照常投递</strong>并记一条 warning——丢掉一条可能是真实告警的事件，比多跑一次会话严重得多。</li>
+<li><strong>没带键</strong>：行为与本功能上线前完全一致。</li>
+<li><strong>首投仍在进行中</strong>时到达的重复：不会被提前 ACK，而是等首投真实结果——首投成功才回 <code>ignored</code>；首投失败则由这条请求<strong>接棒投递</strong>（避免上游因收到 2xx 停止重试而丢事件）。</li>
+<li><strong>同一事件的并发重复过多</strong>时返回可重试的 <code>503</code>（不是 2xx，也不投递），发送方稍后重试即可。</li>
+<li><code>dryRun</code> 不消耗键；<strong>投递失败</strong>（5xx / daemon 离线）也不消耗键，上游重试照常生效。</li>
+<li><strong><code>wait</code> 模式超时（504）不释放键</strong>：那一轮其实已经派发、通常还在跑，所以重试会被折叠而不是重复投递。</li>
+<li>⚠️ <strong>HMAC 校验方式的限制</strong>：nonce 防重放先于幂等闸生效，所以<strong>原样重放同一个已签名请求</strong>（同 nonce）会返回 <code>409 replay</code>，不会被折叠。用 HMAC 时请让每次重试<strong>换一个新 nonce 并重新签名</strong>——同键 + 新 nonce 可以正常折叠。
+<blockquote>
+<p>之所以不做成「原样重放也能折叠」：签名只覆盖 <code>时间戳.原始body</code>，<strong>不覆盖</strong>幂等键、query 以及 <code>x-botmux-chat-id</code> / <code>-session-id</code> / <code>-root-message-id</code> 等路由头。若允许失败后回收 nonce，拿到旧签名的人就能改这些未签字段重放。要正确支持需要给 nonce 也做一套绑定完整请求指纹的 reserve/settle，属于更大的安全改动，不在本次范围内。</p>
+</blockquote>
+</li>
+</ul>
+<h3 class="rp-toc-include" id="局限重要"><a href="#局限重要" class="rp-header-anchor rp-link" aria-hidden="true">#</a>局限（重要）</h3>
+<p>去重窗口是 <strong>dashboard 进程内</strong>的，默认记 10 分钟，<strong>dashboard 重启后丢失</strong>（与上面 HMAC 防重放的 nonce 同样性质）。它解决的是现实中真正发生的「上游隔几秒到几分钟重投」，<strong>不是</strong>跨进程崩溃的持久 at-most-once 保证。</p>
+<p>超过窗口后若某次投递始终没有返回结果（下游卡死），该键会被回收——这是明确的取舍：<strong>宁可允许一次可能的重复投递，也不永久吞掉这个事件键</strong>。单个接入点最多跟踪 10000 个键、单个事件最多并行挂 64 个等待者，超出后退化为「不去重」或返回可重试的 503，不会无上限占用内存。</p>
+<p>若某个上游会拿同一个 id 表示<strong>不同</strong>事件，可在接入点上关掉该功能。</p>
 <h2 class="rp-toc-include" id="投递到哪个群"><a href="#投递到哪个群" class="rp-header-anchor rp-link" aria-hidden="true">#</a>投递到哪个群</h2>
 <h3 class="rp-toc-include" id="固定群"><a href="#固定群" class="rp-header-anchor rp-link" aria-hidden="true">#</a>固定群</h3>
 <p>按<strong>群名</strong>从下拉里选（数据来自该机器人所在的群），群 ID 自动写进接入点。之后那条裸 URL 不带任何参数就能触发。最贴合「一个 URL 直接触发」的用法。</p>
@@ -175,7 +239,11 @@
 
 
 
-<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>现象</th><th>原因</th></tr></thead><tbody><tr><td><code>401 token verification failed</code></td><td>令牌不对 / 没带令牌</td></tr><tr><td><code>404 unknown or disabled connector</code></td><td>接入点 ID 错或已停用</td></tr><tr><td><code>400 target chatId is required</code></td><td>动态模式没带群 ID（见上「由请求指定」）</td></tr><tr><td><code>400 dedup_key_not_found</code></td><td>配了去重字段，但事件 body 里取不到该路径的值</td></tr><tr><td><code>429 rate limit exceeded</code></td><td>触发太频繁，超过限流上限</td></tr></tbody></table></div><!--/$--></div><footer class="rp-doc-footer"><div class="rp-doc-footer__edit"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/zh/webhook.md" target="_blank" rel="noopener noreferrer" class="rp-edit-link rp-link">编辑此页面</a><div class="rp-last-updated"><p>最后更新于<!-- -->: <span>2026/8/28 13:40:59</span></p></div></div><div class="rp-doc-footer__divider"></div><div class="rp-prev-next-page"><a href="/botmux/dashboard.html" class="rp-prev-next-page__item rp-prev-next-page__prev rp-link"><span class="rp-prev-next-page__item__desc">上一页</span><span class="rp-prev-next-page__item__title"><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon rp-prev-next-page__rotate_180"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg><span>Dashboard 管控面</span></span></a><a href="/botmux/api-task-trigger.html" class="rp-prev-next-page__item rp-prev-next-page__next rp-link"><span class="rp-prev-next-page__item__desc">下一页</span><span class="rp-prev-next-page__item__title"><span>API 编程式触发任务</span><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></span></a></div></footer></main></div><aside class="rp-doc-layout__outline rp-scrollbar"><div class="rp-outline"><div class="rp-outline__title">目录<svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg></div><nav class="rp-outline__toc rp-scrollbar"><a href="#快速上手" class="rp-toc-item rp-link" title="快速上手" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">快速上手</span></a><a href="#校验方式" class="rp-toc-item rp-link" title="校验方式" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">校验方式</span></a><a href="#令牌默认--简单" class="rp-toc-item rp-link" title="令牌（默认 · 简单）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">令牌（默认 · 简单）</span></a><a href="#hmac-签名高级--更安全" class="rp-toc-item rp-link" title="HMAC 签名（高级 · 更安全）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">HMAC 签名（高级 · 更安全）</span></a><a href="#投递到哪个群" class="rp-toc-item rp-link" title="投递到哪个群" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">投递到哪个群</span></a><a href="#固定群" class="rp-toc-item rp-link" title="固定群" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">固定群</span></a><a href="#由请求指定动态" class="rp-toc-item rp-link" title="由请求指定（动态）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">由请求指定（动态）</span></a><a href="#每次新建群" class="rp-toc-item rp-link" title="每次新建群" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">每次新建群</span></a><a href="#触发方式" class="rp-toc-item rp-link" title="触发方式" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">触发方式</span></a><a href="#处理指令可选" class="rp-toc-item rp-link" title="处理指令（可选）" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">处理指令（可选）</span></a><a href="#安全与可观测" class="rp-toc-item rp-link" title="安全与可观测" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">安全与可观测</span></a><a href="#常见返回" class="rp-toc-item rp-link" title="常见返回" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">常见返回</span></a></nav><div class="rp-outline__divider"></div><div class="rp-outline__bottom"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/zh/webhook.md" target="_blank" rel="noopener noreferrer" class="rp-outline__action-row rp-edit-link rp-link"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"></path></svg><span>编辑此页面</span></a></div></div></aside></div></div>
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>现象</th><th>原因</th></tr></thead><tbody><tr><td><code>401 token verification failed</code></td><td>令牌不对 / 没带令牌</td></tr><tr><td><code>404 unknown or disabled connector</code></td><td>接入点 ID 错或已停用</td></tr><tr><td><code>400 target chatId is required</code></td><td>动态模式没带群 ID（见上「由请求指定」）</td></tr><tr><td><code>400 dedup_key_not_found</code></td><td>配了去重字段，但事件 body 里取不到该路径的值</td></tr><tr><td><code>200 action:&quot;ignored&quot;</code> + <code>idempotency.action:&quot;duplicate&quot;</code></td><td>幂等键命中重复投递，已折叠（不是错误）</td></tr><tr><td><code>429 rate limit exceeded</code></td><td>触发太频繁，超过限流上限</td></tr></tbody></table></div><!--/$--></div><footer class="rp-doc-footer"><div class="rp-doc-footer__edit"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/zh/webhook.md" target="_blank" rel="noopener noreferrer" class="rp-edit-link rp-link">编辑此页面</a><div class="rp-last-updated"><p>最后更新于<!-- -->: <span>2026/8/29 15:32:11</span></p></div></div><div class="rp-doc-footer__divider"></div><div class="rp-prev-next-page"><a href="/botmux/dashboard.html" class="rp-prev-next-page__item rp-prev-next-page__prev rp-link"><span class="rp-prev-next-page__item__desc">上一页</span><span class="rp-prev-next-page__item__title"><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon rp-prev-next-page__rotate_180"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg><span>Dashboard 管控面</span></span></a><a href="/botmux/api-task-trigger.html" class="rp-prev-next-page__item rp-prev-next-page__next rp-link"><span class="rp-prev-next-page__item__desc">下一页</span><span class="rp-prev-next-page__item__title"><span>API 编程式触发任务</span><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></span></a></div></footer></main></div><aside class="rp-doc-layout__outline rp-scrollbar"><div class="rp-outline"><div class="rp-outline__title">目录<svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg></div><nav class="rp-outline__toc rp-scrollbar"><a href="#快速上手" class="rp-toc-item rp-link" title="快速上手" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">快速上手</span></a><a href="#校验方式" class="rp-toc-item rp-link" title="校验方式" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">校验方式</span></a><a href="#令牌默认--简单" class="rp-toc-item rp-link" title="令牌（默认 · 简单）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">令牌（默认 · 简单）</span></a><a href="#hmac-签名高级--更安全" class="rp-toc-item rp-link" title="HMAC 签名（高级 · 更安全）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">HMAC 签名（高级 · 更安全）</span></a><a href="#幂等重复投递去重" class="rp-toc-item rp-link" title="幂等（重复投递去重）" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">幂等（重复投递去重）</span></a><a href="#行为" class="rp-toc-item rp-link" title="行为" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">行为</span></a><a href="#局限重要" class="rp-toc-item rp-link" title="局限（重要）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">局限（重要）</span></a><a href="#投递到哪个群" class="rp-toc-item rp-link" title="投递到哪个群" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">投递到哪个群</span></a><a href="#固定群" class="rp-toc-item rp-link" title="固定群" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">固定群</span></a><a href="#由请求指定动态" class="rp-toc-item rp-link" title="由请求指定（动态）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">由请求指定（动态）</span></a><a href="#每次新建群" class="rp-toc-item rp-link" title="每次新建群" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">每次新建群</span></a><a href="#触发方式" class="rp-toc-item rp-link" title="触发方式" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">触发方式</span></a><a href="#处理指令可选" class="rp-toc-item rp-link" title="处理指令（可选）" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">处理指令（可选）</span></a><a href="#安全与可观测" class="rp-toc-item rp-link" title="安全与可观测" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">安全与可观测</span></a><a href="#常见返回" class="rp-toc-item rp-link" title="常见返回" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">常见返回</span></a></nav><div class="rp-outline__divider"></div><div class="rp-outline__bottom"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/zh/webhook.md" target="_blank" rel="noopener noreferrer" class="rp-outline__action-row rp-edit-link rp-link"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"></path></svg><span>编辑此页面</span></a></div></div></aside></div></div>
     <div id="__rspress_modal_container"></div>
   </body>
 </html>
