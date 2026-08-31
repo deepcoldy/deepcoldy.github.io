@@ -1153,6 +1153,8 @@ url: /botmux/bots-json.md
 | `brandLabel` | 卡片底部品牌文案。`undefined`=默认 `botmux` 链接；`""`=隐藏；其它字符串=原样渲染（支持 markdown）。纯样式，不影响路由 / 权限 |
 | `showUsageInCardFooter` | 回复卡片页脚是否展示 Agent CLI 原生提供的 Context / Token 用量。缺省 / `true`=展示，`false`=同时隐藏两项；单项数据缺失时仍只省略缺失项。仅控制卡片展示，不停止 Usage Ledger 或其它统计 |
 | `disableStreamingCard` | `true` 时彻底不发实时流式 session 卡片（web 终端仍跑、最终答复仍经 `botmux send` 到达，只是没有自动刷新的状态卡）。给嫌实时卡吵的用户 |
+| `pinStreamingCard` | `true` 时为该 bot **置顶当前公开的实时状态卡片**；默认关闭，只有显式 `true` 才开启。只认当前公开 live-status 的真实 `streamCardId`，repo 选择卡、私有 `/card`、最终回复卡、CoT、关闭卡、以及其它交互卡都不参与。开关支持热更新：通过 dashboard 或 `/botconfig set pinStreamingCard on/off` 成功写盘且有效值发生变化后，会对这个 bot 的**现有活跃会话**做 best-effort 热重算；配置响应**不等待**飞书 Pin/Unpin 完成。失败不会中断发卡、转移、恢复、关闭或配置本身；异常期间可能暂时出现 0 个或多个 Pin。该功能**不维护持久重试日志，也不会全量扫描整群 Pin 状态**：显式从 on 切到 off 时会清理当前会话已知的实时卡 ID；若配置已经是 off 且进程丢失了来源记录，后续关闭或转移不会冒险移除可能由人工创建的 Pin |
+| `noPinStreamingCardChats` | 一个 `chatId` 数组，表示即使 bot 已开启 `pinStreamingCard`，这些群里也**不要自动置顶**流式卡片。它就是 `/card pin off|on` 背后的 negative set。实时流式卡片本身仍照常发送，只是当前群不再触发 Pin 副作用；为空或缺省表示没有按群关闭 |
 | `silentTurnReactions` | `true` 时，无卡片会话不再给触发消息添加 GoGoGo / DONE reaction。只影响 `disableStreamingCard` 或 `noCardChats` 关闭实时卡片后的轻量状态提示；默认 `false` |
 | `receivedReactionEmoji` | 无卡片会话「已收到」reaction 的飞书 emoji\_type；`undefined`=默认 `GoGoGo`（冲!）。自由字符串，填错只是静默不加表情（best-effort） |
 | `doneReactionEmoji` | 无卡片会话「已完成」reaction 的飞书 emoji\_type；`undefined`=默认 `DONE`（✅）。设成与 `receivedReactionEmoji` 相同值可让完成态不翻脸——适合 idle 判定可能提前触发的 CLI（如 Pi），避免过早出现误导性的 ✅ |
@@ -1338,6 +1340,19 @@ url: /botmux/cards.md
 * **卡片上直接操作**：打开 Web 终端、🔑 获取操作链接、关闭会话，额度可重试时还有「🔁 重发上一条任务」。
 * **每轮一张新卡片**：上一轮卡片冻结存档，对话历史清晰可回溯；会话用 [`/relay`](/botmux/relay.md) 搬到别的群后，原卡片也会自动冻结为存档（移除按钮）。
 * **关闭时给「可恢复」卡片**：带「▶️ 恢复会话」按钮随时点回来继续；**该 CLI 若支持原生 resume**（adapter 实现了 `buildResumeCommand` 且有原生 session id），还会附上原生命令（如 `claude --resume <id>`）方便手动恢复；不支持时只给 botmux 的恢复按钮 + 一句提示。
+
+## 置顶当前实时卡片
+
+如果某个 bot 开启了 `pinStreamingCard`，Botmux 会尝试把**当前公开实时状态卡片**置顶到聊天顶部，方便随时点「关闭会话」或打开终端。
+
+* 这是 **per-bot、默认关闭、显式开启** 的选项。
+* 飞书层的 Pin 仍然是**按群生效**，但每个活跃会话依旧维护各自的当前/冻结流式卡片生命周期。也就是说，同一个群里如果有多个活跃话题或多个 bot，可能同时出现多个由不同会话独立维护的群级置顶项。
+* 只会处理当前公开 live-status 的真实 `streamCardId`。
+* repo 选择卡、私有 `/card`、最终回复卡、CoT、关闭卡，以及其它交互卡都**不会**被置顶。
+* 通过 dashboard 或 `/botconfig set pinStreamingCard on/off` 改开关后，Botmux 会对这个 bot 的**现有活跃会话**立即做 best-effort 热重算；配置响应本身不会等待飞书 Pin/Unpin 完成。
+* `/card pin off` 是**按群逃生阀**：保留实时卡片本身，但停止在当前群自动置顶；`/card pin on` 恢复当前群置顶；`/card pin status` 会区分 bot 级未开启、当前群显式关闭、以及当前群实际开启三种状态。
+* 失败是 **fail-open**：不会影响发卡、转移、恢复、关闭或配置写入。异常期间可能暂时没有任何 Pin，也可能短时间同时存在多个 Pin。
+* 该能力只基于当前会话已知的 `streamCardId` / 冻结卡 ID 做补偿，不做全群 Pin 扫描，也没有持久重试日志。显式从 on 切到 off 时会按这些已知 ID 清理；如果进程丢失来源记录时配置已经是 off，后续关闭或转移可能无法区分功能 Pin 与人工 Pin，因此不会冒险清理。
 
 > **打开终端 = 只读**：卡片主按钮「🖥️ 打开 Web 终端」是只读查看；要**可写操作**点「🔑 获取操作链接」——**私密投递**：普通平铺群优先发一张群内「仅你可见」的 ephemeral 卡（不用离开会话），话题/线程或私聊、以及 ephemeral 失败时才走私聊 DM。「🔄 重启」「接管配置」等管理按钮在**会话卡**上，不在每轮的流式卡上。
 
@@ -3562,7 +3577,7 @@ url: /botmux/slash-commands.md
 | `/fork --create <群名>` | 不建子话题，改为把当前会话分身到一个新建群 |
 | `/rename <标题>` | 重命名当前 Botmux 会话，并同步运行中的 Codex/Claude 原生会话名 |
 | `/fork --create <新群名>` | 把当前空闲会话分身到一个新建群，源会话原样保留继续（仅 Claude 系 / Codex 终端模式；需在源会话所在话题内发起） |
-| `/card` | 手动召唤当前会话的流式卡片（关流式时也能召唤并恢复实时刷新；私密卡片模式下改发仅授权人可见的静态快照） |
+| `/card` | 手动召唤当前会话的流式卡片（关流式时也能召唤并恢复实时刷新；私密卡片模式下改发仅授权人可见的静态快照）。`/card off`、`/card on` 控制本群是否出流式卡；`/card pin off`、`/card pin on`、`/card pin status` 控制当前群的流式卡片置顶开关 |
 | `/cot` | 思考过程消息开关：`/cot off` 关闭本群的思考气泡，`/cot on` 恢复，`/cot show` 在开关关闭时临时召唤一次当前回合的思考气泡，`/cot status` 查看状态（bot 级总开关 `thinkingCard` 默认 on；仅 claude-code / codex 支持） |
 | `/term` | 获取当前会话的「可操作终端」（带写权限）链接，私密发给 owner（群内仅你可见，话题/单聊回退私信，不在群里暴露） |
 | `/dashboard [模块]` | 在飞书里打开 Dashboard 控制卡片（sessions/schedules/groups/settings/help 等） |
