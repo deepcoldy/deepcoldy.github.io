@@ -9,7 +9,8 @@ botmux —— 飞书话题群 ↔ AI 编程 CLI 桥接。MIT 协议开源。
 ## 链接
 
 * **GitHub**：[github.com/deepcoldy/botmux](https://github.com/deepcoldy/botmux)
-* **npm**：`npm install -g botmux` · [npmjs.com/package/botmux](https://www.npmjs.com/package/botmux)
+* **安装**：`curl -fsSL https://raw.githubusercontent.com/deepcoldy/botmux/master/install.sh | sh`（自包含二进制，不需要 Node）
+* **npm**（备选，需 Node ≥ 22）：`npm install -g botmux` · [npmjs.com/package/botmux](https://www.npmjs.com/package/botmux)
 * **贡献指南**：[CONTRIBUTING.md](https://github.com/deepcoldy/botmux/blob/master/CONTRIBUTING.md)
 * **许可证**：[MIT](https://github.com/deepcoldy/botmux/blob/master/LICENSE)
 
@@ -1858,7 +1859,7 @@ v2.95.0 起 botmux 会检测这种"会话没真正起来"的情况并发一张�
 
 ## 怎么升级？
 
-`botmux upgrade`。会话内的 `botmux` wrapper 版本始终跟 daemon 一致，无需单独升级。
+`botmux upgrade`——它会按你的安装方式自动选路：curl 安装的原地换二进制，npm 安装的交回 `npm i -g botmux@latest`。curl 用户也可以直接重跑一遍安装命令（同样是原地升级，不会重复写 PATH）。会话内的 `botmux` wrapper 版本始终跟 daemon 一致，无需单独升级。升级后记得 `botmux restart` 让新版本生效。
 
 ## CoCo 忙时发消息丢失？
 
@@ -2090,7 +2091,7 @@ url: /botmux/index.md
 
 botmux 是一座桥：一个常驻 **daemon** 监听飞书消息，为每个新话题自动启动一个独立的 AI 编程 CLI 进程（Claude Code / Codex / Cursor / Gemini / OpenCode / Antigravity 等），把终端输出实时渲染成飞书**流式卡片**，并提供一个可交互的 **Web 终端**。手机、电脑、飞书三端同步——人在哪儿，编程会话就跟到哪儿。
 
-> 项目地址：<https://github.com/deepcoldy/botmux> ｜ npm：`npm install -g botmux`
+> 项目地址：<https://github.com/deepcoldy/botmux> ｜ 安装：`curl -fsSL https://raw.githubusercontent.com/deepcoldy/botmux/master/install.sh | sh`（自包含二进制，不需要 Node；也可 `npm i -g botmux`）
 
 ## 设计理念：不做 SDK wrapper，直接桥接 CLI
 
@@ -2316,7 +2317,8 @@ url: /botmux/pitfalls.md
 
 ## 环境 / 安装
 
-* **Node 太老**：v18 等没内置全局 `fetch`，`botmux setup` 会报 `fetch is not defined` / `fetch failed` 且不写 `bots.json`。→ 升级到 **Node ≥ 22**。
+* **装完 `botmux: command not found`**：`~/.botmux/bin` 没进 PATH。两种安装方式都会写你当前 shell 的启动文件，但**要开个新终端（或 source 一下）才生效**。⚠️ 已知限制：如果执行安装时 `~/.botmux/bin` 恰好已在当前进程的 PATH 里（**在 botmux 自己的 CLI 会话里装就是这种情况**——daemon 会把它注入每个会话的 PATH），`install.sh` 会认为无需处理而**不写启动文件**，于是新终端里仍然找不到。→ 在**普通终端**里装，或手动把 `export PATH="$HOME/.botmux/bin:$PATH"` 加进启动文件。
+* **Node 太老**（仅 npm 安装路径）：v18 等没内置全局 `fetch`，`npm i -g botmux` 的 postinstall 或 `botmux setup` 会报 `fetch is not defined` / `fetch failed`。→ 升级到 **Node ≥ 22**，或改用 curl 安装方式（自包含二进制，不需要 Node）。
 * **首次启动卡在人工确认**：CLI（如 Claude Code）首次会弹"信任目录 / bypass 权限"确认，没人工点过会卡住、报 `tmux send-keys` 错。→ 首次手动确认一次，之后不再出现。
 
 ## 环境变量丢失（高频）
@@ -2410,10 +2412,15 @@ scripts**。安装第三方插件仍等同于信任其发布者。
 
 ## 创建项目
 
-Botmux 当前要求 Node.js 22 或更高版本。安装 Botmux 后运行生成器：
+插件**开发**需要 Node.js 22 或更高版本，且 `npm` 在 `PATH` 中——生成器会调用 npm
+来搭脚手架、装依赖、跑测试。（这是插件开发本身的要求；botmux 自己是自包含二进制，
+不需要 Node，见 [快速接入](/botmux/quickstart.md)。）
+
+按你习惯的方式装好 botmux，然后运行生成器：
 
 ```bash
-npm install -g botmux@latest
+curl -fsSL https://raw.githubusercontent.com/deepcoldy/botmux/master/install.sh | sh
+# 或者走 npm 安装：npm install -g botmux@latest
 
 botmux plugin init my-plugin
 cd botmux-plugin-my-plugin
@@ -2945,17 +2952,18 @@ url: /botmux/prerequisites.md
 
 # 前置要求
 
-装 botmux 之前，先确认这几样齐了——**「装完连不上 / 会话起不来」很多都是这里缺件**（Node 版本、CLI 没登录、PATH 里找不到）。
+装 botmux 之前，先确认这几样齐了——**「装完连不上 / 会话起不来」很多都是这里缺件**（CLI 没登录、tmux 没装、PATH 里找不到）。
 
 **适用**：任何要跑 botmux daemon 的机器（开发机 / devbox / 服务器）。
 **不适用**：你只是在别人已部署好的群里 @ 机器人用——那不需要本机装任何东西。
 
 ## 运行环境
 
-* **Node.js ≥ 22**（`node -v` 确认；低于 22 会有原生模块 / 语法报错）。
+* **botmux 本身：不需要 Node**。默认的 [curl 安装方式](/botmux/quickstart.md)装的是自包含单文件二进制，运行时已嵌在里面。**只有走 npm 安装路径时才要 Node ≥ 22**——那是执行 `npm i -g` 本身的要求，不是跑 botmux 的要求。（`botmux plugin init` 这类插件开发命令会调用 npm，也需要 Node。）
 * **AI 编程 CLI / 本地 Agent 应用**：至少一种**已安装并完成认证**、可执行文件在 `PATH` 中：
   * `claude`（Claude Code）、`codex`、`cursor-agent`（Cursor）、`gemini`、`opencode`、`coco`（Trae / CoCo）、`agy`（Antigravity）、`hermes` 等（完整 `cliId` 见 [多 CLI 适配器](/botmux/adapters.md)）。
   * ⚠️ botmux 只是桥接层，不代管登录——**先在终端里手动跑一次该 CLI 确认能对话**，再接 botmux。
+  * ⚠️ 这些 CLI 自己的运行时要求另算：不少是 npm 包（`claude` / `codex` / `gemini` 等），装它们仍然要 Node。「botmux 不需要 Node」说的是 botmux 自己。
 * **tmux ≥ 3.x**（**默认后端，强烈建议装**）：**默认配置下**会话后端就是 tmux，装了才能起会话——tmux 不可用时 botmux **不再静默降级 pty**，而是硬拦截并弹卡提示装 tmux（见 [tmux 会话常驻](/botmux/tmux.md)）。要跑无 tmux 环境，可显式选别的后端：`BACKEND_TYPE=pty` / per-bot `backendType`（`pty`/`herdr`/`zellij`）——pty 不跨 daemon 重启存活；herdr/zellij 需各自二进制。（riff 是云 Agent，不占本地后端。）
 
 ## 推荐部署形态
@@ -2964,7 +2972,8 @@ url: /botmux/prerequisites.md
 
 ## 常见失败
 
-* `node -v` < 22 → 升级 Node（nvm / fnm 装 22+，注意让 botmux 所在 shell 的启动文件能读到）。
+* 装完 `botmux: command not found` → `~/.botmux/bin` 没进 PATH。安装器会写你当前 shell 的启动文件，但**要开个新终端才生效**；仍然找不到就看 [常见踩坑](/botmux/pitfalls.md)。
+* 走 npm 安装且 `node -v` < 22 → 升级 Node（nvm / fnm 装 22+），或直接改用 curl 安装方式，绕开 Node。
 * CLI 没在 PATH / 没登录 → 会话起不来或首条消息无响应；先手动跑通 CLI，再看 [FAQ · 会话起不来](/botmux/faq.md)。
 * 装了 CLI 但 botmux 找不到 → PATH 在非交互 shell 里没生效，见 [常见踩坑](/botmux/pitfalls.md)。
 
@@ -2978,17 +2987,23 @@ url: /botmux/quickstart.md
 
 # 5 分钟快速接入
 
-> 💡 **TL;DR**：`npm i -g botmux` → `botmux setup`（**一次飞书扫码**连续建应用 + 配全权限 + 发版）→ `botmux start` → `botmux autostart enable` → 拉机器人进群开聊。
+> 💡 **TL;DR**：`curl -fsSL .../install.sh | sh` → `botmux setup`（**一次飞书扫码**连续建应用 + 配全权限 + 发版）→ `botmux start` → `botmux autostart enable` → 拉机器人进群开聊。
 
-**开始前**：先确认 [前置要求](/botmux/prerequisites.md)（Node ≥ 22、目标 CLI 已装并登录）——这里缺件是「装完连不上」最常见的原因。
+**开始前**：先确认 [前置要求](/botmux/prerequisites.md)（目标 CLI 已装并登录、tmux）——这里缺件是「装完连不上」最常见的原因。
 
 ## Step 1 · 安装
 
 ```bash
-npm install -g botmux
+curl -fsSL https://raw.githubusercontent.com/deepcoldy/botmux/master/install.sh | sh
 ```
 
-要求 **Node.js ≥ 22**，且本地已安装并登录好至少一种 AI 编程 CLI（`claude` / `codex` / `cursor-agent` / `gemini` / `opencode` / `coco` / `agy` 等）。**默认会话后端是 tmux（≥3.x），需装好**——不可用时会硬拦截弹卡、不再自动降级 pty；确需无 tmux 环境才用 `BACKEND_TYPE=pty` 或 per-bot `backendType`（`pty`/`herdr`/`zellij`）等显式后端（riff 是云 Agent，不占本地后端）。
+botmux 是**自包含单文件二进制**，运行时已嵌在里面——**装它和跑它都不需要机器上有 Node**。装到 `~/.botmux/bin/botmux`（`BOTMUX_INSTALL_DIR` 可改），按 OS/arch 自动选二进制、校验 SHA-256，并把 `~/.botmux/bin` 写进你当前 shell 的启动文件（zsh / bash / fish 各写对的那个），**开个新终端就能用**。支持 linux / macOS × x64 / arm64（Alpine 等 musl 环境自动选 musl 版）；**Windows 请在 WSL2 里装**。
+
+> 🔁 **升级**：`botmux upgrade`（原地换二进制），或重跑一遍上面那条 curl 命令——同样原地升级，不会重复往启动文件追加 PATH。装指定版本：`BOTMUX_VERSION=v3.18.8 curl … | sh`。
+
+> 📦 **也可以走 npm**（`npm install -g botmux`，需 Node ≥ 22 才能执行安装本身）：npm 包内带的是**同一个自包含二进制**（实测与 GitHub Release 资产 SHA-256 逐字节相同，按 os/arch 只装匹配的那一个），postinstall 把 `~/.botmux/bin/botmux` 指向它并同样写 PATH。区别只在**谁来装、以后谁来升**：npm 路径需要 Node，升级交回 `npm i -g botmux@latest`；curl 路径全程不碰 Node。跑起来之后两者完全一致。
+
+跑 botmux 本身不需要 Node，但**本地要装好并登录至少一种 AI 编程 CLI**（`claude` / `codex` / `cursor-agent` / `gemini` / `opencode` / `coco` / `agy` 等，它们各自的运行时要求另算）。**默认会话后端是 tmux（≥3.x），需装好**——不可用时会硬拦截弹卡、不再自动降级 pty；确需无 tmux 环境才用 `BACKEND_TYPE=pty` 或 per-bot `backendType`（`pty`/`herdr`/`zellij`）等显式后端（riff 是云 Agent，不占本地后端）。
 
 ## Step 2 · 配置（`botmux setup`）
 
@@ -3495,7 +3510,7 @@ CLI 进入 botmux 会话时，自动获得 `~/.botmux/bin` 在 PATH 中，以及
 
 ## wrapper 机制
 
-会话内命令依赖 `~/.botmux/bin/botmux` 这个 wrapper 脚本——**daemon 启动时自动写入**并加入 worker 的 PATH。wrapper 是个极薄的 `exec node <本 daemon 的 dist/cli.js>` shim，所以**版本永远跟 daemon 一致**，不需要单独 `npm i -g`。（`bun run use:here` 之类是开发期手动改指向，与启动写入同内容、幂等。）
+会话内命令依赖 `~/.botmux/bin/botmux`——**daemon 启动时自动维护**并加入 worker 的 PATH，所以**版本永远跟 daemon 一致**，不需要单独装一份。它指向什么取决于 daemon 自己是怎么跑的：curl 安装时这个路径**就是那个自包含二进制本身**（daemon 识别出来后跳过改写，不会把自己覆盖成脚本）；npm 安装时是一行 `exec "<平台子包里的二进制>"` 的极薄 shim；源码开发态则是 `exec node <本 daemon 的 dist/cli.js>`。（`bun run use:here` 之类是开发期手动改指向，与启动写入同内容、幂等。）
 
 session 信息通过**祖先进程标记**自动推断：worker 启动 CLI 时按子进程 PID 写一份标记（含 sessionId / turnId），agent 侧的命令沿进程树向上找到最近的标记即知道自己属于哪个会话——所以 agent 无需手动传 session id。进程树被打断（detached / `setsid` / 深层嵌套）时回落到 `BOTMUX_SESSION_ID` 环境变量兜底。
 

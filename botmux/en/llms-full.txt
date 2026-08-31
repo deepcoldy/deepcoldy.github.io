@@ -9,7 +9,8 @@ botmux — a bridge between Lark topic groups ↔ AI coding CLIs. Open source un
 ## Links
 
 * **GitHub**: [github.com/deepcoldy/botmux](https://github.com/deepcoldy/botmux)
-* **npm**: `npm install -g botmux` · [npmjs.com/package/botmux](https://www.npmjs.com/package/botmux)
+* **Install**: `curl -fsSL https://raw.githubusercontent.com/deepcoldy/botmux/master/install.sh | sh` (self-contained binary, no Node required)
+* **npm** (alternative, needs Node ≥ 22): `npm install -g botmux` · [npmjs.com/package/botmux](https://www.npmjs.com/package/botmux)
 * **Contributing guide**: [CONTRIBUTING.md](https://github.com/deepcoldy/botmux/blob/master/CONTRIBUTING.md)
 * **License**: [MIT](https://github.com/deepcoldy/botmux/blob/master/LICENSE)
 
@@ -1859,7 +1860,7 @@ It hasn't been verified on native Windows, but WSL2 should be fine.
 
 ## How do I upgrade?
 
-`botmux upgrade`. The `botmux` wrapper version inside sessions always stays in sync with the daemon, so it doesn't need to be upgraded separately.
+`botmux upgrade` — it routes by how you installed: a curl install gets its binary replaced in place, an npm install is handed back to `npm i -g botmux@latest`. curl users can equally just re-run the install command (also an in-place upgrade, and it won't write a second PATH line). The `botmux` wrapper version inside sessions always stays in sync with the daemon, so it doesn't need to be upgraded separately. Run `botmux restart` afterwards to pick up the new version.
 
 ## CoCo loses messages while busy?
 
@@ -2091,7 +2092,7 @@ url: /botmux/en/index.md
 
 botmux is a bridge: a persistent **daemon** listens to Lark messages and automatically launches a dedicated AI coding CLI process (Claude Code / Codex / Cursor / Gemini / OpenCode / Antigravity, etc.) for each new topic. It renders terminal output into Lark **streaming cards** in real time, and provides an interactive **Web Terminal**. Phone, computer, and Lark stay in sync — wherever you are, your coding session follows.
 
-> Project: <https://github.com/deepcoldy/botmux> ｜ npm: `npm install -g botmux`
+> Project: <https://github.com/deepcoldy/botmux> ｜ Install: `curl -fsSL https://raw.githubusercontent.com/deepcoldy/botmux/master/install.sh | sh` (self-contained binary, no Node required; `npm i -g botmux` also works)
 
 ## Design philosophy: not an SDK wrapper — bridge the CLI directly
 
@@ -2317,7 +2318,8 @@ url: /botmux/en/pitfalls.md
 
 ## Environment / Installation
 
-* **Node too old**: v18 and similar lack a built-in global `fetch`, so `botmux setup` throws `fetch is not defined` / `fetch failed` and won't write `bots.json`. → Upgrade to **Node ≥ 22**.
+* **`botmux: command not found` right after installing**: `~/.botmux/bin` isn't on PATH. Both install routes write your shell's startup file, but **you need a new terminal (or to source it) for it to take effect**. ⚠️ Known limitation: if `~/.botmux/bin` already happens to be on the *installing process's* PATH — **which is exactly the case when you install from inside a botmux CLI session**, since the daemon injects it into every session's PATH — `install.sh` concludes there is nothing to do and **writes no startup file**, so a new terminal still can't find it. → Install from an **ordinary terminal**, or add `export PATH="$HOME/.botmux/bin:$PATH"` to your startup file by hand.
+* **Node too old** (npm install path only): v18 and similar lack a built-in global `fetch`, so the `npm i -g botmux` postinstall or `botmux setup` throws `fetch is not defined` / `fetch failed`. → Upgrade to **Node ≥ 22**, or switch to the curl install (self-contained binary, no Node needed).
 * **First launch stuck on a manual confirmation**: On first run, a CLI (such as Claude Code) pops up a "trust this directory / bypass permissions" confirmation. If nobody has clicked through it, it hangs and reports a `tmux send-keys` error. → Confirm it manually once, and it won't appear again.
 
 ## Lost environment variables (high frequency)
@@ -2418,11 +2420,16 @@ publisher.
 
 ## Create a project
 
-Botmux currently requires Node.js 22 or newer. Install Botmux, then run the
-generator:
+Plugin **development** requires Node.js 22 or newer with `npm` on your `PATH` —
+the generator shells out to npm to scaffold, install, and test the project. (This
+is a requirement of plugin development specifically; botmux itself is a
+self-contained binary and needs no Node — see [Quickstart](/botmux/en/quickstart.md).)
+
+Install botmux by whichever route you prefer, then run the generator:
 
 ```bash
-npm install -g botmux@latest
+curl -fsSL https://raw.githubusercontent.com/deepcoldy/botmux/master/install.sh | sh
+# or, if you'd rather install through npm: npm install -g botmux@latest
 
 botmux plugin init my-plugin
 cd botmux-plugin-my-plugin
@@ -3017,17 +3024,18 @@ url: /botmux/en/prerequisites.md
 
 # Prerequisites
 
-Before installing botmux, make sure these are in place — **many "installed but won't connect / sessions won't start" issues trace back to a missing prerequisite here** (Node version, CLI not logged in, not on PATH).
+Before installing botmux, make sure these are in place — **many "installed but won't connect / sessions won't start" issues trace back to a missing prerequisite here** (CLI not logged in, tmux missing, not on PATH).
 
 **Applies to**: any machine that will run the botmux daemon (dev machine / devbox / server).
 **Doesn't apply**: if you only @ a bot in a group someone else already set up — you don't need to install anything locally.
 
 ## Runtime environment
 
-* **Node.js ≥ 22** (`node -v` to check; below 22 causes native-module / syntax errors).
+* **botmux itself: no Node required.** The default [curl install](/botmux/en/quickstart.md) delivers a self-contained single-file binary with its runtime embedded. **Node ≥ 22 is required only on the npm install path** — that's a requirement of running `npm i -g`, not of running botmux. (Plugin-development commands like `botmux plugin init` shell out to npm and need Node too.)
 * **AI coding CLI / local agent app**: at least one **installed and authenticated**, with the executable on your `PATH`:
   * `claude` (Claude Code), `codex`, `cursor-agent` (Cursor), `gemini`, `opencode`, `coco` (Trae / CoCo), `agy` (Antigravity), `hermes`, etc. (full `cliId` list in [CLI Adapters](/botmux/en/adapters.md)).
   * ⚠️ botmux is only a bridge — it doesn't manage login. **Run the CLI once in a terminal to confirm it can chat** before wiring it into botmux.
+  * ⚠️ Those CLIs have their own runtime requirements: many ship as npm packages (`claude` / `codex` / `gemini`, …) and still need Node to install. "botmux needs no Node" is about botmux itself.
 * **tmux ≥ 3.x** (**the default backend — strongly recommended to install**): **in the default configuration** the session backend is tmux, so you need it to start sessions — when tmux isn't available botmux **no longer silently downgrades to pty**; it hard-gates the session and posts a card asking you to install tmux (see [tmux Session Persistence](/botmux/en/tmux.md)). To run a tmux-free environment, pick an explicit backend: `BACKEND_TYPE=pty` / per-bot `backendType` (`pty`/`herdr`/`zellij`) — pty doesn't survive daemon restarts; herdr/zellij need their own binaries. (riff is a cloud agent and doesn't occupy a local backend.)
 
 ## Recommended deployment
@@ -3036,7 +3044,8 @@ Deploy on an **always-on dev machine / devbox** (rather than a laptop), so the d
 
 ## Common failures
 
-* `node -v` < 22 → upgrade Node (install 22+ via nvm / fnm; make sure the botmux shell's startup file picks it up).
+* `botmux: command not found` right after installing → `~/.botmux/bin` isn't on PATH yet. The installer writes your shell's startup file, but **you need a new terminal for it to take effect**; if it's still missing, see [Common Pitfalls](/botmux/en/pitfalls.md).
+* Installing via npm with `node -v` < 22 → upgrade Node (22+ via nvm / fnm), or switch to the curl install and skip Node entirely.
 * CLI not on PATH / not logged in → sessions won't start or the first message gets no response; get the CLI working manually first, then see [FAQ · session won't start](/botmux/en/faq.md).
 * CLI installed but botmux can't find it → PATH not effective in a non-interactive shell, see [Common Pitfalls](/botmux/en/pitfalls.md).
 
@@ -3050,17 +3059,23 @@ url: /botmux/en/quickstart.md
 
 # 5-minute quick setup
 
-> 💡 **TL;DR**: `npm i -g botmux` → `botmux setup` (**a single Lark QR scan** creates the app + configures all permissions + publishes) → `botmux start` → `botmux autostart enable` → add the bot to a group and start chatting.
+> 💡 **TL;DR**: `curl -fsSL .../install.sh | sh` → `botmux setup` (**a single Lark QR scan** creates the app + configures all permissions + publishes) → `botmux start` → `botmux autostart enable` → add the bot to a group and start chatting.
 
-**Before you start**: confirm the [Prerequisites](/botmux/en/prerequisites.md) (Node ≥ 22, target CLI installed and logged in) — a missing prerequisite here is the most common cause of "installed but won't connect."
+**Before you start**: confirm the [Prerequisites](/botmux/en/prerequisites.md) (target CLI installed and logged in, tmux) — a missing prerequisite here is the most common cause of "installed but won't connect."
 
 ## Step 1 · Install
 
 ```bash
-npm install -g botmux
+curl -fsSL https://raw.githubusercontent.com/deepcoldy/botmux/master/install.sh | sh
 ```
 
-Requires **Node.js ≥ 22**, with at least one AI coding CLI already installed and signed in locally (`claude` / `codex` / `cursor-agent` / `gemini` / `opencode` / `coco` / `agy`, etc.). **The default session backend is tmux (≥3.x), so install it** — when it's unavailable botmux hard-gates with a card instead of silently downgrading to pty; only pick an explicit backend (`BACKEND_TYPE=pty` or per-bot `backendType`: `pty`/`herdr`/`zellij`) if you truly need a tmux-free environment (riff is a cloud agent and doesn't occupy a local backend).
+botmux is a **self-contained single-file binary** with its runtime embedded — **neither installing nor running it needs Node**. It installs to `~/.botmux/bin/botmux` (override with `BOTMUX_INSTALL_DIR`), picks the binary for your OS/arch, verifies its SHA-256, and adds `~/.botmux/bin` to the startup file your shell actually reads (zsh / bash / fish each get the correct one), so **a new terminal has the command**. Supported: linux / macOS × x64 / arm64, with musl builds selected automatically on Alpine and similar. **On Windows, install inside WSL2.**
+
+> 🔁 **Upgrading**: `botmux upgrade` (replaces the binary in place), or just re-run the curl command — also an in-place upgrade, and it won't append a second PATH line. To install a specific version: `BOTMUX_VERSION=v3.18.8 curl … | sh`.
+
+> 📦 **npm works too** (`npm install -g botmux`, needs Node ≥ 22 to run the install itself): the npm package carries **the same self-contained binary** (verified byte-identical to the GitHub Release asset by SHA-256; only the one matching your os/arch is installed), and its postinstall points `~/.botmux/bin/botmux` at it and writes PATH the same way. The only difference is **who installs it and who upgrades it later**: the npm path needs Node and hands upgrades back to `npm i -g botmux@latest`; the curl path never touches Node. Once running, the two are identical.
+
+Running botmux itself needs no Node, but you do need **at least one AI coding CLI installed and signed in locally** (`claude` / `codex` / `cursor-agent` / `gemini` / `opencode` / `coco` / `agy`, etc. — each with its own runtime requirements). **The default session backend is tmux (≥3.x), so install it** — when it's unavailable botmux hard-gates with a card instead of silently downgrading to pty; only pick an explicit backend (`BACKEND_TYPE=pty` or per-bot `backendType`: `pty`/`herdr`/`zellij`) if you truly need a tmux-free environment (riff is a cloud agent and doesn't occupy a local backend).
 
 ## Step 2 · Configure (`botmux setup`)
 
@@ -3567,7 +3582,7 @@ A `botmux send` **must carry an @-decision**, or it refuses to send: `--mention 
 
 ## Wrapper Mechanism
 
-In-session commands rely on the wrapper script at `~/.botmux/bin/botmux` — **written automatically by the daemon at startup** and added to the worker's PATH. The wrapper is an extremely thin `exec node <this daemon's dist/cli.js>` shim, so its **version always matches the daemon** and no separate `npm i -g` is needed. (Dev helpers like `bun run use:here` re-point it manually with identical, idempotent content.)
+In-session commands rely on `~/.botmux/bin/botmux` — **maintained automatically by the daemon at startup** and added to the worker's PATH, so its **version always matches the daemon** and no separate install is needed. What it points at depends on how the daemon itself is running: with a curl install that path **is the self-contained binary** (the daemon detects this and skips rewriting, so it never overwrites itself with a script); with an npm install it's a one-line `exec "<binary inside the platform subpackage>"` shim; in a source checkout it's `exec node <this daemon's dist/cli.js>`. (Dev helpers like `bun run use:here` re-point it manually with identical, idempotent content.)
 
 Session info is inferred automatically from **ancestor-process markers**: when the worker launches the CLI it writes a marker keyed by the child PID (carrying sessionId / turnId), and the agent's commands walk up the process tree to the nearest marker to know which session they belong to — so the agent never passes a session id. If the process tree is broken (detached / `setsid` / deeply nested), it falls back to the `BOTMUX_SESSION_ID` environment variable.
 
