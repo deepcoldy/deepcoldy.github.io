@@ -1499,7 +1499,7 @@ botmux dashboard rotate   # 轮换 token 并输出新 URL
 ## 功能
 
 * **Sessions**：跨所有 bot 列出活跃 + 已关闭会话，可按 CLI / 状态 / adopt / 文本过滤。点进 detail 可复制各种 ID、关闭会话、多选批量关闭；「定位话题」会让机器人在原话题发一条 **@会话 owner** 的提醒（纯 @、无其它正文）帮你跳回上下文。chat-scope 的会话行还带一个飞书群 AppLink 直达群聊。
-* **Schedules**：列出所有定时任务，可 Run now / Pause / Resume。
+* **Schedules**：新建、编辑和管理定时任务，支持立即运行、暂停/恢复、多个目标群、执行日志，以及可测试的 [Bash 前置条件](/botmux/schedule.md#bash-前置条件dashboard)。
 * **Groups**：一键拉新群（自动 @ 通知被邀请人）、拉 bot 入群、自动转让群主；解散群聊、bot 退群（关联会话自动清理）。
 * **团队 / Roles / Bot Defaults**：团队面板做[跨部署协作](/botmux/roles.md)（邀请别人的部署进团队、跨部署拉群）；Roles 管理各 bot 按群人设；Bot Defaults（Bot 配置）配默认行为（新群 oncall、卡片签名、**默认角色**等）。
 * **Workflows 管控面**：Run List 轮询；Run Detail 看 summary / dangling 红区 / node-activity / event timeline / 并发执行 timeline；可直接 **cancel run**。
@@ -2023,7 +2023,7 @@ tail -f /tmp/botmux-hook.log
 | `thread.reply` | 收到已有话题回复 |
 | `outbound.send` | botmux 发送普通消息成功 |
 | `outbound.reply` | botmux 回复话题消息成功 |
-| `schedule.fired` | 定时任务执行完成 |
+| `schedule.fired` | 定时任务的前置检查与提交结束（成功、跳过或报错） |
 | `session.start` | worker / adopt worker 启动成功 |
 | `session.exit` | worker 退出、崩溃或会话被关闭（daemon shutdown 默认静音） |
 | `session.idle` | session 进入或离开 idle，按 session + 状态 10s 去重 |
@@ -2046,6 +2046,10 @@ tail -f /tmp/botmux-hook.log
 | `session.exit` | `reason`、`code`（worker 退出路径；`dashboard_close` 为 `null`） |
 | `session.idle` | `prevState`、`newState`、`transition`、`source` |
 | `session.requires_attention` | `reason`、`description`、`optionsCount`、`optionsPreview`、`multiSelect`、`message` |
+
+`schedule.fired.status` 与任务的 `lastStatus` 使用 `ok`、`error`、`skipped`：`ok` 表示已交给执行器，不代表模型已完成或消息已送达；`error` 表示前置检查或提交报错；`skipped` 表示前置条件未通过、未调用模型。跳过不消耗重复次数，也不删除任务、前置配置或执行日志。已启用的一次性任务跳过后保持启用，等待至少 30 秒后由调度器重新检查；若提前手动运行被跳过，后续自动检查不会早于原定执行时间。周期任务仍按原周期检查。
+
+`skipped` 是新增状态，旧任务无需迁移；只接受 `ok/error` 的自定义 Hook 需增加该分支，不能把它当作执行成功。
 
 默认会把 `content`、`message`、`description`、`finalOutput`、`lastScreenContent` 截断到 **600 字符**，并补充 `xxxLength` / `xxxTruncated`；只有 `redact.fullContentEvents` 内的事件透传全文。
 
@@ -3439,6 +3443,59 @@ url: /botmux/schedule.md
 /schedule 2026-05-01T10:00 ...
 ```
 
+## Bash 前置条件（Dashboard）
+
+需要先检查外部状态、仅在满足条件时调用模型，可以在 Dashboard 新建或编辑定时任务时启用「Bash 前置条件」。关闭开关会停用前置条件，但定时任务仍按原计划执行，已填写的脚本也会保留；清空脚本或文件路径并保存，才会移除配置。
+
+可选择两种配置方式：
+
+* **直接填写 Bash**：脚本内容保存在任务配置中。
+* **Bash 文件路径**：文件必须是 daemon 主机上可读的普通 UTF-8 Bash 文件，并位于 Dashboard 为当前 Bot 显示的 `<dataDir>/schedule-preconditions/trusted-files/` 目录中。页面同时显示可直接填写的完整绝对路径示例。相对路径、使用 `~` 展开的路径、目录本身、目录外文件和任一路径段中的符号链接均会被拒绝。
+
+### 文件路径配置 Demo
+
+假设 Dashboard 为当前 Bot 显示以下内容：
+
+```text
+受信目录：/home/alice/.botmux/data/schedule-preconditions/trusted-files/
+完整示例：/home/alice/.botmux/data/schedule-preconditions/trusted-files/check-ready.sh
+```
+
+这是 Linux 示例；实际 `dataDir` 可能不同，请使用 Dashboard 显示的值，不要照抄示例用户名。然后：
+
+1. 在**运行 daemon 的同一台主机**上，将普通 UTF-8 Bash 文件创建或复制到 Dashboard 显示的目录中。该目录由 daemon 创建。
+2. 将完整绝对路径粘贴到「Bash 文件路径」。本例应填写 `/home/alice/.botmux/data/schedule-preconditions/trusted-files/check-ready.sh`，不能写成 `~/...`。
+3. 点击「测试前置条件」。测试通过后再保存任务。
+
+`check-ready.sh` 可以从这个最小内容开始：
+
+```bash
+#!/usr/bin/env bash
+# 请替换为 daemon 主机上实际要检查的状态路径
+if test -f /srv/my-service/ready.flag; then
+  printf '1\n'
+else
+  printf '0\n'
+fi
+```
+
+Botmux 会在每次测试和每次定时触发时重新校验并读取该文件；修改文件后无需重新保存任务。
+
+两种配置方式使用同一个执行协议：脚本退出码必须为 `0`，且标准输出去除首尾空白后必须严格等于 `1`，任务才会继续调用模型。输出 `0`、其他内容、空输出或脚本报错都会停止本次任务。
+
+如需给本次模型调用追加 Prompt，将内容写入文件描述符 3（FD 3）：
+
+```bash
+printf '1\n'
+cat >&3 <<'PROMPT'
+部署检查已通过，请结合这一状态继续分析。
+PROMPT
+```
+
+点击「测试前置条件」会在 daemon 主机真实执行当前表单中**尚未保存**的内容，并显示通过、未通过，或完整错误码与退出码。测试不会保存配置、调用模型、写入任务执行日志或计入重复次数；但脚本产生的文件、网络等副作用仍会真实发生。
+
+> **存量配置迁移**：升级前保存在受信目录外的文件路径会继续保留，但启用该前置条件时，测试和定时执行都会 fail closed，不会调用模型。Botmux 不会自动复制文件或修改任务；请手动把文件移入当前 Bot 的受信目录，更新为新的完整绝对路径，测试通过后保存。FD 3 的内容会发送给模型并可能进入会话记录，不要输出密钥或令牌。
+
 ## 每次开新话题
 
 默认每次触发都续在**创建任务的原话题**里。如果想让每次执行都落在同群的一个**全新话题**、起一个独立会话（适合日报这类"每天一篇、各自独立"的任务），有三种写法：
@@ -3454,7 +3511,7 @@ botmux schedule add "每日17:30" "生成日报" --new-topic
 botmux schedule add "每日17:30" "生成日报" --deliver new-topic
 ```
 
-也可以在 dashboard 的「定时」页用「投递」列的切换按钮，把已有任务在「原话题 / 每次新话题」之间切换。
+也可以在 Dashboard 的「定时任务」页编辑任务，通过「执行位置」切换原话题、群消息顶层或每次新话题。
 
 ## 跟随活跃话题
 
