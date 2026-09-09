@@ -24,7 +24,9 @@ Just send these commands directly in a topic, and the daemon intercepts and hand
 | `/term` | Get the operable (write-enabled) terminal link for this session, delivered privately to the owner (visible-to-you in-chat, falling back to DM in topic/p2p — never exposed in the group) |
 | `/quote` | Pop a picker of this chat's topics; choosing one reads that topic's transcript into the current session. This fills a gap in Feishu itself — its quote-reply UI can only reference a single message, never a whole topic. The bot replies with a short acknowledgement (how many messages, time span, subject) and waits for your next instruction |
 | `/quote <instruction>` | Same, but runs your instruction as soon as you pick a topic, saving a round trip. The transcript is still injected explicitly labelled as material rather than instructions |
+| `/sessions` | List this bot's active topic sessions in the current group and jump directly back to a topic (legacy sessions use a safe locate fallback) |
 | `/dashboard [module]` | Open Dashboard control cards in Feishu (sessions/schedules/groups/settings/help, etc.) |
+| `@bot /project enable\|status\|roles\|disable` | Enable, inspect, configure agent roles, or leave project-group mode in the current ordinary group (owner/allowedUsers only; does not consume a session slot) |
 | `/insight` | owner-only: instantly posts a "session insight summary" card for the current session (aggregate metrics + rule suggestions; action-span detail / per-turn reconciliation / conversation replay live on the Dashboard "Insights" page) |
 | `/vc prepare <meeting link or number>` | Use the current regular group as a meeting-prep chat and reuse the same Agent session during the meeting |
 | `/introduce` | Register the bots in this chat with each other by `open_id`, so they can @-mention one another precisely when collaborating |
@@ -34,6 +36,10 @@ Just send these commands directly in a topic, and the daemon intercepts and hand
 | `/issue status` | Run inside the task group to see which platform task it is bound to and where things stand: platform status / claimant / local binding / whether any status write-back is still stuck in the outbox. Read-only, also limited to the bot's `allowedUsers` |
 | `/issue done` | Run inside the task group to **accept the work** and move the task to its terminal state on the platform. An agent can only deliver up to "in review"; marking it done is a human decision. Once done, the platform clears the claim and the task can no longer be released. Also limited to the bot's `allowedUsers` |
 | `/issue release` | Run inside the group created when the task was claimed: hands the task back to the platform's todo pool so someone else can take it. The group and session are **not** disbanded — the conversation is kept. Also limited to the bot's `allowedUsers` |
+
+`/sessions` card preview:
+
+![Current-group active topic sessions card](/img/sessions-command-card.png)
 
 See [Session & Topic Model](/botmux/en/session-model.md) for the repository-picker and pinned-directory branches of bare `/t`. You can also make `/repo` the new topic's first command:
 
@@ -168,6 +174,24 @@ Add `--role-profile <profile>` to bootstrap the new group with reusable per-bot 
 ```
 
 See [One-Click Session Group](/botmux/en/group.md) for details.
+
+## 📌 Upgrade an Ordinary Group to Project Mode
+
+In the top-level ordinary-group chat, mention the Bot that should coordinate the project:
+
+```text
+@bot /project enable
+```
+
+The addressed Bot becomes coordinator and the other bots in this group that are managed by the same Botmux host become workers. The command writes the same source of truth as Dashboard and immediately sends and pins the getting-started card. A settled project goal is not required; discussion can begin first in the top-level chat. Command-based enablement turns on “automatically enroll new bots” by default, so newly joined bots managed by the same host enter the worker allowlist independently of the auto-start-on-join setting.
+
+On every project turn, the coordinator receives Botmux's fixed project-state protocol: read durable state first, then persist material changes to the goal, phase, current work, remaining plan, blockers, or milestones. This protocol is injected separately from custom Roles, so Role wording and once-only Role injection cannot disable it. On first initialization, Botmux sends and pins a fresh formal project card at the current point in the timeline, then unpins the getting-started guide; later progress updates patch the formal card in place.
+
+* `@bot /project status`: show the coordinator, workers, and whether a project has started.
+* `@bot /project roles`: Reply in the current group with a focused role card for this project’s coordinator and workers; only the admin who opened the card can operate it. Saving reuses the per-chat `/role` files and follows the bot’s existing injection policy: every-turn mode applies on the next message, while once mode applies after a new or rebuilt session.
+* `@bot /project disable`: leave project-group mode; an unused guide is unpinned, while existing project state is retained for a later re-enable.
+
+The command works only in ordinary groups and only for the Bot's owner/allowedUsers. Repeating `enable` preserves any worker subset and auto-enrollment policy already curated in Dashboard. Dashboard can disable “automatically enroll new bots”; when disabled, the explicit worker list remains unchanged. Dashboard also lists the same project agents and deep-links to their group-role editors; both entry points share one role source of truth.
 
 ## 📄 Feishu Doc Comment Entry
 

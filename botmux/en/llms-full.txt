@@ -1028,10 +1028,39 @@ There are many fields, listed below grouped by purpose. The vast majority are **
 | `lang` | The bot's UI language, `zh` / `en`; leave empty to fall back to the `BOTMUX_LANG` / `LANG` environment variable |
 | `customPassthroughCommands` | On top of the fixed passthrough allowlist and the current CLI adapter's default-allowed commands, additionally pass through slash commands to the underlying CLI, e.g. `["/export"]` (Claude Code / Codex default-allow `/goal`). Auto-normalized (a missing `/` is added, lowercased, only `[a-z0-9:_-]` kept, deduplicated); entries that would shadow a botmux daemon command (e.g. `/status`) are dropped and have no effect even if configured. Use `/list-slash-command` to view the full allowlist. See [Slash commands](/botmux/en/slash-commands.md) |
 | `env` | Per-bot process environment variables `{ "KEY": "value" }`, injected into this bot's CLI process. Most common use: run a bot on GLM / a third-party Anthropic·OpenAI-compatible provider (see example below); also handy for `HTTPS_PROXY` or a CLI feature flag. Values accept string / number / boolean; botmux-reserved keys (`BOTMUX_`, `LARK_APP_`, …) are ignored. Injected **per session** (effective from the next session), never written to the shared tmux server env, so it can't leak across bots. Also editable in the dashboard ("Bot defaults → Environment variables") |
+| `quotaFallbackBot` | Optional handoff after the CLI exhausts its quota: `{ "enabled": true, "targetAppId": "cli_...", "kinds"?: ["usage", "rate"], "message"?: "..." }`. Off by default; editable under Dashboard "Bot Configuration → Advanced." See below |
 | `codexAppCleanInput` | **Experimental**, and only effective for Botmux-managed sessions whose actual CLI is `codex-app`. When `true`, the visible / persisted text `UserMessage` contains only the user's original input while message-level Botmux context primarily moves to `additionalContext`. Defaults to off, takes effect on the next turn dispatch, and does not rewrite existing history. See details below |
 | `codexBrowser` | **Experimental and off by default**. Supported only with `cliId: "codex-app"`. Set to `true` to let new sessions control Chrome through the locally installed Codex Chrome plugin. Object form: `{ "enabled": true, "family": "chrome" | "edge", "pluginRoot"?: "/absolute/path" }`. See below |
 
 `nativeSubagentRuntime` rewrites only new subagents created through Trae's native `spawn_agent`; it does not alter the parent agent itself. An absent dimension passes through the subagent request, while `custom` replaces it with a fixed value. When both a custom model and custom effort are configured, BotMux validates that Trae supports the combination. Switching the bot to another CLI removes this field automatically. In the Dashboard, “Pass through request” corresponds to an absent dimension. This policy is behavior configuration and is copied when cloning a bot, but it is intentionally excluded from portable Agent presets. Legacy `mode: "inherit"` values are invalid and are not applied.
+
+### Automatic CLI quota handoff
+
+`quotaFallbackBot` lets the daemon post one fixed, real `@` to a backup Bot at the original session landing point once the current CLI is confirmed quota-limited. It does not call the exhausted primary model, and the existing limit card and owner notification remain unchanged.
+
+![Quota-limit handoff under Dashboard Bot Configuration → Advanced](/img/quota-fallback-dashboard.png)
+
+```json
+{
+  "quotaFallbackBot": {
+    "enabled": true,
+    "targetAppId": "cli_xxx_backup",
+    "kinds": ["usage", "rate"],
+    "message": "The primary Bot has exhausted its quota. Please take over this conversation and continue from its context."
+  }
+}
+```
+
+* `targetAppId` is the backup Bot's stable Lark App ID. Never configure or copy an `ou_xxx`: open IDs are scoped to the sending application. At send time, the daemon resolves a receiver-scoped mention handle from the current chat's live membership.
+* `kinds` accepts `usage` and/or `rate`; omitting it enables both. Omitting `message` uses the built-in Chinese handoff text. The message is limited to 1000 characters and must be non-blank without a native `<at>` tag.
+* The target must be a locally configured Bot that is currently in the chat. Cross-deployment/team-directory targets are not supported yet because the daemon cannot safely prove which live `open_id` belongs to a remote App ID. Non-local, self, absent, and live-resolution failures all fail closed.
+* Save and Bot clone validate the complete impending handoff graph and reject self-reference or cycles such as `A → B → C → A`; an acyclic chain may continue cascading. If a manual edit introduces a cycle, `botmux start/restart` skips Bots in that cycle while still starting the Dashboard and unrelated Bots. Bot Config marks the skipped Bots and lets an operator repair the edge under Advanced → Quota-limit handoff; restart after saving to bring them online. A supervisor-driven daemon reload still disables cyclic handoff at load time and logs a warning so malformed configuration cannot spread its impact.
+
+![Dashboard marks Bots skipped because of a handoff cycle and opens the Advanced recovery controls](/img/quota-fallback-cycle-recovery-dashboard.png)
+
+* Within a daemon, the source Bot and limit kind are deduplicated across all sessions for five minutes. A failed identity lookup or delivery still occupies that window to prevent a short retry storm.
+* Chat-scoped sessions land in the original chat and thread-scoped sessions land in the original thread. The backup Bot reads context from the existing history. Restoring a daemon with an already-limited session does not backfill an old handoff.
+* The whole feature is inert when the block is absent or `enabled` is not exactly `true`, preserving previous behavior. Configure it under Dashboard "Bot Configuration → Advanced → Quota-limit handoff," or edit `bots.json` manually.
 
 ### Codex-compatible distributions
 
@@ -1108,6 +1137,8 @@ You can also add it to the corresponding bot entry directly (manual `bots.json` 
 
 ### Codex App browser bridge (experimental)
 
+Install the browser runtime bundled with the Codex desktop app. The bridge prefers `mcp_servers.node_repl`, but locates the installed runtime when the desktop removes that MCP registration; set `BOTMUX_CODEX_NODE_REPL_PATH` for a custom installation. Identity, site safety status, and feature configuration use the official authenticated request channel. The bridge does not read or store login tokens, and fails closed when the runtime or authentication is unavailable.
+
 This option addresses one narrow gap: Codex running through Botmux's app-server path does not otherwise inherit the Chrome tool built into Codex App. The bridge belongs entirely to Botmux and has no dependency on a project repository, Harness, or local-proxy setup.
 
 ```json
@@ -1118,8 +1149,10 @@ This option addresses one narrow gap: Codex running through Botmux's app-server 
 ```
 
 * Install and enable the Codex browser extension in Chrome / Edge under the same OS user first. Botmux selects the newest complete official plugin under `CODEX_HOME` (or `~/.codex`) automatically; use an absolute `pluginRoot` only for a maintained custom location.
-* The setting registers one `botmux_browser` dynamic tool only on newly created Codex App threads. Existing threads are not rewritten; open a new Lark topic / session to verify it.
-* The tool exposes only high-level tab, accessibility-tree interaction, navigation, and screenshot operations. It does not expose arbitrary JavaScript, raw CDP, cookies, local storage, browser history, clipboard, or file transfer.
+* The setting registers the `botmux_browser` dynamic tool when starting or resuming a Codex App thread. Restart or resume an already-running runner to load the updated tool definition.
+* The bridge probes capabilities per tab. It prefers the accessibility tree, falls back automatically to visible-DOM / Playwright-DOM snapshots when AX is unavailable, and exposes typed Playwright locator, DOM, and coordinate operations. A backend without `tab.ax` no longer breaks the entire Chrome connection.
+* Browser Use safety requests for origin access, uploads, downloads, and similar actions block the operation and appear as Lark authorization cards. Only users accepted by Botmux's `canTalk` check can choose session approval, persistent approval, or denial; Botmux ask records the answer and reviewer. A plain approval is also scoped to the current runner session and is reused for the same origin, operation type, and risk context; a different origin, operation type, risk context, or new session requires confirmation again. Denial, timeout, or daemon unavailability fails closed.
+* The tool does not expose arbitrary JavaScript, raw CDP, cookies, local storage, browser history, or clipboard. Uploads/downloads run only through Browser Use's controlled file chooser and safety checks. Secure browser-auth flows involving credentials never downgrade to an ordinary Lark card and require a client with a secure credential broker.
 * Each Botmux runner owns isolated browser-session state. The feature is off by default, so unconfigured bots retain their existing launch arguments and behavior.
 * It currently cannot be combined with `existingAppServer`, `sandbox`, or `readIsolation`; conflicting configuration fails at startup instead of running with an incomplete isolation boundary.
 
@@ -1164,6 +1197,7 @@ This option addresses one narrow gap: Codex running through Botmux's app-server 
 | `brandLabel` | Branding text at the bottom of the card. `undefined` = default `botmux` link; `""` = hidden; any other string = rendered as-is (supports markdown). Purely cosmetic, does not affect routing / permissions |
 | `showUsageInCardFooter` | Whether reply-card footers show native Context / Token usage from the Agent CLI. Missing / `true` = show; `false` = hide both metrics. A missing individual metric is still omitted independently. This controls card display only and does not disable the Usage Ledger or other accounting |
 | `disableStreamingCard` | When `true`, no real-time streaming session card is sent at all (the Web Terminal still runs and the final reply still arrives via `botmux send`, there's just no auto-refreshing status card). For users who find the real-time card noisy |
+| `hiddenStreamingCardButtons` | Hides selected main controls on live streaming cards. Values: `output` (also hides text export and screenshot refresh), `terminal`, `writeLink`, `compact`, `stop`, and `close` (`Disconnect` on adopted sessions). Missing or empty shows every control, for example `["terminal", "writeLink", "close"]`. Hot-update with `/botconfig set hiddenStreamingCardButtons terminal,writeLink,close`; `unset` restores all controls |
 | `pinStreamingCard` | When `true`, the bot **pins the current public live-status card**. It is opt-in and default-off: only an explicit `true` enables it. Only the current public live-status real `streamCardId` participates; repo-picker cards, private `/card` snapshots, final reply cards, CoT, closed cards, and every other interactive card stay out of scope. The switch is hot-updated: once dashboard or `/botconfig set pinStreamingCard on/off` successfully writes local config and changes the effective value, Botmux runs a best-effort reconciliation across this bot's **existing active sessions**, and after a daemon restart it also schedules one fire-and-forget recovery pass for the current bot after `restoreActiveSessions`. The configuration response and daemon readiness do **not wait** for Feishu Pin/Unpin calls. Failures never interrupt publication, transfer, resume, close, startup, or configuration itself; during exceptional periods there may temporarily be zero or multiple Pins. This feature adds **no durable retry journal and no broad remote cleanup**: restart recovery only trusts Feishu Pins whose operator provenance is `app_id === current larkAppId`, then narrows cleanup to the strict intersection with the enqueue-time local candidate IDs. A colliding current Pin with human, other-app, mixed, or malformed provenance is neither claimed nor re-pinned; an absent current Pin is claimed only when create returns the exact message ID and same-app provenance. Explicit off cleans process-owned IDs plus freshly proven local candidates, while ordinary disable, close, and transfer remain process-ownership-only |
 | `noPinStreamingCardChats` | Array of `chatId`s where Botmux must **not pin** streaming cards even when `pinStreamingCard` is enabled for the bot. This is the negative set behind `/card pin off|on`. The live streaming cards themselves still post normally; only the Pin side effect is suppressed for those chats. Empty / absent means no per-chat opt-out |
 | `silentTurnReactions` | When `true`, card-off sessions no longer add GoGoGo / DONE reactions to the triggering message. Only affects the lightweight status reactions used when `disableStreamingCard` or `noCardChats` suppresses live cards; defaults to `false` |
@@ -1177,6 +1211,7 @@ This option addresses one narrow gap: Codex running through Botmux's app-server 
 | Field | Description |
 |-------|-------------|
 | `senderTag` | Boolean, default `true` (on). Whether each turn forwarded to the CLI carries a `<sender type="user\|bot" open_id="ou_…" name="…" email="…" />` tag naming who spoke. Only an explicit `false` is persisted and disables it; absent or `true` both keep injecting, leaving the prompt byte-for-byte identical to historical behavior |
+| `thinkingCardToolResult` | Boolean, default `true` (on). Whether tool nodes in the native thinking bubble (bot-level master switch `thinkingCard`, default on) carry the command output / file content code block. `false` keeps only thinking paragraphs and tool node titles (tool · command / path) and degrades the result to a single `✓ Done` line (a tool node only leaves the “running” state once a result event arrives, so the event cannot simply be dropped), matching Claude Code's own UI; toggle via `/botconfig set thinkingCardToolResult off` or the dashboard card sub-switch, effective immediately |
 
 With it off the model cannot see speaker identity: in a multi-person chat it cannot tell participants apart or address them by name. Useful for a CLI whose model copies the tag into its reply body (e.g. cursor — see the `<sender_note>` anti-echo hint, which disappears together with the tag), or when you do not want per-message identity written into the CLI transcript.
 
@@ -1410,9 +1445,9 @@ Manage the daemon and sessions from the terminal.
 | Command | Description |
 |------|------|
 | `botmux setup` | Interactive configuration (first run / add / edit / delete a bot) |
-| `botmux start` | Start the daemon (managed by PM2) |
+| `botmux start [--companion-secret-file <path> --companion-bot <appId>]` | Start the daemon. Supplying both companion options enables the closed local API for exactly one isolated test Bot; see [Local Companion API](/botmux/en/companion-api.md) |
 | `botmux stop` | Stop the daemon |
-| `botmux restart [--include-pm2]` | Restart the daemon (automatically restores active sessions); `--include-pm2` additionally retires botmux's PM2 God daemon after the fleet is safely shut down, so the whole process tree restarts from the invoking shell's clean environment (plugin services are gracefully stopped first; auto ones come back after the restart) |
+| `botmux restart [--companion-secret-file <path> --companion-bot <appId>]` | Restart the daemon and restore active sessions; accepts the same closed Companion API options as `start` |
 | `botmux logs [--lines N]` | View logs |
 | `botmux status` | View daemon status |
 | `botmux upgrade` | Upgrade to the latest version |
@@ -1460,6 +1495,54 @@ Session info is inferred automatically from ancestor-process markers, so the age
 
 
 ---
+url: /botmux/en/companion-api.md
+---
+
+# Local Companion API
+
+Botmux can expose a closed local management protocol for one explicitly bound isolated test Bot. It neither reuses Dashboard tokens or Dashboard/daemon HMAC keys nor proxies arbitrary Dashboard routes.
+
+## Startup
+
+```bash
+botmux start \
+  --companion-secret-file /run/secrets/botmux/companion \
+  --companion-bot local_test_bot
+```
+
+`restart` accepts the same options. Both options are required together. `--companion-bot` selects one specific existing Bot; unrelated fleet entries are ignored, but that selected app id must match exactly one entry with `sandbox` enabled and `cliId` set to `codex` or `traex`. Duplicate entries, a missing entry, or any nonqualifying entry fail closed with a deterministic generic diagnostic and no app id disclosure.
+
+Preprovision a dedicated test Bot before invoking the command: add one unique `larkAppId` entry with `sandbox: true` and `cliId: "codex"` or `"traex"`, and keep it separate from production Bots. Then pass that app id to `--companion-bot` and a separate canonical `0600` secret file to `--companion-secret-file`. `readIsolation` alone and `codex-app` are not accepted by this protocol. The secret must be a nonempty, non-symlink `0600` regular file owned by the current user at a canonical absolute path. Invalid configuration fails closed without including the path or contents in the error.
+
+## Authentication
+
+The surface uses the Dashboard's local listening port but authenticates independently before ordinary Dashboard auth/routing; it grants no Dashboard administrator identity. Requests must originate from loopback and carry the headers below. If an operator explicitly enables the platform tunnel, the tunnel is a trusted transport into the local Dashboard port; HMAC remains mandatory and is the effective boundary for that opt-in path.
+
+* `X-Botmux-Companion-Timestamp`: epoch milliseconds, within 60 seconds;
+* `X-Botmux-Companion-Nonce`: a one-time random value;
+* `X-Botmux-Companion-Signature`: base64url HMAC-SHA256.
+
+Signing material:
+
+```text
+timestamp\nnonce\nMETHOD\nexact-pathname\nsha256(raw-body)
+```
+
+Bodies are capped at 64 KiB. Replay, stale timestamps, and signature/method/path/body mismatches are rejected before the operation runs.
+
+## Fixed routes
+
+* `GET /__companion/v1/health`: protocol version and capabilities only;
+* `GET /__companion/v1/role`: `{role, injectMode, revision:null}`, with role text capped at 32 KiB;
+* `PUT /__companion/v1/role`: only `{requestId, role, injectMode}`; `injectMode` is `every|once`, and `role:""` clears it; returns the sanitized readback;
+* `GET /__companion/v1/runtime`: `{provider, model?, reasoning?}`;
+* `PUT /__companion/v1/runtime`: only `{requestId, provider, model?, reasoning?}`. `provider` is `codex|traecli` (mapped to Botmux `codex|traex`), model is at most 200 characters, and reasoning uses the existing provider/model-specific closed allowlist.
+
+Successful writes are idempotent by `requestId` for a bounded process-local window. Failed or timed-out writes are not cached and may be retried; the underlying operation must still be treated as asynchronous when a timeout is reported. The API accepts no Bot ID, chat ID, arbitrary settings/env/URL/header/command and exposes no trigger/result surface; every operation targets the startup-bound Bot. Role text is returned only on this companion-HMAC route and is not added to Dashboard/public DTOs. Responses and errors contain no secret, file path, or native identifier.
+
+
+
+---
 url: /botmux/en/dashboard.md
 ---
 
@@ -1496,6 +1579,25 @@ botmux dashboard rotate   # Rotate the token and print the new URL
 Authenticated administrators can manage botmux background-service auto-start under **Settings → System & Maintenance**. Anonymous users cannot view or change this setting.
 
 The toggle reuses the existing `botmux autostart` behavior. It only manages the entry used at the next boot/login and does not start, stop, or restart the current daemon.
+
+## Authenticated integration actions
+
+An authenticated host integration can rename a Lark group through one explicit
+bot identity:
+
+```http
+PUT /api/groups/{chatId}/name/{larkAppId}
+Content-Type: application/json
+
+{"name":"New group name"}
+```
+
+Both path segments must be URL-encoded. The selected bot must currently be in
+the group; botmux never falls back to another configured bot. The name follows
+Lark's 100-code-point limit and rejects control or invisible formatting
+characters. The request body is limited to 4 KiB and accepts only `name`.
+Authentication uses the existing Dashboard management boundary described
+below; `publicReadOnly` never makes this mutation anonymous.
 
 ## External read-only queries
 
@@ -1576,7 +1678,7 @@ The following fields belong only to the richer `/api/sessions` rows and `/events
 
 `publicReadOnly` is on by default. While it is enabled, allow-listed reads including `GET /api/dashboard/v1/summary`, `GET /api/sessions`, and `GET /events` are reachable **without a token** on the Dashboard listener. The summary contains only the strongly redacted aggregate above; session names, titles, backends, and the other session/event row metadata must be treated as public to that network.
 
-* Every POST / PATCH / DELETE mutation, every GET outside the read-only allow-list, and every raw PTY / diagnostic log still requires the current token issued by `botmux dashboard`. The allow-list is fail-closed: a newly added GET endpoint does not become public merely because public read-only mode is enabled.
+* Every POST / PUT / PATCH / DELETE mutation, every GET outside the read-only allow-list, and every raw PTY / diagnostic log still requires the current token issued by `botmux dashboard`. The allow-list is fail-closed: a newly added GET endpoint does not become public merely because public read-only mode is enabled.
 * When `publicReadOnly` is off, a tokenless summary request returns 401. A request carrying the current token remains available and is exempt from the anonymous rate limit. In public read-only mode, an incorrect or rotated old token is treated as anonymous.
 * `botmux dashboard` and `botmux dashboard current` reuse the current token (creating the first one when absent); `botmux dashboard rotate` explicitly replaces it and invalidates the previous link. The token is application-layer Dashboard access, not a replacement for host firewall, VPN, or reverse-proxy authentication.
 * If tokenless observation is unnecessary, turn off **Public read-only** under Dashboard Settings. You can also start with `BOTMUX_DASHBOARD_PUBLIC_READONLY=false`; once the setting has been saved in the UI, the persisted value in `~/.botmux/config.json` takes precedence over the environment variable.
@@ -1696,6 +1798,7 @@ Most configuration goes through `bots.json` / the dashboard — you **usually do
 
 | Variable | Default | Description |
 |------|------|------|
+| `BOTMUX_CODEX_NODE_REPL_PATH` | — | Absolute path to the installed Codex `node_repl` executable when no valid MCP runtime is configured; used only by opt-in browser support. |
 | `BOTS_CONFIG` | *(unset)* | Path to bots.json (overrides the default location) |
 | `WEB_HOST` | `0.0.0.0` | HTTP service bind address |
 | `WEB_EXTERNAL_HOST` | *(auto-detect LAN IP)* | External hostname/IP used in terminal links (for public/intranet-domain access, see [Web Terminal](/botmux/en/web-terminal.md)) |
@@ -1722,6 +1825,8 @@ Most configuration goes through `bots.json` / the dashboard — you **usually do
 | `BOTMUX_DAEMON_IPC_BASE_PORT` | `7892` | Each daemon's IPC port = base + botIndex |
 | `BOTMUX_WORKFLOW_RUNS_DIR` | `~/.botmux/workflow-runs` | Workflow run storage directory |
 | `BOTMUX_DASHBOARD_PUBLIC_READONLY` | `true` | Allow tokenless access to the Dashboard's allow-listed read-only APIs / SSE. Once this switch has been saved in Dashboard Settings, the value persisted in `~/.botmux/config.json` takes precedence over this environment variable |
+| `BOTMUX_COMPANION_SECRET_FILE` | *(unset)* | Dedicated HMAC secret-file path for the closed [Local Companion API](/botmux/en/companion-api.md), normally set by `start/restart --companion-secret-file`. Botmux strictly requires a canonical absolute path, current-user ownership, non-symlink regular file, `0600`, and nonempty content. It is not passed to session CLIs and never falls back to `.dashboard-secret`. |
+| `BOTMUX_COMPANION_BOT_APP_ID` | *(unset)* | The single isolated test Bot bound to the Companion API, normally set by `start/restart --companion-bot`. Callers cannot select a Bot. |
 
 ## File locations
 
@@ -1943,7 +2048,9 @@ url: /botmux/en/hooks.md
 
 # Lifecycle Hooks
 
-botmux can **asynchronously invoke external commands** when key lifecycle events occur. If a command fails, times out, or doesn't exist, it only writes to the log and never blocks botmux's main flow.
+botmux can invoke external commands when key lifecycle events occur. By default they are **asynchronous**: if a command fails, times out, or doesn't exist, it only writes to the log and never blocks botmux's main flow.
+
+There is also a **synchronous pre-submit gate** (`mode: "sync"`, supported only on the `prompt.submit` event): the daemon waits for it and uses its verdict to decide whether the message reaches the CLI. See [Synchronous pre-submit gate](#synchronous-pre-submit-gate-promptsubmit).
 
 ## Configuration Location
 
@@ -1995,9 +2102,13 @@ After any hook event fires, you'll see the JSON payload in the log. `examples/ho
 | `event` | string | Required. The event name to subscribe to (see table below) |
 | `command` | string | Required. The external executable command; supports arguments, but is not run through a shell |
 | `timeoutMs` | number | Optional. Defaults to 5000; on timeout, sends `SIGTERM` first, then falls back to `SIGKILL` |
+| `mode` | `"sync"`｜`"async"` | Optional, defaults to `async` (notification, non-blocking). `sync` (awaited, can block) is supported **only on gate events** (currently `prompt.submit`); declaring it on any other event degrades to `async` with a warning in the log. **Gate events also support `async`** — one event can carry both observers and adjudicators |
+| `onError` | `"allow"`｜`"deny"` | Optional, meaningful only with `mode:"sync"`. Fallback direction when the hook itself fails (timeout / missing command / crash). Defaults to `allow` (fail-open) |
 | `filter.chatId` | string｜string\[] | Optional. Only match the chat of the specified Lark group / topic |
 | `filter.senderOpenId` | string｜string\[] | Optional. Only match the specified sender open\_id |
 | `redact.fullContentEvents` | string\[] | Optional. Long text is truncated by default; events in this allowlist pass through the full text |
+
+> **`outbound.send` / `outbound.reply` cannot intercept.** They fire *after* the Lark API call succeeds (the `messageId` is required to build the payload), by which point the message is already in the chat; `mode:"sync"` there could only retract after the fact, which is not interception. Declaring `sync` on them degrades to async with a warning.
 
 ## Supported Events
 
@@ -2005,6 +2116,7 @@ After any hook event fires, you'll see the JSON payload in the log. `examples/ho
 |------|----------|
 | `topic.new` | A new topic / @mention is received |
 | `thread.reply` | A reply to an existing topic is received |
+| `prompt.submit` | A message passed the built-in permission checks and is **about to be submitted to the CLI**. Usable as a plain notification (default `async`), and the only event that supports `mode:"sync"` blocking |
 | `outbound.send` | botmux successfully sends a regular message |
 | `outbound.reply` | botmux successfully replies to a topic message |
 | `schedule.fired` | A scheduled task finishes its precondition check and dispatch attempt (success, skip, or error) |
@@ -2022,6 +2134,7 @@ Different events carry extra fields:
 | Event | Extra fields |
 |------|----------|
 | `topic.new` | `messageId`, `senderOpenId`, `senderType`, `msgType`, `content` |
+| `prompt.submit` | `messageId`, `chatId`, `chatType`, `anchor`, `senderOpenId`, `senderUnionId`, `memberUnionId`, `botSender`, `talkReason`, `content`, `attachments` (`[{type,name}]`, metadata only) |
 | `thread.reply` | `messageId`, `rootId`, `parentId`, `senderOpenId`, `senderType`, `msgType`, `content` |
 | `outbound.send` | `messageId`, `msgType`, `uuid`, `content` |
 | `outbound.reply` | `messageId`, `replyId`, `msgType`, `replyInThread`, `uuid`, `content` |
@@ -2036,6 +2149,82 @@ Different events carry extra fields:
 `skipped` is a new status and requires no migration of existing tasks. Custom hooks that accept only `ok/error` must handle it separately instead of treating it as a successful execution.
 
 By default, `content`, `message`, `description`, `finalOutput`, and `lastScreenContent` are truncated to **600 characters**, with `xxxLength` / `xxxTruncated` added; only events in `redact.fullContentEvents` pass through the full text.
+
+## Synchronous pre-submit gate (prompt.submit)
+
+A regular hook is a *notification* — nothing reads its result. `prompt.submit` with `mode: "sync"` is a *verdict*: the daemon waits for it, reads it, and allows or rejects the message accordingly. Use it to add a custom authorization layer before a message reaches the CLI (an internal permission service, working-hours limits, dangerous-command interception, …).
+
+```json
+[
+  {
+    "event": "prompt.submit",
+    "mode": "sync",
+    "command": "/root/bin/prompt-gate.sh",
+    "timeoutMs": 3000,
+    "onError": "allow"
+  }
+]
+```
+
+A ready-to-adapt example ships in the repo: `examples/hooks/prompt-gate.sh`.
+
+### When it fires
+
+**The gate runs *before* the prompt is handed to the CLI — not "typed into the box, before Enter".**
+
+That second moment does not exist in botmux: writing the text and pressing Enter are a single atomic adapter call (`writeInput` types line by line and the trailing Enter *is* the submit), with no insertion point between them.
+
+```
+Lark message → built-in permission checks → 🚦 prompt.submit gate → charge quota
+   → download attachments → createSession/forkWorker → IPC to worker
+   → writeInput (type + Enter, atomic) → CLI
+```
+
+The gate runs in the **daemon** process, before the CLI subprocess has this turn's input at all (for a new topic the CLI has not even been forked). A denied message never existed as far as the CLI is concerned.
+
+### Using it as a plain notification (`async`)
+
+`mode:"sync"` is **not** required. With no `mode` (or an explicit `async`) this event behaves like any other notification hook: the daemon does not wait for it and its result cannot affect admission — good for audit trails, metrics and alerting.
+
+```json
+[
+  { "event": "prompt.submit", "command": "/root/bin/audit-log.sh" },
+  { "event": "prompt.submit", "mode": "sync", "command": "/root/bin/prompt-gate.sh", "timeoutMs": 3000 }
+]
+```
+
+Both can coexist — the first only records, the second actually blocks. Three rules:
+
+* **Observers are dispatched before the verdict**, so **a notification hook still sees a message that ends up denied** — "whose message was blocked" is exactly what an audit trail wants.
+* **Observers receive the truncated body** (600 characters by default, same as every other event). Only adjudicating `sync` hooks are exempt from truncation; subscribing to this event does not by itself hand a hook the full message text.
+* An observer's exit code and stdout **never** participate in the verdict.
+
+### Expressing a verdict
+
+Two ways; **JSON on stdout takes precedence over the exit code**:
+
+| Method | How | Notes |
+|------|------|------|
+| JSON (recommended) | print `{"decision":"deny","reason":"..."}` on stdout | `reason` is shown to the user; `decision` is `allow`｜`deny` |
+| Exit code | print no JSON, `exit 0` / non-zero | 0 allows, non-zero denies; stderr is used as the reason |
+
+Stdout must be a **whole JSON object** to count as a verdict. Printing an ordinary log line will not be mistaken for one — that case falls back to the exit code.
+
+### Boundaries and guarantees
+
+* **It can only tighten, never loosen.** The built-in permission model (`allowedUsers` / `grant` / oncall / quota) runs first; the hook is asked only after all of it passes. A hook returning `allow` cannot let in someone the built-in gate rejected.
+* **A rejection costs no quota.** The gate sits before the charge, so a denied message does not consume the user's message quota.
+* **A rejection tells the user** (with `reason`) instead of dropping silently — an authorized user whose messages vanish is the hardest failure to diagnose.
+* **Multiple sync hooks are ANDed.** Any `deny` rejects; hooks after the first `deny` do not run.
+* **A broken hook is not a rejection.** Timeout, missing command, and crashes all follow `onError`, which defaults to `allow` — a broken checker should not brick the whole bot. Set `onError: "deny"` explicitly for the opposite.
+* ⚠️ **`timeoutMs: 0` does not mean "no timeout" — it means *instant* timeout**: the gate falls straight through to `onError` (default `allow`), i.e. **the gate is effectively disabled**. A warning is logged at load time. There is no "unlimited" option (the gate sits on the inbound path); set a real budget such as `3000`.
+* **The latency lands directly on the inbound path.** Keep `timeoutMs` small (1–3s). Bot-level admission is concurrent so a slow gate will not stall the whole daemon, but it holds up two things: (1) replies **within one topic** hold an ordering lock, so later messages in that topic queue up; (2) the gate runs inside that bot's admission lease, so **that bot's Dashboard operations** (closing/pruning sessions, changing Agent config) may time out until the gate returns. Do not lean on a large timeout to paper over a slow service. With no sync hook configured there is zero overhead — no spawn is added per message.
+* **Message-listener traffic is adjudicated too.** That content comes from third parties (alert bots and the like) and still reaches a CLI, so it is exactly what a gate should inspect. That path never charges quota; a denial is logged only, with no reply (there is no human sender to answer).
+* **A gate receives the full content, exempt from the 600-character truncation.** That truncation exists for notification hooks; for a gate the content *is* the input to the decision, so truncating it makes the gate structurally blind past the limit (pad 600 characters and hide the payload behind them).
+  ⚠️ **Privacy implication**: configuring a sync gate hands that command the **full message text**. Async hooks are unaffected and still truncate.
+* **A gate sees attachment metadata, not attachment content.** The `attachments` field carries this turn's `[{type,name}]` (e.g. `[{"type":"file","name":"prod.env"}]`), enough for "no .env uploads" or "images only" policies. But the gate runs *before* the files are downloaded (downloading must stay behind authorization, or an unauthorized sender could make the bot fetch files), so it **cannot decide on file contents**.
+* **Coverage: the inbound-message entry only.** New topics, thread replies, slash-command cold starts, session-group birth turns, and message-listener matches all pass through the gate. **Scheduled tasks do not** — that is automation the operator pre-authorized, not external input. **v3 saved workflows do pass through the gate, but carry no prompt body** — sender-level rules such as `senderOpenId` still apply; content-level rules are blind to them. Do not read the gate as "everything reaching the CLI was checked".
+* A given hook entry **runs only once**: after running as the gate, it is not fired again as an async notification.
 
 ## Practical: Auto-Update Skills with session.start
 
@@ -3245,6 +3434,8 @@ Give each bot an independent persona per group, and form a "team roster" during 
 * Role content is Markdown, injected into the CLI's system prompt, with a maximum of about 4096 bytes.
 * Role resolution stays exactly: **this-group role > default role > none**.
 
+Project-group coordinators separately receive Botmux's fixed `<project_group_mode>` protocol for durable project state and the pinned project card. It is not a third Role layer and does not follow the Role's every-turn/once-only injection setting: custom Roles define responsibilities, style, and domain boundaries, while the project protocol governs state lifecycle; both apply together.
+
 Role Management also exposes a per-group, per-bot **topic task reporting** switch. It is off by default. When enabled, tasks dispatched by the current bot in that group still ask the assignee to run `botmux report` so completion is injected into the orchestrator's existing session, and additionally ask it to run `botmux send --no-mention "subtask complete + output location/summary"` in the topic where the task was received to leave a human-visible final-delivery copy, without mentioning the dispatching bot or opening another topic. `--standby` sends no task, so it receives no task instruction.
 
 > 💡 The most intuitive way to set the **default role** is on the **Bot Config** page of `botmux dashboard` — every bot card has a "**Default Role**" editor (it writes to the same config as `/role team set`; it's a bot-level global default persona, so it fits better under Bot Config). The **Team** panel only provides a **read-only view** entry; do all editing on the Bot Config page.
@@ -3593,6 +3784,33 @@ Cross-topic notice: a plain topic-pinned task that fires somewhere other than it
 
 `--follow-active` only makes sense for topic execution and cannot be combined with `--top-level` / `--new-topic`. Tasks of this kind show a `↷跟随活跃话题` marker in `schedule list`.
 
+## A Model Per Task
+
+Under one bot, different tasks usually deserve different model tiers: a sentinel firing every 30 minutes runs fine on a cheap model, while the nightly code review is the one that needs the strongest. `--model` / `--reasoning-effort` give a task its own model without touching the bot config or any other task.
+
+```bash
+# Frequent sentinel: cheap model, low effort
+botmux schedule add "every 30m" "check service health, alert only on failure" \
+  --silent --model gpt-5.2 --reasoning-effort low
+
+# Once-a-day deep task: strongest model, highest effort
+botmux schedule add "0 9 * * *" "review every PR merged to master yesterday" \
+  --new-topic --model gpt-5.6-sol --reasoning-effort ultra
+```
+
+The Dashboard "Schedules" page has both fields too; empty means "follow the bot config".
+
+**Only a run that creates a session can apply the model.** Model and reasoning effort are CLI **process launch** arguments (`codex --model X -c model_reasoning_effort=Y`) and cannot be changed once the process is up. So:
+
+| Execution position | Effect |
+| --- | --- |
+| `--new-topic` | Every run starts a new session, so the model applies **every time** |
+| `--topic` / `--top-level` | Applies on the run that creates the session; later runs reuse it with the model it started with |
+
+Use `--new-topic` when it must apply on every run. Both the CLI and the Dashboard say which case you are in when you save.
+
+Supported CLIs are Codex, Claude Code, Grok and TraeX (the same gate as the trigger API's `options.model`); a task on any other CLI ignores both fields at fire time and logs a warning. Which effort levels exist depends on the model (`gpt-5.6-sol` goes up to `ultra`, `gpt-5.5` stops at `xhigh`), and the Dashboard rejects an unsupported pairing on save. If the bot later switches CLI, or the model stops offering the level, the fire **drops that field and runs anyway** with a warning — stale configuration never skips a run.
+
 ## Management
 
 ```bash
@@ -3744,7 +3962,9 @@ Just send these commands directly in a topic, and the daemon intercepts and hand
 | `/term` | Get the operable (write-enabled) terminal link for this session, delivered privately to the owner (visible-to-you in-chat, falling back to DM in topic/p2p — never exposed in the group) |
 | `/quote` | Pop a picker of this chat's topics; choosing one reads that topic's transcript into the current session. This fills a gap in Feishu itself — its quote-reply UI can only reference a single message, never a whole topic. The bot replies with a short acknowledgement (how many messages, time span, subject) and waits for your next instruction |
 | `/quote <instruction>` | Same, but runs your instruction as soon as you pick a topic, saving a round trip. The transcript is still injected explicitly labelled as material rather than instructions |
+| `/sessions` | List this bot's active topic sessions in the current group and jump directly back to a topic (legacy sessions use a safe locate fallback) |
 | `/dashboard [module]` | Open Dashboard control cards in Feishu (sessions/schedules/groups/settings/help, etc.) |
+| `@bot /project enable\|status\|roles\|disable` | Enable, inspect, configure agent roles, or leave project-group mode in the current ordinary group (owner/allowedUsers only; does not consume a session slot) |
 | `/insight` | owner-only: instantly posts a "session insight summary" card for the current session (aggregate metrics + rule suggestions; action-span detail / per-turn reconciliation / conversation replay live on the Dashboard "Insights" page) |
 | `/vc prepare <meeting link or number>` | Use the current regular group as a meeting-prep chat and reuse the same Agent session during the meeting |
 | `/introduce` | Register the bots in this chat with each other by `open_id`, so they can @-mention one another precisely when collaborating |
@@ -3754,6 +3974,10 @@ Just send these commands directly in a topic, and the daemon intercepts and hand
 | `/issue status` | Run inside the task group to see which platform task it is bound to and where things stand: platform status / claimant / local binding / whether any status write-back is still stuck in the outbox. Read-only, also limited to the bot's `allowedUsers` |
 | `/issue done` | Run inside the task group to **accept the work** and move the task to its terminal state on the platform. An agent can only deliver up to "in review"; marking it done is a human decision. Once done, the platform clears the claim and the task can no longer be released. Also limited to the bot's `allowedUsers` |
 | `/issue release` | Run inside the group created when the task was claimed: hands the task back to the platform's todo pool so someone else can take it. The group and session are **not** disbanded — the conversation is kept. Also limited to the bot's `allowedUsers` |
+
+`/sessions` card preview:
+
+![Current-group active topic sessions card](/img/sessions-command-card.png)
 
 See [Session & Topic Model](/botmux/en/session-model.md) for the repository-picker and pinned-directory branches of bare `/t`. You can also make `/repo` the new topic's first command:
 
@@ -3888,6 +4112,24 @@ Add `--role-profile <profile>` to bootstrap the new group with reusable per-bot 
 ```
 
 See [One-Click Session Group](/botmux/en/group.md) for details.
+
+## 📌 Upgrade an Ordinary Group to Project Mode
+
+In the top-level ordinary-group chat, mention the Bot that should coordinate the project:
+
+```text
+@bot /project enable
+```
+
+The addressed Bot becomes coordinator and the other bots in this group that are managed by the same Botmux host become workers. The command writes the same source of truth as Dashboard and immediately sends and pins the getting-started card. A settled project goal is not required; discussion can begin first in the top-level chat. Command-based enablement turns on “automatically enroll new bots” by default, so newly joined bots managed by the same host enter the worker allowlist independently of the auto-start-on-join setting.
+
+On every project turn, the coordinator receives Botmux's fixed project-state protocol: read durable state first, then persist material changes to the goal, phase, current work, remaining plan, blockers, or milestones. This protocol is injected separately from custom Roles, so Role wording and once-only Role injection cannot disable it. On first initialization, Botmux sends and pins a fresh formal project card at the current point in the timeline, then unpins the getting-started guide; later progress updates patch the formal card in place.
+
+* `@bot /project status`: show the coordinator, workers, and whether a project has started.
+* `@bot /project roles`: Reply in the current group with a focused role card for this project’s coordinator and workers; only the admin who opened the card can operate it. Saving reuses the per-chat `/role` files and follows the bot’s existing injection policy: every-turn mode applies on the next message, while once mode applies after a new or rebuilt session.
+* `@bot /project disable`: leave project-group mode; an unused guide is unpinned, while existing project state is retained for a later re-enable.
+
+The command works only in ordinary groups and only for the Bot's owner/allowedUsers. Repeating `enable` preserves any worker subset and auto-enrollment policy already curated in Dashboard. Dashboard can disable “automatically enroll new bots”; when disabled, the explicit worker list remains unchanged. Dashboard also lists the same project agents and deep-links to their group-role editors; both entry points share one role source of truth.
 
 ## 📄 Feishu Doc Comment Entry
 
