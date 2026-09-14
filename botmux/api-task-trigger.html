@@ -9,7 +9,7 @@
 <script defer src="/botmux/static/js/lib-react.9b7f575772.js"></script>
 <script defer src="/botmux/static/js/lib-router.00d9fd057a.js"></script>
 <script defer src="/botmux/static/js/805.746bc2f44c.js"></script>
-<script defer src="/botmux/static/js/index.ec16866af0.js"></script>
+<script defer src="/botmux/static/js/index.20460f2034.js"></script>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="generator" content="Rspress v2.0.13">
 <meta property="og:type" content="website">
@@ -20,18 +20,19 @@
 <meta name="theme-color" content="#646CEA">
 <link rel="icon" href="/botmux/botmux-logo.png">
 <meta property="og:title" content="通过 API 编程式触发 botmux 任务 - botmux 文档">
-<meta name="description" content="让外部系统（任务编排器、CI、后端服务等）通过 HTTP API 把一段指令交给某个 botmux 机器人执行，并拿回最终结果——机器人在飞书话题里正常跑 CLI，但整个调用是纯程序化的「请求 → 拿结果」，可选完全不打扰飞书。 本文面向调用方开发者，介绍两种执行模式、四态轮询契约、鉴权、取消与故障恢复，并附可直接运行的 curl 示例与客户端伪代码。">
-<meta property="og:description" content="让外部系统（任务编排器、CI、后端服务等）通过 HTTP API 把一段指令交给某个 botmux 机器人执行，并拿回最终结果——机器人在飞书话题里正常跑 CLI，但整个调用是纯程序化的「请求 → 拿结果」，可选完全不打扰飞书。 本文面向调用方开发者，介绍两种执行模式、四态轮询契约、鉴权、取消与故障恢复，并附可直接运行的 curl 示例与客户端伪代码。"></head>
+<meta name="description" content="让外部系统（任务编排器、CI、后端服务等）通过 HTTP API 把一段指令交给某个 botmux 机器人执行。机器人照常跑它的 CLI，调用方拿到的是一次纯程序化的「请求 → 结果」。任务可以完全不进飞书，也可以落在真实群聊/话题里——这两件事是互相独立的。 本文面向调用方开发者，是 POST /api/trigger 的完整契约：请求字段、投递目标、执行模式、幂等、四态轮询、状态码与错误码、边界与陷阱。">
+<meta property="og:description" content="让外部系统（任务编排器、CI、后端服务等）通过 HTTP API 把一段指令交给某个 botmux 机器人执行。机器人照常跑它的 CLI，调用方拿到的是一次纯程序化的「请求 → 结果」。任务可以完全不进飞书，也可以落在真实群聊/话题里——这两件事是互相独立的。 本文面向调用方开发者，是 POST /api/trigger 的完整契约：请求字段、投递目标、执行模式、幂等、四态轮询、状态码与错误码、边界与陷阱。"></head>
 
   <body>
     <div id="__rspress_root"><link rel="preload" as="image" href="/botmux/botmux-logo.png"/><header class="rp-nav"><div class="rp-nav__left"><div class="rp-nav__title"><a href="/botmux/" class="rp-nav__title__link rp-link"><div class="rp-nav__title__logo"><img src="/botmux/botmux-logo.png" alt="logo" id="logo" class="rspress-logo rp-nav__title__logo-image"/></div><span>botmux 文档</span></a></div></div><div class="rp-nav__right"><button class="rp-search-button"><div class="rp-search-button__content"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21" class="rp-search-button__icon"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg><span class="rp-search-button__word">搜索</span></div><div class="rp-search-button__hotkey" style="opacity:0"><span></span><span>K</span></div></button><div class="rp-search-button--mobile"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg></div><div class="rp-nav__others"><div class="rp-nav-menu__divider"></div><li class="rp-nav-menu__item"><div class="rp-nav-menu__item__container">简体中文<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-menu__item__icon"><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--center"><li class="rp-hover-group__item rp-hover-group__item--active" style="padding-left:8px" data-depth="0"><a href="/botmux/" class="rp-hover-group__item__link rp-link" aria-label="简体中文" lang="zh" hrefLang="zh" rel="alternate">简体中文</a></li><li class="rp-hover-group__item" style="padding-left:8px" data-depth="0"><a href="/botmux/en/api-task-trigger.html" class="rp-hover-group__item__link rp-link" aria-label="English" lang="en" hrefLang="en" rel="alternate">English</a></li></ul></li><div class="rp-switch-appearance"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" class="rp-switch-appearance__icon rp-switch-appearance__icon--sun"><path fill="currentColor" d="m7.001 15.848-1.226 1.226a.58.58 0 0 0 0 .818.58.58 0 0 0 .818 0l1.226-1.226a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0m-.352-8.735a.584.584 0 0 0 .825-.825L6.237 5.051a.584.584 0 0 0-.825.825zM5.011 11.07h-1.75a.584.584 0 0 0 0 1.167h1.75c.324 0 .584-.26.584-.583a.585.585 0 0 0-.584-.584m7.003-5.835c.324 0 .584-.26.584-.584V2.9a.58.58 0 0 0-.584-.584.58.58 0 0 0-.583.583V4.65c0 .323.262.584.583.584m5.616 1.621 1.226-1.225a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0l-1.226 1.225a.58.58 0 0 0 0 .818.576.576 0 0 0 .818 0m3.138 4.214h-1.75a.58.58 0 0 0-.584.584c0 .324.26.584.583.584h1.751a.584.584 0 1 0 0-1.167m-3.389 5.124a.584.584 0 0 0-.825.825l1.238 1.238a.584.584 0 0 0 .825-.826zm-5.365-9.795a5.256 5.256 0 0 0-5.257 5.258 5.256 5.256 0 0 0 5.257 5.257 5.256 5.256 0 0 0 5.257-5.257 5.256 5.256 0 0 0-5.257-5.258m0 11.675a.58.58 0 0 0-.583.583v1.751a.582.582 0 1 0 1.167 0v-1.75a.584.584 0 0 0-.584-.584"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" viewBox="0 0 19 19" class="rp-switch-appearance__icon rp-switch-appearance__icon--moon"><path fill="currentColor" d="M9.166 0a9.2 9.2 0 0 1 1.857.188.834.834 0 0 1 .042 1.623 4.47 4.47 0 1 0 5.457 5.457l.048-.135a.834.834 0 0 1 1.575.177q.186.902.188 1.856A9.168 9.168 0 1 1 9.166 0"></path></svg></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__sm"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg></button><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__md"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"><div class="rp-nav-menu__others-mobile__container"><div class="rp-nav-hamburger__md__hover-group"><div class="rp-nav-screen-appearance"><div class="rp-nav-screen-appearance__left">主题</div><div class="rp-nav-screen-appearance__right"></div></div><div class="rp-nav-screen-langs"><div class="rp-nav-screen-langs__left">语言</div><div class="rp-nav-screen-langs__right">简体中文<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-screen-langs__icon "><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div></div><div class="rp-nav-screen-langs-group" style="display:grid;grid-template-rows:0fr;transition:grid-template-rows 0.2s ease-out"><div class="rp-nav-screen-langs-group__inner"><span class="rp-nav-screen-langs-group__item rp-nav-screen-langs-group__item--active" aria-current="page" aria-disabled="true">简体中文</span><a href="/botmux/en/api-task-trigger.html" class="rp-nav-screen-langs-group__item rp-link" hrefLang="en" lang="en" rel="alternate">English</a></div></div><div class="rp-nav-screen-divider"></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div></div></ul></button></div></header><div class="rp-doc-layout__menu"><div class="rp-sidebar-menu"><button type="button" class="rp-sidebar-menu__left"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M4 6h24v2H4zm0 18h24v2H4zm0-12h24v2H4zm0 6h24v2H4z"></path></svg><span>菜单</span></button><button type="button" class="rp-sidebar-menu__right"><span class="rp-sidebar-menu__right__text">目录</span><svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-sidebar-menu__right__icon" style="transform:rotate(0deg);transition:transform 0.2s ease-out"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></button></div></div><div class="rp-doc-layout__container"><aside class="rp-doc-layout__sidebar rp-scrollbar"><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">开始</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/index.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">介绍</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/quickstart.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">5 分钟快速接入</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/prerequisites.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">前置要求</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">核心概念</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/architecture.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">架构总览</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/session-model.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">会话与话题模型</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">功能详解</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/cards.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">实时流式卡片</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/web-terminal.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Web 终端</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/multi-bot.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">多机器人协作</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/multi-topic.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">多话题协作模式</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/whiteboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">本地白板</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/roles.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">角色与团队</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/tmux.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">tmux 会话常驻</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/zmx.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">ZMX 会话后端</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/adopt.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">会话接入 Adopt</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/relay.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">会话接力 Relay</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/group.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">一键建会话群</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/doc-comment.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">飞书文档评论入口</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/schedule.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">定时任务</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/oncall.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Oncall 模式</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/sandbox.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">文件沙盒</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/voice.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">语音总结</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/dashboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Dashboard 管控面</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/webhook.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">接入点（Webhook）</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/api-task-trigger.html" class="rp-sidebar-item rp-sidebar-item--active rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">API 编程式触发任务</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/api-core-only.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Core-only API 控制</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/workflow.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Workflow（实验性）</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/hooks.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">生命周期 Hooks</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/skill-cli.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Skill + CLI 交互</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">开发与扩展</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/plugins.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Plugin 开发与市场注册</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">命令参考</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/slash-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">斜杠命令</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/cli-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">CLI 命令</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">配置</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/bots-json.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">bots.json 配置</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/env.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">环境变量与文件位置</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/companion-api.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">本地 Companion API</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/adapters.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">多 CLI 适配器</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">实践与排错</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/best-practices.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">最佳实践</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/pitfalls.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">常见踩坑</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/faq.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">FAQ / 排错</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/about.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">关于 &amp; 资源</span></div><div class="rp-sidebar-item__right"></div></a></div></div></aside><div class="rp-doc-layout__doc"><main class="rp-doc-layout__doc-container"><div class="rp-doc rspress-doc"><!--$--><h1 class="rp-toc-include" id="通过-api-编程式触发-botmux-任务"><a href="#通过-api-编程式触发-botmux-任务" class="rp-header-anchor rp-link" aria-hidden="true">#</a>通过 API 编程式触发 botmux 任务<!-- --> </h1>
 <blockquote>
-<p>让外部系统（任务编排器、CI、后端服务等）通过 HTTP API 把一段指令交给某个 botmux 机器人执行，并拿回最终结果——机器人在飞书话题里正常跑 CLI，但整个调用是纯程序化的「请求 → 拿结果」，可选完全不打扰飞书。</p>
+<p>让外部系统（任务编排器、CI、后端服务等）通过 HTTP API 把一段指令交给某个 botmux 机器人执行。机器人照常跑它的 CLI，调用方拿到的是一次纯程序化的「请求 → 结果」。任务可以完全不进飞书，也可以落在真实群聊/话题里——这两件事是<strong>互相独立</strong>的。</p>
 </blockquote>
-<p>本文面向<strong>调用方开发者</strong>，介绍两种执行模式、四态轮询契约、鉴权、取消与故障恢复，并附可直接运行的 curl 示例与客户端伪代码。</p>
+<p>本文面向<strong>调用方开发者</strong>，是 <code>POST /api/trigger</code> 的完整契约：请求字段、投递目标、执行模式、幂等、四态轮询、状态码与错误码、边界与陷阱。</p>
 <hr/>
-<h2 class="rp-toc-include" id="1-两种执行模式"><a href="#1-两种执行模式" class="rp-header-anchor rp-link" aria-hidden="true">#</a>1. 两种执行模式</h2>
-<p>所有调用都走同一个端点 <code>POST /api/trigger</code>，区别只在 <code>options</code>：</p>
+<h2 class="rp-toc-include" id="1-先分清两个正交维度"><a href="#1-先分清两个正交维度" class="rp-header-anchor rp-link" aria-hidden="true">#</a>1. 先分清两个正交维度</h2>
+<p>一次触发由两个<strong>互不影响</strong>的维度决定，请求体里各管各的。老版本文档把它们混在一起说（「两种模式都不进飞书群」），那是不准确的：<strong>是否进飞书群只由 <code>target</code> 决定，和同步/异步无关。</strong></p>
+<p><strong>维度 A — 执行模式（<code>options</code>，决定你怎么拿结果）</strong></p>
 
 
 
@@ -55,10 +56,78 @@
 
 
 
-<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>模式</th><th>触发方式</th><th>适用场景</th><th style="text-align:center">能否中途取消</th></tr></thead><tbody><tr><td><strong>同步</strong></td><td><code>options.waitForFinalOutput=true</code></td><td>一发一收、任务短（≤5 分钟）、不需要中途取消</td><td style="text-align:center">✗</td></tr><tr><td><strong>异步</strong></td><td><code>options.asyncReturnSessionId=true</code></td><td>快速接单 + 轮询、需要中途取消、需要故障恢复</td><td style="text-align:center">✓</td></tr></tbody></table></div>
-<p>两种模式都会开一个「虚拟会话」（不传 <code>chatId</code> 时），<strong>完全不进飞书群、不发任何消息</strong>——纯 HTTP 请求-应答。</p>
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>模式</th><th>怎么触发</th><th>HTTP 行为</th><th style="text-align:center">能轮询</th><th style="text-align:center">能中途取消</th></tr></thead><tbody><tr><td><strong>同步</strong></td><td><code>options.waitForFinalOutput=true</code></td><td>连接挂住直到产出或超时，结果在 <code>output.content</code></td><td style="text-align:center">—</td><td style="text-align:center">✗</td></tr><tr><td><strong>异步</strong></td><td><code>options.asyncReturnSessionId=true</code></td><td>立即返回 <code>sessionId</code></td><td style="text-align:center">✓</td><td style="text-align:center">✓</td></tr><tr><td><strong>即发即忘</strong></td><td>两个都不传</td><td>立即返回 <code>queued</code>/<code>delivered</code>，产出走飞书正常回复</td><td style="text-align:center">✗（见 §8）</td><td style="text-align:center">✓</td></tr></tbody></table></div>
+<p><strong>维度 B — 投递目标（<code>target</code>，决定任务落在哪、飞书里看不看得见）</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>形状</th><th><code>target</code> 字段</th><th>落点</th></tr></thead><tbody><tr><td><strong>虚拟会话</strong></td><td>不传 <code>chatId</code>/<code>sessionId</code>/<code>rootMessageId</code></td><td>合成会话，完全不进飞书</td></tr><tr><td><strong>真实群聊</strong></td><td><code>chatId</code></td><td>该群的真实会话</td></tr><tr><td><strong>已有话题</strong></td><td><code>chatId</code> + <code>rootMessageId</code></td><td>该话题锚点</td></tr><tr><td><strong>已有会话</strong></td><td><code>sessionId</code></td><td>给那个会话追加一轮</td></tr></tbody></table></div>
+<p>两个维度<strong>可以自由组合</strong>。常见组合：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>组合</th><th>效果</th></tr></thead><tbody><tr><td>虚拟 + 同步/异步</td><td>纯 API 任务，飞书零打扰（最常用）</td></tr><tr><td>真群 + 即发即忘</td><td>等价于一次 webhook 投递，答案发在群里</td></tr><tr><td>真群 + 同步/异步</td><td>群里能看到话题引子和流式卡片，但<strong>最终答案只回给 HTTP 调用方</strong>（详见 §4）</td></tr><tr><td>已有会话 + 异步</td><td>对同一个会话连续追问，配合 <code>turnIdempotencyKey</code></td></tr></tbody></table></div>
 <blockquote>
-<p>⚠️ 生产级任务调度<strong>推荐异步模式</strong>：同步模式的 <code>sessionId</code> 只在完成时才返回，运行中拿不到、无法中途取消，且 HTTP 连接要挂最长 5 分钟。异步模式立即返回 <code>sessionId</code>，可轮询、可取消、可恢复。</p>
+<p>硬约束：<strong>不传 <code>chatId</code>/<code>sessionId</code>/<code>rootMessageId</code> 时，<code>options</code> 必须含 <code>waitForFinalOutput</code> 或 <code>asyncReturnSessionId</code> 之一</strong>，否则 400 <code>target_required</code>——否则这个任务既没有飞书出口、也没有 HTTP 出口，产出无处可去。</p>
 </blockquote>
 <hr/>
 <h2 class="rp-toc-include" id="2-鉴权"><a href="#2-鉴权" class="rp-header-anchor rp-link" aria-hidden="true">#</a>2. 鉴权</h2>
@@ -72,34 +141,345 @@
 <p>token 会一直保留到显式轮换。独立 API Key 认证（如 <code>X-Botmux-Api-Key</code>）在规划中，届时本文更新。</p>
 </blockquote>
 <hr/>
-<h2 class="rp-toc-include" id="3-触发任务"><a href="#3-触发任务" class="rp-header-anchor rp-link" aria-hidden="true">#</a>3. 触发任务</h2>
-<h3 class="rp-toc-include" id="请求体结构"><a href="#请求体结构" class="rp-header-anchor rp-link" aria-hidden="true">#</a>请求体结构</h3>
+<h2 class="rp-toc-include" id="3-请求体完整字段"><a href="#3-请求体完整字段" class="rp-header-anchor rp-link" aria-hidden="true">#</a>3. 请求体完整字段</h2>
 <div class="rp-codeblock language-jsonc"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="jsonc"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span></span>
-<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;source&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)">   { </span><span style="color:var(--shiki-token-keyword)">&quot;type&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;webhook&quot;</span><span style="color:var(--shiki-foreground)"> }</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-comment)">          // 来源类型</span></span>
-<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;target&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)">   { </span><span style="color:var(--shiki-token-keyword)">&quot;kind&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;turn&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-keyword)"> &quot;botId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;cli_xxx&quot;</span><span style="color:var(--shiki-foreground)"> }</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-comment)">  // 目标机器人的 larkAppId</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;source&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)">   { </span><span style="color:var(--shiki-token-keyword)">&quot;type&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;webhook&quot;</span><span style="color:var(--shiki-foreground)"> }</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-comment)">                  // 见 3.1</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;target&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)">   { </span><span style="color:var(--shiki-token-keyword)">&quot;kind&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;turn&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-keyword)"> &quot;botId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;cli_xxx&quot;</span><span style="color:var(--shiki-foreground)"> }</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-comment)"> // 见 3.2</span></span>
 <span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;instruction&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;你要机器人执行的指令（可信，作为顶层指令渲染）&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
-<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;envelope&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;envelope&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> {                                        </span><span style="color:var(--shiki-token-comment)">// 见 3.3</span></span>
 <span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;format&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;json&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
-<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;sourceName&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;your-system&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-comment)">               // 调用方标识</span></span>
-<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;trusted&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> false</span><span style="color:var(--shiki-token-comment)">                           // 必须为 false，见下</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;sourceName&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;your-system&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;trusted&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> false</span><span style="color:var(--shiki-token-comment)">                                   // 必须为 false</span></span>
 <span class="line"><span style="color:var(--shiki-foreground)">  }</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
-<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;options&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> { </span><span style="color:var(--shiki-token-comment)">/* 见下 */</span><span style="color:var(--shiki-foreground)"> }</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;presentation&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> { </span><span style="color:var(--shiki-token-keyword)">&quot;title&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;…&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-keyword)"> &quot;topicMessage&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;…&quot;</span><span style="color:var(--shiki-foreground)"> }</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-comment)">  // 可选，见 3.4</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;options&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> { </span><span style="color:var(--shiki-token-comment)">/* 见 3.5 */</span><span style="color:var(--shiki-foreground)"> }</span></span>
 <span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="切换代码换行" aria-label="切换代码换行"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="复制代码"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
-<p>关键约束（都是硬校验，违反直接 400）：</p>
+<h3 class="rp-toc-include" id="31-source"><a href="#31-source" class="rp-header-anchor rp-link" aria-hidden="true">#</a>3.1 <code>source</code></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>字段</th><th style="text-align:center">必填</th><th>说明</th></tr></thead><tbody><tr><td><code>type</code></td><td style="text-align:center">✓</td><td>声明值：<code>webhook</code> / <code>ui</code> / <code>workflow</code> / <code>schedule</code> / <code>vc_meeting</code> / <code>headless</code></td></tr><tr><td><code>connectorId</code></td><td style="text-align:center"></td><td>接入点标识，无 <code>envelope.sourceName</code> 时用于生成默认会话标题</td></tr><tr><td><code>requestId</code></td><td style="text-align:center"></td><td>调用方请求 id，写进调用日志</td></tr><tr><td><code>receivedAt</code></td><td style="text-align:center"></td><td>上游收到事件的时间</td></tr></tbody></table></div>
+<blockquote>
+<p>⚠️ <strong><code>source.type</code> 不做任何校验</strong>——任意字符串都能通过。真正影响行为的只有两个值：<code>headless</code>（走本机 CLI 的 headless 分支，渲染另一套提示块）与 <code>vc_meeting</code>（事件 JSON 紧凑渲染）。普通外部调用<strong>一律填 <code>&quot;webhook&quot;</code></strong>，别指望其它值带来差异。</p>
+</blockquote>
+<h3 class="rp-toc-include" id="32-target"><a href="#32-target" class="rp-header-anchor rp-link" aria-hidden="true">#</a>3.2 <code>target</code></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>字段</th><th style="text-align:center">必填</th><th>说明</th></tr></thead><tbody><tr><td><code>kind</code></td><td style="text-align:center">✓</td><td>必须是 <code>&quot;turn&quot;</code>。<code>&quot;workflow&quot;</code> 已退役：校验能过，但 daemon 直接 <strong>410 <code>legacy_workflow_retired</code></strong></td></tr><tr><td><code>botId</code></td><td style="text-align:center">✓</td><td>目标机器人的 <code>larkAppId</code>。缺失 → 400 <code>target_required</code>；与目标 daemon 不符 → 400 <code>bot_not_found</code></td></tr><tr><td><code>chatId</code></td><td style="text-align:center"></td><td>真实群 ID。传了就是真群会话，见 §4</td></tr><tr><td><code>sessionId</code></td><td style="text-align:center"></td><td>续已有会话。会话不存在 → 404 <code>session_not_found</code></td></tr><tr><td><code>rootMessageId</code></td><td style="text-align:center"></td><td>已有话题锚点。非空字符串；不带 <code>sessionId</code> 时<strong>必须同时传 <code>chatId</code></strong></td></tr></tbody></table></div>
+<h3 class="rp-toc-include" id="33-envelope不可信事件数据"><a href="#33-envelope不可信事件数据" class="rp-header-anchor rp-link" aria-hidden="true">#</a>3.3 <code>envelope</code>（不可信事件数据）</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>字段</th><th style="text-align:center">必填</th><th>说明</th></tr></thead><tbody><tr><td><code>sourceName</code></td><td style="text-align:center">✓</td><td>调用方标识，用于默认会话标题与默认话题引子文案</td></tr><tr><td><code>trusted</code></td><td style="text-align:center">✓</td><td><strong>必须字面为 <code>false</code></strong></td></tr><tr><td><code>format</code></td><td style="text-align:center">✓</td><td>标注用；<strong>代码中无读取方</strong>，填 <code>&quot;json&quot;</code> 即可</td></tr><tr><td><code>headers</code></td><td style="text-align:center"></td><td>原始请求头，随事件 JSON 一起给模型</td></tr><tr><td><code>payload</code></td><td style="text-align:center"></td><td>原始事件体</td></tr><tr><td><code>rawText</code></td><td style="text-align:center"></td><td>原始文本</td></tr></tbody></table></div>
+<p><strong><code>envelope.trusted</code> 必须是 <code>false</code></strong> 是防注入设计：它声明「以下 envelope 内容是不可信外部数据」，daemon 才会把整个 envelope 包进 <code>&lt;botmux_external_event trusted=&quot;false&quot;&gt;</code> 并明确告诉模型不要执行其中夹带的指令。<strong>你真正要机器人执行的事情放在顶层 <code>instruction</code></strong>，它会渲染成 <code>&lt;botmux_task trusted=&quot;true&quot;&gt;</code> 置于事件数据之上。</p>
+<h3 class="rp-toc-include" id="34-presentation可选控制飞书里的呈现"><a href="#34-presentation可选控制飞书里的呈现" class="rp-header-anchor rp-link" aria-hidden="true">#</a>3.4 <code>presentation</code>（可选，控制飞书里的呈现）</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>字段</th><th>取值</th><th>默认</th></tr></thead><tbody><tr><td><code>title</code></td><td>1–200 字符</td><td><code>[External] &lt;sourceName 或 connectorId 或 source.type&gt;</code></td></tr><tr><td><code>topicMessage</code></td><td>1–200 字符，或 <code>null</code></td><td><code>外部事件触发：{sourceName}</code></td></tr></tbody></table></div>
 <ul>
-<li><strong><code>envelope.trusted</code> 必须是 <code>false</code></strong>。这是防注入设计：<code>trusted:false</code> 声明「以下 envelope 内容是不可信外部数据」，daemon 才会把它包成 untrusted event、不执行里面夹带的指令。你要机器人真正执行的东西放在顶层 <code>instruction</code>（可信指令），不要放进 envelope。</li>
-<li><strong>不传 <code>chatId</code></strong> 时，<code>options</code> 必须含 <code>waitForFinalOutput</code> 或 <code>asyncReturnSessionId</code> 之一，否则报 <code>target_required</code>。</li>
-<li><strong><code>options.timeoutMs</code> 范围 <code>[1000, 300000]</code></strong>（1 秒 ~ 5 分钟），越界报 400。不传默认 120000。</li>
-<li><strong><code>options.model</code></strong> / <strong><code>options.reasoningEffort</code></strong>（可选，<strong>仅对 codex / codex-app / traex / grok 机器人生效</strong>）：按本次触发覆盖模型与推理档位。
-<ul>
-<li><code>model</code>：该 CLI 的模型 id（≤200 字符）；<code>reasoningEffort</code> 按 CLI/模型能力校验。常用档位是 <code>low</code> / <code>medium</code> / <code>high</code> / <code>xhigh</code>，部分模型还支持 <code>max</code> / <code>ultra</code>。未配置或未知模型只开放公共安全档位；明确不支持或超过档位时请求 400。</li>
-<li><strong>仅新建会话生效</strong>：只在这次触发<strong>创建新会话</strong>时记录；折叠进已有 worker 的续轮不改写。</li>
-<li><code>model</code> <strong>只驻内存、不落盘</strong>：它在该会话本次生命周期内的每次启动生效，daemon 重启后不恢复——之后按机器人配置的模型启动。<code>reasoningEffort</code> 仍随会话持久化。</li>
-<li><strong>作用域收窄到带思考强度控制的 CLI</strong>：目标机器人不是 codex/codex-app/traex/grok 时，这两个字段被忽略（不会改动 Claude/Gemini/CoCo 等的模型）。</li>
+<li><code>title</code> 是<strong>会话标题</strong>（dashboard/飞书话题名），最终截断到 50 字符。</li>
+<li><code>topicMessage</code> 是<strong>新开话题时发的那条引子消息</strong>。传 <code>null</code> 显式表示「不要发引子」——话题会直接落在群的 chat 层级。</li>
+<li>⚠️ 两者<strong>只在真正新开话题时有意义</strong>：虚拟会话不发任何飞书消息，<code>rootMessageId</code> 落已有话题、折叠进已有会话也都不发引子。</li>
+<li>越界（空串 / &gt;200 字符 / 类型不对）→ 400 <code>bad_request</code>。</li>
 </ul>
+<h3 class="rp-toc-include" id="35-options"><a href="#35-options" class="rp-header-anchor rp-link" aria-hidden="true">#</a>3.5 <code>options</code></h3>
+<p><strong>有效字段</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>字段</th><th>校验</th><th>说明</th></tr></thead><tbody><tr><td><code>waitForFinalOutput</code></td><td>严格布尔</td><td>同步模式。仅 <code>kind:&quot;turn&quot;</code>；与 <code>asyncReturnSessionId</code> 同传 → 400</td></tr><tr><td><code>asyncReturnSessionId</code></td><td>严格布尔</td><td>异步模式</td></tr><tr><td><code>dryRun</code></td><td>严格布尔</td><td>只渲染不派发，见 §5.4</td></tr><tr><td><code>timeoutMs</code></td><td><code>[1000, 300000]</code></td><td>同步模式等待上限，默认 <code>120000</code>。越界 400</td></tr><tr><td><code>idempotencyKey</code></td><td>非空 ≤200 字符</td><td>新建会话幂等，见 §7.1</td></tr><tr><td><code>turnIdempotencyKey</code></td><td>非空 ≤200 字符</td><td>续轮幂等，见 §7.2。与上一项互斥</td></tr><tr><td><code>suppressFinalOutput</code></td><td>布尔</td><td><strong>仅即发即忘模式生效</strong>，见下方陷阱</td></tr><tr><td><code>model</code></td><td>≤200 字符</td><td>仅 codex / codex-app / traex / grok，仅新建会话</td></tr><tr><td><code>reasoningEffort</code></td><td><code>low</code>|<code>medium</code>|<code>high</code>|<code>xhigh</code>|<code>max</code>|<code>ultra</code></td><td>同上</td></tr></tbody></table></div>
+<p><code>model</code> / <code>reasoningEffort</code> 细则：</p>
+<ul>
+<li><code>model</code> 是该 CLI 的模型 id；<code>reasoningEffort</code> 按 CLI/模型能力校验，未配置或未知模型只开放公共安全档位，明确不支持时 400。</li>
+<li><strong>仅新建会话生效</strong>：折叠进已有 worker 的续轮不改写。</li>
+<li><code>model</code> <strong>只驻内存、不落盘</strong>：daemon 重启后按机器人配置的模型启动；<code>reasoningEffort</code> 仍随会话持久化。</li>
+<li>目标机器人不是 codex/codex-app/traex/grok 时这两个字段被忽略（不会改动 Claude/Gemini/CoCo 等的模型）。</li>
+</ul>
+<p><strong>⚠️ 三个陷阱字段（类型里有，但和你想的不一样）</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>字段</th><th>真实行为</th></tr></thead><tbody><tr><td><code>dedupKey</code></td><td><strong>触发路径没有任何消费方</strong>。它只会随 options JSON 一起渲染进模型提示词，并参与幂等 <code>requestHash</code>。真正的事件去重在 <a href="/botmux/webhook.html" class="rp-link">Webhook 接入点</a>的「去重字段」上，不在这里。</td></tr><tr><td><code>status</code></td><td>同样<strong>没有读取方</strong>（<code>&#x27;firing&#x27;</code> / <code>&#x27;resolved&#x27;</code> 或任意字符串）。只进提示词 + 参与 <code>requestHash</code>——所以同一个 <code>idempotencyKey</code> 改了 <code>status</code> 会因 payload 变化而 <strong>409</strong>。</td></tr><tr><td><code>suppressFinalOutput</code></td><td><strong>在同步/异步模式下刻意无效</strong>。这是设计约束不是 bug：wait/async 的整个契约就是把最终产出返回给调用方，抑制它会让 HTTP 调用方一直饿到超时。只有<strong>即发即忘 + 真群</strong>时它才生效，且只丢弃群里那条收尾回复，流式卡片与开场提示照常。</td></tr></tbody></table></div>
+<hr/>
+<h2 class="rp-toc-include" id="4-投递目标任务落在哪飞书里看得见什么"><a href="#4-投递目标任务落在哪飞书里看得见什么" class="rp-header-anchor rp-link" aria-hidden="true">#</a>4. 投递目标：任务落在哪、飞书里看得见什么</h2>
+<blockquote>
+<p>这是老文档缺失最多的一节。对照 <a href="/botmux/webhook.html" class="rp-link">Webhook 接入点的「投递到哪个群」</a>阅读。</p>
+</blockquote>
+<h3 class="rp-toc-include" id="41-不传-chatid--虚拟会话飞书零打扰"><a href="#41-不传-chatid--虚拟会话飞书零打扰" class="rp-header-anchor rp-link" aria-hidden="true">#</a>4.1 不传 <code>chatId</code> → 虚拟会话（飞书零打扰）</h3>
+<p>不传任何 <code>chatId</code>/<code>sessionId</code>/<code>rootMessageId</code> 时，daemon 按模式铸造一个合成会话 id：</p>
+<ul>
+<li><code>waitForFinalOutput</code> → <code>http_wait_&lt;uuid&gt;</code></li>
+<li><code>asyncReturnSessionId</code> → <code>http_async_&lt;uuid&gt;</code></li>
+<li><code>source.type:&quot;headless&quot;</code> → <code>headless_&lt;id&gt;</code></li>
+</ul>
+<p>这类会话被识别为 <strong>HTTP 虚拟会话</strong>：飞书传输能力整体关闭，<strong>不发话题引子、不发流式卡片、不发任何消息、不做群成员校验</strong>。响应里 <code>target.chatId</code> 就是这个合成 id。</p>
+<h3 class="rp-toc-include" id="42-传真-chatid--真实群会话"><a href="#42-传真-chatid--真实群会话" class="rp-header-anchor rp-link" aria-hidden="true">#</a>4.2 传真 <code>chatId</code> → 真实群会话</h3>
+<p>只要 <code>target.chatId</code> 是真实群 ID，这<strong>永远不是</strong>虚拟会话——同步/异步也一样。此时：</p>
+<ul>
+<li>会先校验机器人是否在该群，不在 → <strong>403 <code>bot_not_in_chat</code></strong>。</li>
+<li><strong>话题群</strong>（或普通群配置成 <code>new-topic</code> 模式）会新开一个话题：先发一条引子消息（<code>presentation.topicMessage</code>，可自定义、可传 <code>null</code> 抑制），会话锚在这条消息上。</li>
+<li><strong>普通群的 <code>chat</code> 模式</strong>：不新开话题，折叠进该群那个唯一的 chat-scope 会话（已有会话就续轮）。</li>
+</ul>
+<h3 class="rp-toc-include" id="43-chatid--rootmessageid--落到已有话题"><a href="#43-chatid--rootmessageid--落到已有话题" class="rp-header-anchor rp-link" aria-hidden="true">#</a>4.3 <code>chatId</code> + <code>rootMessageId</code> → 落到已有话题</h3>
+<p>任务追加到那条话题里，不发引子。校验：</p>
+<ul>
+<li>不带 <code>sessionId</code> 时必须同时传 <code>chatId</code>，否则 400 <code>target_required</code>。</li>
+<li>该消息不可见 / 取不到 chat_id → 400 <code>target_required</code>。</li>
+<li>该消息<strong>不属于</strong>你传的 <code>chatId</code> → <code>chat_not_allowed</code>（⚠️ 见 §11.3，这个码在本端点当前落到 <strong>500</strong>）。</li>
+</ul>
+<h3 class="rp-toc-include" id="44-sessionid--给已有会话追加一轮"><a href="#44-sessionid--给已有会话追加一轮" class="rp-header-anchor rp-link" aria-hidden="true">#</a>4.4 <code>sessionId</code> → 给已有会话追加一轮</h3>
+<p><code>chatId</code> 从该会话继承，不需要再传。会话不存在 → <strong>404 <code>session_not_found</code></strong>。若目标会话仍在完成<strong>开场激活</strong>，该轮会被<strong>可重试地</strong>拒绝（<code>trigger_failed</code>，提示含 <code>session activation in progress</code>），稍后重试即可。</p>
+<h3 class="rp-toc-include" id="45-交付矩阵群里到底能看到什么"><a href="#45-交付矩阵群里到底能看到什么" class="rp-header-anchor rp-link" aria-hidden="true">#</a>4.5 交付矩阵：群里到底能看到什么</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>目标 × 模式</th><th style="text-align:center">话题引子</th><th style="text-align:center">流式卡片</th><th style="text-align:center">最终答案发到飞书</th><th style="text-align:center">最终答案回给 HTTP</th></tr></thead><tbody><tr><td>虚拟 + 同步/异步</td><td style="text-align:center">✗</td><td style="text-align:center">✗</td><td style="text-align:center">✗</td><td style="text-align:center">✓</td></tr><tr><td>真群 + 即发即忘</td><td style="text-align:center">✓（话题群）</td><td style="text-align:center">✓</td><td style="text-align:center">✓</td><td style="text-align:center">✗</td></tr><tr><td><strong>真群 + 同步/异步</strong></td><td style="text-align:center">✓（话题群）</td><td style="text-align:center">✓</td><td style="text-align:center"><strong>✗</strong></td><td style="text-align:center">✓</td></tr><tr><td>已有话题 + 即发即忘</td><td style="text-align:center">✗</td><td style="text-align:center">✓</td><td style="text-align:center">✓</td><td style="text-align:center">✗</td></tr><tr><td><strong>已有话题 + 同步/异步</strong></td><td style="text-align:center">✗</td><td style="text-align:center">✓</td><td style="text-align:center"><strong>✗</strong></td><td style="text-align:center">✓</td></tr></tbody></table></div>
+<blockquote>
+<p>⚠️ <strong>加粗那两行是最容易踩的坑</strong>：在真实群里跑 wait/async，群成员会看到话题被拉起、看到机器人在流式工作，<strong>但永远等不到那条最终答复</strong>——最终产出在 daemon 内部被同步/异步通道截走返回给 HTTP 调用方了，不会再作为飞书消息发出。想让群里也能看到答案，要么用即发即忘模式，要么由你的程序拿到 <code>output.content</code> 后自己发回群里。</p>
+</blockquote>
+<h3 class="rp-toc-include" id="46-自动新建群不在这个端点上"><a href="#46-自动新建群不在这个端点上" class="rp-header-anchor rp-link" aria-hidden="true">#</a>4.6 「自动新建群」不在这个端点上</h3>
+<p><code>/api/trigger</code> <strong>没有</strong>「每次自动拉个新群」的能力——<code>chatId</code> 必须是已存在的群。这个能力只存在于 <a href="/botmux/webhook.html" class="rp-link">Webhook 接入点</a>的「每次新建群」投递模式（它还会自动把机器人的授权用户拉进群，并支持按事件 body 的点号路径做去重）。需要自动建群请走接入点，不要走本端点。</p>
+<h3 class="rp-toc-include" id="47-与交互式会话的两处行为差异"><a href="#47-与交互式会话的两处行为差异" class="rp-header-anchor rp-link" aria-hidden="true">#</a>4.7 与交互式会话的两处行为差异</h3>
+<ul>
+<li><strong>不建 worktree</strong>：即使机器人开了「自动创建 worktree」，同步/异步/虚拟会话也<strong>一律在基目录直接跑</strong>。这是刻意的——程序化「请求-应答」调用每次建一个 worktree 既反直觉又会泄漏（无回收机制）。只有「真群 + 即发即忘 + 命中机器人自己的默认目录」这一种形状（即普通 webhook 形状）才会走 auto-worktree。</li>
+<li><strong>工作目录阶梯更短</strong>：HTTP 触发按 <code>oncall 绑定目录 → 机器人 defaultWorkingDir（含 defaultOncall.workingDir） → 机器人 workingDir → ~</code> 解析。相比交互式会话，它<strong>不走兄弟会话继承</strong>（<code>botToBotSameDir</code> / 「bot@bot 同目录拉起」在这条路径上不生效），群自动绑定 oncall 也不会在这里发生。
+<blockquote>
+<p>与上一条不同，这处差异<strong>源码里没有说明性注释</strong>，是否属于有意设计尚未定论——需要与交互式会话完全一致的目录语义时，请显式把目录固定下来，不要依赖继承。</p>
+</blockquote>
 </li>
 </ul>
-<h3 class="rp-toc-include" id="同步模式waitforfinaloutput"><a href="#同步模式waitforfinaloutput" class="rp-header-anchor rp-link" aria-hidden="true">#</a>同步模式（waitForFinalOutput）</h3>
+<hr/>
+<h2 class="rp-toc-include" id="5-执行模式"><a href="#5-执行模式" class="rp-header-anchor rp-link" aria-hidden="true">#</a>5. 执行模式</h2>
+<h3 class="rp-toc-include" id="51-同步waitforfinaloutput"><a href="#51-同步waitforfinaloutput" class="rp-header-anchor rp-link" aria-hidden="true">#</a>5.1 同步（<code>waitForFinalOutput</code>）</h3>
 <div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-function)">curl</span><span style="color:var(--shiki-token-string)"> -X</span><span style="color:var(--shiki-token-string)"> POST</span><span style="color:var(--shiki-token-string-expression)"> &quot;http://&lt;host&gt;:7891/api/trigger&quot;</span><span style="color:var(--shiki-foreground)"> \</span></span>
 <span class="line"><span style="color:var(--shiki-token-string)">  -H</span><span style="color:var(--shiki-token-string-expression)"> &#x27;content-type: application/json&#x27;</span><span style="color:var(--shiki-foreground)"> \</span></span>
 <span class="line"><span style="color:var(--shiki-token-string)">  -H</span><span style="color:var(--shiki-token-string-expression)"> &quot;Cookie: botmux_dashboard_token=$TOKEN&quot;</span><span style="color:var(--shiki-foreground)"> \</span></span>
@@ -120,9 +500,9 @@
 <span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;message&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;queued new session turn and completed&quot;</span></span>
 <span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="切换代码换行" aria-label="切换代码换行"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="复制代码"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
 <blockquote>
-<p>同步模式超时（等待超过 <code>timeoutMs</code>）返回 <strong>HTTP 504</strong> + <code>errorCode:&quot;wait_timeout&quot;</code>。此时任务其实<strong>仍在后台跑完</strong>——只是这条 HTTP 断了。若你留了 <code>sessionId</code>，可后续查询兜底，别直接判失败。</p>
+<p>等待超过 <code>timeoutMs</code> 返回 <strong>HTTP 504</strong> + <code>errorCode:&quot;wait_timeout&quot;</code>。此时任务其实<strong>仍在后台跑完</strong>——只是这条 HTTP 断了。同步模式的 <code>sessionId</code> 只在完成时才返回，超时响应里没有它，所以<strong>超时即失联</strong>。需要兜底查询能力就该用异步模式。</p>
 </blockquote>
-<h3 class="rp-toc-include" id="异步模式asyncreturnsessionid"><a href="#异步模式asyncreturnsessionid" class="rp-header-anchor rp-link" aria-hidden="true">#</a>异步模式（asyncReturnSessionId）</h3>
+<h3 class="rp-toc-include" id="52-异步asyncreturnsessionid"><a href="#52-异步asyncreturnsessionid" class="rp-header-anchor rp-link" aria-hidden="true">#</a>5.2 异步（<code>asyncReturnSessionId</code>）</h3>
 <div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-function)">curl</span><span style="color:var(--shiki-token-string)"> -X</span><span style="color:var(--shiki-token-string)"> POST</span><span style="color:var(--shiki-token-string-expression)"> &quot;http://&lt;host&gt;:7891/api/trigger&quot;</span><span style="color:var(--shiki-foreground)"> \</span></span>
 <span class="line"><span style="color:var(--shiki-token-string)">  -H</span><span style="color:var(--shiki-token-string-expression)"> &#x27;content-type: application/json&#x27;</span><span style="color:var(--shiki-foreground)"> \</span></span>
 <span class="line"><span style="color:var(--shiki-token-string)">  -H</span><span style="color:var(--shiki-token-string-expression)"> &quot;Cookie: botmux_dashboard_token=$TOKEN&quot;</span><span style="color:var(--shiki-foreground)"> \</span></span>
@@ -142,9 +522,66 @@
 <span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;async&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> { </span><span style="color:var(--shiki-token-keyword)">&quot;status&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;pending&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-keyword)"> &quot;sessionId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;2eed60c4-...&quot;</span><span style="color:var(--shiki-foreground)"> }</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
 <span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;message&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;queued new session turn; poll by sessionId or triggerId for final output&quot;</span></span>
 <span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="切换代码换行" aria-label="切换代码换行"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="复制代码"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
-<h3 class="rp-toc-include" id="幂等键optionsidempotencykey-防止重试重复执行"><a href="#幂等键optionsidempotencykey-防止重试重复执行" class="rp-header-anchor rp-link" aria-hidden="true">#</a>幂等键（<code>options.idempotencyKey</code>）—— 防止重试重复执行</h3>
+<blockquote>
+<p><strong>生产级任务调度推荐异步模式</strong>：立即拿到 <code>sessionId</code>，可轮询、可取消、daemon 重启也能恢复结果（§8、§9）。</p>
+</blockquote>
+<h3 class="rp-toc-include" id="53-即发即忘两个模式开关都不传"><a href="#53-即发即忘两个模式开关都不传" class="rp-header-anchor rp-link" aria-hidden="true">#</a>5.3 即发即忘（两个模式开关都不传）</h3>
+<p>必须带 <code>chatId</code> / <code>sessionId</code> / <code>rootMessageId</code> 之一（否则 400 <code>target_required</code>）。立即返回（<code>action</code> 为 <code>queued</code> 或 <code>delivered</code>，见 §10.1），产出走<strong>飞书正常回复路径</strong>。</p>
+<blockquote>
+<p>⚠️ <strong>这种模式不登记异步结果</strong>。用 <code>sessionId</code> 查 <code>trigger-result</code> 只会看到 <code>running</code>，会话关闭后转成 <code>failed</code>/<code>no_output</code>——<strong>永远不会变成 <code>completed</code>，也拿不到 <code>output.content</code></strong>。它的产出出口只有飞书。需要程序化拿结果就用同步或异步模式。</p>
+</blockquote>
+<h3 class="rp-toc-include" id="54-dryrun只渲染不派发"><a href="#54-dryrun只渲染不派发" class="rp-header-anchor rp-link" aria-hidden="true">#</a>5.4 <code>dryRun</code>：只渲染不派发</h3>
+<p><code>options.dryRun=true</code> 时不创建会话、不派发任何东西，直接返回：</p>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;ok&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> true</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;triggerId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;trg_...&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;action&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;dry_run&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;target&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> { </span><span style="color:var(--shiki-token-keyword)">&quot;kind&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;turn&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-keyword)"> &quot;sessionId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> null</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-keyword)"> &quot;chatId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;oc_xxx&quot;</span><span style="color:var(--shiki-foreground)"> }</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;message&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;would create or deliver a new session turn&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;promptPreview&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;&lt;botmux_task trusted=\&quot;true\&quot;&gt;…&quot;</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="切换代码换行" aria-label="切换代码换行"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="复制代码"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p><code>promptPreview</code> 是<strong>实际会喂给模型的完整提示词</strong>（超过 4000 字符会截断并追加 <code>\n...[truncated]</code>）。<code>message</code> 区分两种落点：命中已有会话是 <code>would inject into existing session</code>，否则是 <code>would create or deliver a new session turn</code>。</p>
+<blockquote>
+<p>注意：<code>dry_run</code> 是一个 <strong><code>action</code>，不是错误码</strong>。错误码枚举里虽然有 <code>dry_run</code> 这个值，但代码里从不发出。</p>
+</blockquote>
+<hr/>
+<h2 class="rp-toc-include" id="6-空回答契约botmux_nothing_to_send"><a href="#6-空回答契约botmux_nothing_to_send" class="rp-header-anchor rp-link" aria-hidden="true">#</a>6. 空回答契约（<code>BOTMUX_NOTHING_TO_SEND</code>）</h2>
+<p>同步/异步模式下（<strong>首轮与续轮都有</strong>），daemon 会在提示词里追加一段 <code>&lt;botmux_http_response_mode trusted=&quot;true&quot;&gt;</code>，内容要点：</p>
+<ul>
+<li>你的整条回复会<strong>原样返回给一个程序</strong>，不是聊天展示。</li>
+<li><strong>只输出最终答案</strong>，不要前言、元评论，不要谈论这些路由头/系统上下文。</li>
+<li>不要调用 <code>botmux send</code>，不要往飞书发消息。</li>
+<li><strong>如果没有什么可答的，只输出唯一一个 token <code>BOTMUX_NOTHING_TO_SEND</code></strong>，程序会收到一个空结果。</li>
+</ul>
+<p>这个哨兵是<strong>结算契约的一部分</strong>，不是装饰：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>模式</th><th>模型只吐 sentinel 时</th></tr></thead><tbody><tr><td><strong>异步</strong></td><td>结算为 <code>state:&quot;completed&quot;</code>，<code>output.content</code> 为<strong>空串</strong>，并持久化</td></tr><tr><td><strong>同步</strong></td><td><strong>没有对应的结算路径</strong>——这一轮会一直挂到 <code>timeoutMs</code>，最终 <strong>504 <code>wait_timeout</code></strong></td></tr></tbody></table></div>
+<blockquote>
+<p>⚠️ 这是同步与异步之间<strong>唯一的语义不对称</strong>。如果你的任务<strong>可能不需要回答</strong>（条件触发、巡检类、&quot;有问题才报&quot;），请用<strong>异步模式</strong>，否则每次「无事发生」都要白等一个超时。若必须用同步模式，请把 <code>timeoutMs</code> 调到可接受的短值。</p>
+</blockquote>
+<p><strong>正文 + 结尾 sentinel ≠ 沉默</strong>：模型写了正文、末尾又带了一行 sentinel 时，正文照常返回，token 会被剥掉。只有「除 sentinel 外什么都没有」才算真沉默。</p>
+<p><strong>关于 preamble</strong>：上述提示已在源头引导模型只输出最终答案，绝大多数回复是干净的，但这是 prompt 层引导、非硬保证，见 §14。</p>
+<hr/>
+<h2 class="rp-toc-include" id="7-幂等键"><a href="#7-幂等键" class="rp-header-anchor rp-link" aria-hidden="true">#</a>7. 幂等键</h2>
+<h3 class="rp-toc-include" id="71-optionsidempotencykey新建会话"><a href="#71-optionsidempotencykey新建会话" class="rp-header-anchor rp-link" aria-hidden="true">#</a>7.1 <code>options.idempotencyKey</code>（新建会话）</h3>
 <p><strong>问题</strong>：异步触发后如果 HTTP 响应在网络中丢了（daemon 其实已建 session、任务已在跑），你的重试会建一个<strong>全新 session</strong>、把同一个任务<strong>跑第二遍</strong>（重复的外部副作用：发两次消息、迁移跑两遍……）。你自己的去重挡不住——第一个 session 是真的在执行。</p>
-<p><strong>解法</strong>：在 <code>options.idempotencyKey</code> 传一个你侧稳定生成、且<strong>在发起 trigger 之前就持久化</strong>的键。同键重试时 daemon 返回<strong>同一个 session/triggerId、不新建也不重派</strong>：</p>
+<p><strong>解法</strong>：传一个你侧稳定生成、且<strong>在发起 trigger 之前就持久化</strong>的键。同键重试时 daemon 返回<strong>同一个 session/triggerId、不新建也不重派</strong>：</p>
 <div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-function)">curl</span><span style="color:var(--shiki-token-string)"> -X</span><span style="color:var(--shiki-token-string)"> POST</span><span style="color:var(--shiki-token-string-expression)"> &quot;http://&lt;host&gt;:7891/api/trigger&quot;</span><span style="color:var(--shiki-token-string)"> -H</span><span style="color:var(--shiki-token-string-expression)"> &#x27;content-type: application/json&#x27;</span><span style="color:var(--shiki-foreground)"> \</span></span>
 <span class="line"><span style="color:var(--shiki-token-string)">  -H</span><span style="color:var(--shiki-token-string-expression)"> &quot;Cookie: botmux_dashboard_token=$TOKEN&quot;</span><span style="color:var(--shiki-foreground)"> \</span></span>
 <span class="line"><span style="color:var(--shiki-token-string)">  -d</span><span style="color:var(--shiki-token-string-expression)"> &#x27;{</span></span>
@@ -155,14 +592,12 @@
 <span class="line"><span style="color:var(--shiki-token-string-expression)">    &quot;options&quot;:{&quot;asyncReturnSessionId&quot;:true, &quot;idempotencyKey&quot;:&quot;my-task-42&quot;}</span></span>
 <span class="line"><span style="color:var(--shiki-token-string-expression)">  }&#x27;</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="切换代码换行" aria-label="切换代码换行"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="复制代码"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
 <p>命中已有键时响应带 <code>idempotent:true</code>（复用，无新派发）；首次创建时带 <code>idempotent:false</code>。拿到（复用或新建的）<code>sessionId</code> 后照常轮询 <code>trigger-result</code>——<strong>不需要额外的反查端点</strong>。</p>
-<p><strong>适用范围（重要）</strong>：<code>idempotencyKey</code> 仅支持 <strong>fresh async virtual</strong> 触发，即 <code>target.kind:&#x27;turn&#x27;</code> + <code>options.asyncReturnSessionId:true</code>，且<strong>不带</strong> <code>target.sessionId</code> / <code>rootMessageId</code> / <code>chatId</code>、不带 <code>waitForFinalOutput</code> / <code>dryRun</code>。任何其它组合带 key 会 <strong>400</strong>（其它派发路径本 PR 未接入 lease，故契约不对外开放，以免误判为幂等）。</p>
-<p><strong>同键、不同 payload → 409 <code>idempotency_conflict</code></strong>：键与其业务 payload（<code>instruction</code>/<code>envelope</code>/影响执行的 <code>options</code>）绑定；同键换了 payload 是调用方 bug，daemon 明确报 409，<strong>绝不</strong>把新请求静默串进旧任务。所以重试务必用<strong>同键配同 payload</strong>。</p>
-<p><strong>崩溃语义（at-most-once）</strong>：daemon 在真正派发前会把该键的 lease durable 标记为 <code>attempting</code>（commit-unknown 屏障）。若 daemon 恰好在「已开始派发」与「拿到完成证据」之间崩溃，重启后<strong>不会盲目重派</strong>（<code>forkWorker</code> 返回并不证明模型没开始跑）——该键会收敛到终态、<code>trigger-result</code> 报 <code>failed</code>（错误码 <code>no_output</code>，语义为「上次派发结果未知、按至多一次不重跑」）。你的 recovery 把它当 <strong>Failed</strong> 处理即可（宁可让你看到明确失败去新建重试，也不双跑）。</p>
-<p><strong>保留</strong>：键→session 映射只增不删（与异步结果同策略，保证完成后的迟到重试仍复用同一 session、不重建）。</p>
-<hr/>
-<h3 class="rp-toc-include" id="续会话轮幂等键optionsturnidempotencykey-给追问轮同样的保证"><a href="#续会话轮幂等键optionsturnidempotencykey-给追问轮同样的保证" class="rp-header-anchor rp-link" aria-hidden="true">#</a>续会话轮幂等键（<code>options.turnIdempotencyKey</code>）—— 给追问轮同样的保证</h3>
-<p>上面的 <code>idempotencyKey</code> 只覆盖 <strong>fresh 新会话</strong>。当你往<strong>已存在的会话追加一轮追问</strong>（带 <code>target.sessionId</code>）时，改用 <code>options.turnIdempotencyKey</code>——追加轮的 HTTP 回包一旦丢失，你无法判断 daemon 是否已受理该轮，重试就可能<strong>重复注入两次</strong>。</p>
-<p>传一个<strong>在发起前就持久化</strong>的稳定键。同键重试到同一会话时，daemon 解析到<strong>同一轮（同 <code>triggerId</code>）、不二次注入</strong>：</p>
+<p><strong>适用范围（重要）</strong>：仅支持 <strong>fresh async virtual</strong> 触发，即 <code>target.kind:&quot;turn&quot;</code> + <code>options.asyncReturnSessionId:true</code>，且<strong>不带</strong> <code>target.sessionId</code> / <code>rootMessageId</code> / <code>chatId</code>、不带 <code>waitForFinalOutput</code> / <code>dryRun</code>。任何其它组合带 key 会 <strong>400</strong>（租约只实现在这一条缝上，不对外宣称其它路径也幂等，以免误判）。</p>
+<p><strong>同键、不同 payload → 409 <code>idempotency_conflict</code></strong>：键绑定到它的<strong>完整业务 payload</strong>——<code>instruction</code>、<code>envelope</code>、<code>source</code>、<code>presentation</code>，以及<strong>整个 <code>options</code>（除 <code>idempotencyKey</code> 自身）</strong>。所以改 <code>model</code>、<code>status</code>、<code>dedupKey</code>、<code>timeoutMs</code> 中的任何一个都会让同键请求 409。重试务必<strong>同键配同 payload</strong>。</p>
+<p><strong>崩溃语义（at-most-once）</strong>：daemon 在真正派发前会把该键的 lease durable 标记为 <code>attempting</code>（commit-unknown 屏障）。若 daemon 恰好在「已开始派发」与「拿到完成证据」之间崩溃，重启后<strong>不会盲目重派</strong>——该键会收敛到终态、<code>trigger-result</code> 报 <code>failed</code>（<code>no_output</code>，语义为「上次派发结果未知、按至多一次不重跑」）。你的 recovery 把它当 <strong>Failed</strong> 处理即可。</p>
+<p><strong>保留</strong>：键→session 映射只增不删，保证完成后的迟到重试仍复用同一 session。</p>
+<h3 class="rp-toc-include" id="72-optionsturnidempotencykey续会话轮"><a href="#72-optionsturnidempotencykey续会话轮" class="rp-header-anchor rp-link" aria-hidden="true">#</a>7.2 <code>options.turnIdempotencyKey</code>（续会话轮）</h3>
+<p>上面的 <code>idempotencyKey</code> 只覆盖 <strong>fresh 新会话</strong>。往<strong>已存在的会话追加一轮</strong>（带 <code>target.sessionId</code>）时改用这个键——追加轮的 HTTP 回包一旦丢失，你无法判断 daemon 是否已受理该轮，重试就可能<strong>重复注入两次</strong>。</p>
 <div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-function)">curl</span><span style="color:var(--shiki-token-string)"> -X</span><span style="color:var(--shiki-token-string)"> POST</span><span style="color:var(--shiki-token-string-expression)"> &quot;http://&lt;host&gt;:7891/api/trigger&quot;</span><span style="color:var(--shiki-token-string)"> -H</span><span style="color:var(--shiki-token-string-expression)"> &#x27;content-type: application/json&#x27;</span><span style="color:var(--shiki-foreground)"> \</span></span>
 <span class="line"><span style="color:var(--shiki-token-string)">  -H</span><span style="color:var(--shiki-token-string-expression)"> &quot;Cookie: botmux_dashboard_token=$TOKEN&quot;</span><span style="color:var(--shiki-foreground)"> \</span></span>
 <span class="line"><span style="color:var(--shiki-token-string)">  -d</span><span style="color:var(--shiki-token-string-expression)"> &#x27;{</span></span>
@@ -172,11 +607,12 @@
 <span class="line"><span style="color:var(--shiki-token-string-expression)">    &quot;envelope&quot;:{&quot;format&quot;:&quot;json&quot;,&quot;sourceName&quot;:&quot;demo&quot;,&quot;trusted&quot;:false},</span></span>
 <span class="line"><span style="color:var(--shiki-token-string-expression)">    &quot;options&quot;:{&quot;asyncReturnSessionId&quot;:true, &quot;turnIdempotencyKey&quot;:&quot;my-followup-7&quot;}</span></span>
 <span class="line"><span style="color:var(--shiki-token-string-expression)">  }&#x27;</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="切换代码换行" aria-label="切换代码换行"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="复制代码"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
-<p>命中带 <code>idempotent:true</code>；照常用 <code>sessionId</code>/<code>triggerId</code> 轮询 <code>trigger-result</code>。</p>
-<p><strong>适用范围</strong>：<code>turnIdempotencyKey</code> 仅支持<strong>已存在会话上的续会话异步轮</strong>——<code>target.kind:&#x27;turn&#x27;</code> + 带 <code>target.sessionId</code> + <code>options.asyncReturnSessionId:true</code>，不带 <code>waitForFinalOutput</code> / <code>dryRun</code>。它与 <code>idempotencyKey</code> <strong>互斥</strong>（同时传返回 <strong>400</strong>），且两者位于<strong>互不碰撞的独立键空间</strong>——即便 <code>turnIdempotencyKey</code> 和 <code>idempotencyKey</code> 取相同字符串也绝不会共用同一 lease。</p>
-<p><strong>同键异 payload → 409 <code>idempotency_conflict</code></strong>；<strong>崩溃语义（at-most-once）</strong>与<strong>保留</strong>策略与上面的 <code>idempotencyKey</code> 完全一致（派发结果未知的追问轮收敛为 <code>failed</code> / <code>no_output</code>，绝不盲目重跑）。另有一个瞬时情况：若目标会话仍在完成其<strong>开场激活</strong>，该追问轮会被<strong>可重试地</strong>拒绝（errorCode <code>trigger_failed</code>，提示含 “session activation in progress”）——稍后重试即可。</p>
+<p>同键重试到同一会话时，daemon 解析到<strong>同一轮（同 <code>triggerId</code>）、不二次注入</strong>，响应带 <code>idempotent:true</code>。</p>
+<p><strong>适用范围</strong>：<code>target.kind:&quot;turn&quot;</code> + 带 <code>target.sessionId</code> + <code>asyncReturnSessionId:true</code>，不带 <code>waitForFinalOutput</code> / <code>dryRun</code>。</p>
+<p><strong>与 <code>idempotencyKey</code> 互斥</strong>：同时传 → <strong>400</strong>（这条互斥检查刻意排在两个键各自的范围检查之前，所以无论 target 形状如何，你拿到的都是精确的「互斥」报错，而不是被某个范围锁的报错盖掉）。两者位于<strong>互不碰撞的独立键空间</strong>——即便取相同字符串也绝不会共用同一 lease。</p>
+<p><strong>同键异 payload → 409</strong>；<strong>崩溃语义</strong>与<strong>保留</strong>策略与 <code>idempotencyKey</code> 完全一致。</p>
 <hr/>
-<h2 class="rp-toc-include" id="4-轮询结果四态契约"><a href="#4-轮询结果四态契约" class="rp-header-anchor rp-link" aria-hidden="true">#</a>4. 轮询结果（四态契约）</h2>
+<h2 class="rp-toc-include" id="8-轮询结果四态契约"><a href="#8-轮询结果四态契约" class="rp-header-anchor rp-link" aria-hidden="true">#</a>8. 轮询结果（四态契约）</h2>
 <p>异步模式下，用 <code>sessionId</code> 轮询：</p>
 <div class="rp-codeblock language-txt"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="txt"><code><span class="line"><span>GET /api/sessions/:sessionId/trigger-result</span></span>
 <span class="line"><span>   （可选 ?triggerId=&lt;trg_...&gt; 精确匹配某次触发；不传则取该会话最新一次）</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="切换代码换行" aria-label="切换代码换行"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="复制代码"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
@@ -216,12 +652,13 @@
 
 
 
-<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th><code>state</code></th><th>含义</th><th>你该做什么</th><th>关键字段</th></tr></thead><tbody><tr><td><code>running</code></td><td>任务还在跑</td><td>继续轮询</td><td>—</td></tr><tr><td><code>completed</code></td><td>有最终产出</td><td>落终态，读 <code>output.content</code>（codex-app 还会带 <code>usage</code>）</td><td><code>output.content</code>、<code>finishedAt</code>、<code>usage?</code></td></tr><tr><td><code>failed</code></td><td>会话已终止但没捕获到产出（软终态）</td><td>见下方说明</td><td><code>errorCode:&quot;no_output&quot;</code>、<code>error</code>、<code>finishedAt</code></td></tr><tr><td><code>not_found</code></td><td>查无此会话（从未存在/非法 id）</td><td>见下方两种物理表现</td><td><code>errorCode:&quot;session_not_found&quot;</code></td></tr></tbody></table></div>
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th><code>state</code></th><th>含义</th><th>你该做什么</th><th>关键字段</th></tr></thead><tbody><tr><td><code>running</code></td><td>任务还在跑</td><td>继续轮询</td><td><code>action:&quot;queued&quot;</code>、<code>async.status:&quot;pending&quot;</code></td></tr><tr><td><code>completed</code></td><td>有最终产出</td><td>落终态，读 <code>output.content</code></td><td><code>output.content</code>、<code>finishedAt</code>、<code>usage?</code></td></tr><tr><td><code>failed</code></td><td>会话已终止但没捕获到产出（软终态）</td><td>见 8.2</td><td><code>errorCode</code>、<code>error</code>、<code>finishedAt</code></td></tr><tr><td><code>not_found</code></td><td>查无此会话</td><td>见 8.3</td><td><code>errorCode:&quot;session_not_found&quot;</code></td></tr></tbody></table></div>
 <p><code>completed</code> 响应示例（<code>usage</code> 仅 codex-app、且成功采集到时出现）：</p>
 <div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span></span>
 <span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;ok&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> true</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
 <span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;state&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;completed&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
 <span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;triggerId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;trg_87e7b415-...&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;action&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;completed&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
 <span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;output&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> { </span><span style="color:var(--shiki-token-keyword)">&quot;content&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;ASYNC_DEMO_OK&quot;</span><span style="color:var(--shiki-foreground)"> }</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
 <span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;usage&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> { </span><span style="color:var(--shiki-token-keyword)">&quot;inputTokens&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 60</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-keyword)"> &quot;outputTokens&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 30</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-keyword)"> &quot;cacheReadTokens&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 40</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-keyword)"> &quot;cacheCreateTokens&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 0</span><span style="color:var(--shiki-foreground)"> }</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
 <span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;finishedAt&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;2026-07-24T08:43:17.126Z&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
@@ -231,43 +668,410 @@
 <p>关于 <code>usage</code>（本轮 token 用量，四桶互斥）：</p>
 <ul>
 <li><strong>仅 codex-app 任务</strong>、且本轮成功采集到用量时出现；其它 CLI（含纯 codex）或未采集到时<strong>整段省略</strong>。</li>
-<li><strong>omit ≠ 0</strong>：拿不到用量就没有 <code>usage</code> 字段，而不是四个 0——请按&quot;字段缺失=未知&quot;处理，不要把缺失当成真实 0 用量。</li>
+<li><strong>omit ≠ 0</strong>：拿不到用量就没有 <code>usage</code> 字段，而不是四个 0——按「字段缺失=未知」处理。</li>
 <li>四桶：<code>inputTokens</code>（纯新增输入，已扣除缓存读/写）、<code>outputTokens</code>、<code>cacheReadTokens</code>、<code>cacheCreateTokens</code>，均为本轮增量（非会话累计）。</li>
 <li><strong>随重启持久化</strong>：daemon 重启后再查该已完成会话，<code>usage</code> 与 <code>output</code> 一并从磁盘恢复。</li>
 </ul>
-<h3 class="rp-toc-include" id="failed-是软终态不要立即判死"><a href="#failed-是软终态不要立即判死" class="rp-header-anchor rp-link" aria-hidden="true">#</a><code>failed</code> 是软终态，不要立即判死</h3>
-<p><code>failed</code>（<code>no_output</code>）表示「会话已终止但没捕获到最终产出」，它<strong>既可能是真失败，也可能是你自己取消（close）的</strong>——两者从这个信号上无法区分。建议：</p>
+<h3 class="rp-toc-include" id="81-哪些触发是可轮询的"><a href="#81-哪些触发是可轮询的" class="rp-header-anchor rp-link" aria-hidden="true">#</a>8.1 哪些触发是可轮询的</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>触发形状</th><th style="text-align:center">能查到 <code>completed</code></th></tr></thead><tbody><tr><td>异步模式（任何目标）</td><td style="text-align:center">✓</td></tr><tr><td>同步模式</td><td style="text-align:center">✗（结果直接在触发响应里；轮询看到的是会话状态）</td></tr><tr><td>即发即忘</td><td style="text-align:center">✗（见 §5.3，永远停在 <code>running</code> → 关闭后 <code>failed</code>）</td></tr></tbody></table></div>
+<h3 class="rp-toc-include" id="82-failed-是软终态不要立即判死"><a href="#82-failed-是软终态不要立即判死" class="rp-header-anchor rp-link" aria-hidden="true">#</a>8.2 <code>failed</code> 是软终态，不要立即判死</h3>
+<p><code>failed</code> 有三个来源，<code>errorCode</code> 可区分：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th><code>errorCode</code></th><th>来源</th></tr></thead><tbody><tr><td><code>no_output</code></td><td>会话终止但没捕获到最终产出——<strong>可能是真失败，也可能是你自己 close 取消的</strong></td></tr><tr><td><code>no_output</code>（<code>error</code> 含「上一次派发结果未知」）</td><td>幂等 at-most-once 的歧义崩溃收敛，按语义不重跑</td></tr><tr><td><code>trigger_failed</code></td><td>worker 明确上报了终态失败（<code>error</code> 含 <code>worker reported terminal failure:</code>）</td></tr></tbody></table></div>
+<p>建议：</p>
 <ul>
-<li><strong>取消判定用你自己的意图</strong>（比如你发起 cancel 时本就有记录），不要靠这里的 <code>failed</code> 反推「是不是我取消的」。</li>
-<li>把 <code>failed</code> 当作「需要二次确认」的软终态：先标记待核对，确认确实无产出、且不是自己取消，再落最终失败态。</li>
+<li><strong>取消判定用你自己的意图</strong>（发起 cancel 时本就有记录），不要靠这里的 <code>failed</code> 反推。</li>
+<li>把 <code>no_output</code> 的 <code>failed</code> 当作「需要二次确认」的软终态：先标记待核对，确认确实无产出、且不是自己取消，再落最终失败态。</li>
 </ul>
-<h3 class="rp-toc-include" id="not_found-的两种物理表现"><a href="#not_found-的两种物理表现" class="rp-header-anchor rp-link" aria-hidden="true">#</a><code>not_found</code> 的两种物理表现</h3>
+<h3 class="rp-toc-include" id="83-not_found-的两种物理表现"><a href="#83-not_found-的两种物理表现" class="rp-header-anchor rp-link" aria-hidden="true">#</a>8.3 <code>not_found</code> 的两种物理表现</h3>
 <p>调用方走 dashboard 代理，<code>not_found</code> 会以两种形式出现，<strong>都应归一成 not_found 终态</strong>：</p>
 <ol>
 <li><code>HTTP 404</code> + <code>{ &quot;ok&quot;: false, &quot;error&quot;: &quot;unknown_session&quot; }</code> —— 代理层短路（sessionId 从没被聚合器见过，通常是传了非法/过期 id）。</li>
 <li><code>HTTP 200</code> + <code>{ &quot;ok&quot;: true, &quot;state&quot;: &quot;not_found&quot; }</code> —— 请求到了 daemon，但磁盘查无此会话。</li>
 </ol>
+<h3 class="rp-toc-include" id="84-精确-triggerid-未命中"><a href="#84-精确-triggerid-未命中" class="rp-header-anchor rp-link" aria-hidden="true">#</a>8.4 精确 <code>?triggerId=</code> 未命中</h3>
+<p>会话存在、但它从来没有过你指定的那个 <code>triggerId</code> → <code>ok:false</code> + <code>errorCode:&quot;bad_request&quot;</code>，<strong>且响应里没有 <code>state</code> 字段</strong>。这是<strong>请求形状错误</strong>，不是四态之一，别和 <code>state:&quot;not_found&quot;</code> 混淆。</p>
+<h3 class="rp-toc-include" id="85-️-另一条轮询路径的形状不一样"><a href="#85-️-另一条轮询路径的形状不一样" class="rp-header-anchor rp-link" aria-hidden="true">#</a>8.5 ⚠️ 另一条轮询路径的形状不一样</h3>
+<p>上面描述的是<strong>原生四态契约</strong>（dashboard 裸代理 → 任务编排器调用方）。<a href="/botmux/webhook.html" class="rp-link">Webhook 接入点</a>自己的异步轮询路由走了一层<strong>遗留消费者适配</strong>：它会把 <code>failed</code> 与 <code>not_found</code> 改写成 <code>ok:false</code>，并把 HTTP 200 改成 <strong>404</strong>（<code>.state</code> 字段保留）。</p>
+<p>如果你用的是本文的 <code>/api/sessions/:id/trigger-result</code>，<strong>不受这层改写影响</strong>；但如果你的客户端同时对接两条路径，要按各自形状处理。</p>
 <hr/>
-<h2 class="rp-toc-include" id="5-重启存活保证重要"><a href="#5-重启存活保证重要" class="rp-header-anchor rp-link" aria-hidden="true">#</a>5. 重启存活保证（重要）</h2>
-<p><strong>daemon 重启后，一个已经跑完的任务再查仍返回 <code>completed</code>（带 <code>output.content</code>），不会误报成 <code>not_found</code>。</strong></p>
-<p>实现上，异步结果在任务完成时会持久化到磁盘（<code>data/async-triggers/&lt;sessionId&gt;.json</code>），轮询时优先读持久化结果，不依赖内存态。所以：</p>
+<h2 class="rp-toc-include" id="9-重启存活取消"><a href="#9-重启存活取消" class="rp-header-anchor rp-link" aria-hidden="true">#</a>9. 重启存活、取消</h2>
+<h3 class="rp-toc-include" id="91-重启存活保证"><a href="#91-重启存活保证" class="rp-header-anchor rp-link" aria-hidden="true">#</a>9.1 重启存活保证</h3>
+<p><strong>daemon 重启后，一个已经跑完的异步任务再查仍返回 <code>completed</code>（带 <code>output.content</code>），不会误报成 <code>not_found</code>。</strong></p>
+<p>异步结果在任务完成时会持久化到磁盘（<code>data/async-triggers/&lt;sessionId&gt;.json</code>），轮询时优先读持久化结果，不依赖内存态。所以：</p>
 <ul>
 <li>你的恢复逻辑<strong>不应因为单次查询拿不到就判任务丢失</strong>。</li>
 <li>只有「代理确认查无（<code>unknown_session</code>）」+「你自己的租约/超时也过期」才走补偿判定。</li>
 </ul>
-<p>这条是异步模式故障恢复的地基——轮询期间即使 daemon 重启，已完成的结果不丢。</p>
-<hr/>
-<h2 class="rp-toc-include" id="6-取消任务"><a href="#6-取消任务" class="rp-header-anchor rp-link" aria-hidden="true">#</a>6. 取消任务</h2>
-<p>异步模式下，用 close 取消：</p>
+<h3 class="rp-toc-include" id="92-取消任务"><a href="#92-取消任务" class="rp-header-anchor rp-link" aria-hidden="true">#</a>9.2 取消任务</h3>
 <div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-function)">curl</span><span style="color:var(--shiki-token-string)"> -X</span><span style="color:var(--shiki-token-string)"> POST</span><span style="color:var(--shiki-token-string-expression)"> &quot;http://&lt;host&gt;:7891/api/sessions/:sessionId/close&quot;</span><span style="color:var(--shiki-foreground)"> \</span></span>
 <span class="line"><span style="color:var(--shiki-token-string)">  -H</span><span style="color:var(--shiki-token-string-expression)"> &quot;Cookie: botmux_dashboard_token=$TOKEN&quot;</span></span>
 <span class="line"><span style="color:var(--shiki-token-comment)"># → { &quot;ok&quot;: true, &quot;alreadyClosed&quot;: false }</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="切换代码换行" aria-label="切换代码换行"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="复制代码"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
 <blockquote>
-<p><code>close</code> 的语义是<strong>关闭整个会话</strong>，不是「中断当前这一轮 turn」。对一次性的虚拟异步会话（一个会话只有一轮 turn），二者等价。</p>
+<p><code>close</code> 的语义是<strong>关闭整个会话</strong>，不是「中断当前这一轮 turn」。对一次性的虚拟异步会话（一个会话只有一轮 turn），二者等价；但对<strong>真实群会话</strong>（可能还有别人在用）请慎用。</p>
 </blockquote>
-<p>取消后再轮询该 <code>sessionId</code>，若它在关闭前没产出，会返回 <code>state:&quot;failed&quot;</code>（<code>no_output</code>）。<strong>这符合预期</strong>——你按自己的取消意图落 <code>cancelled</code> 终态即可，不必依赖这个 <code>failed</code>。</p>
+<p>取消后再轮询该 <code>sessionId</code>，若它在关闭前没产出，会返回 <code>state:&quot;failed&quot;</code>（<code>no_output</code>）。<strong>这符合预期</strong>——按自己的取消意图落 <code>cancelled</code> 终态即可。</p>
 <hr/>
-<h2 class="rp-toc-include" id="7-客户端伪代码"><a href="#7-客户端伪代码" class="rp-header-anchor rp-link" aria-hidden="true">#</a>7. 客户端伪代码</h2>
+<h2 class="rp-toc-include" id="10-响应字段"><a href="#10-响应字段" class="rp-header-anchor rp-link" aria-hidden="true">#</a>10. 响应字段</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>字段</th><th>出现时机</th></tr></thead><tbody><tr><td><code>ok</code></td><td>总是。<strong>注意</strong>：终态 <code>failed</code> 在触发端点上是 <code>ok:false</code>+HTTP 200，在轮询端点上是 <code>ok:true</code>+HTTP 200</td></tr><tr><td><code>triggerId</code></td><td>几乎总是（<code>trg_&lt;uuid&gt;</code>）</td></tr><tr><td><code>action</code></td><td><code>queued</code> / <code>delivered</code> / <code>completed</code> / <code>dry_run</code>，取值与 <code>message</code> 的对应见 §10.1。枚举里还有 <code>ignored</code>，<strong>只出现在 webhook 接入点的幂等折叠</strong>，本端点从不返回</td></tr><tr><td><code>state</code></td><td>仅轮询响应（四态）。触发响应上只在幂等收敛到终态时出现</td></tr><tr><td><code>target</code></td><td><code>{ kind, sessionId?, chatId?, workflowRunId? }</code></td></tr><tr><td><code>output.content</code></td><td>同步完成、或轮询到 <code>completed</code></td></tr><tr><td><code>usage</code></td><td>见 §8</td></tr><tr><td><code>async</code></td><td><code>{ status: &#x27;pending&#x27;|&#x27;completed&#x27;, sessionId, completedAt? }</code></td></tr><tr><td><code>finishedAt</code></td><td><code>completed</code> / <code>failed</code> 的 ISO8601 时间</td></tr><tr><td><code>message</code></td><td>人类可读说明（<code>queued new session turn</code>、<code>delivered to existing session and completed</code> 等）</td></tr><tr><td><code>errorCode</code> / <code>error</code></td><td>失败时，见 §11</td></tr><tr><td><code>promptPreview</code></td><td>仅 <code>dryRun</code></td></tr><tr><td><code>idempotent</code></td><td>带幂等键时：<code>true</code> 表示复用已有会话/轮，<code>false</code>/缺失表示首次创建</td></tr><tr><td><code>idempotencyKey</code> / <code>turnIdempotencyKey</code></td><td>回显你传的键</td></tr><tr><td><code>reason</code> / <code>targetWorkflowId</code> / <code>targetRevisionId</code></td><td>仅已退役的 workflow 目标</td></tr><tr><td><code>idempotency</code></td><td><code>{ key, action:&#x27;accepted&#x27;|&#x27;duplicate&#x27;, firstTriggerId? }</code>——<strong>仅 webhook 接入点</strong>的重复投递抑制结果，与 <code>options.idempotencyKey</code> 无关</td></tr><tr><td><code>readOnlyUrl</code> / <code>viewToken</code></td><td>仅 core-only 部署（<code>BOTMUX_CORE_ONLY=1</code>）且存在活的 worker 终端时，轮询响应上附带只读终端链接</td></tr></tbody></table></div>
+<h3 class="rp-toc-include" id="101-action--message-对照"><a href="#101-action--message-对照" class="rp-header-anchor rp-link" aria-hidden="true">#</a>10.1 <code>action</code> + <code>message</code> 对照</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th><code>action</code></th><th><code>message</code></th><th>触发形状</th></tr></thead><tbody><tr><td><code>delivered</code></td><td><code>delivered to existing session</code></td><td>即发即忘，注入一个 worker 还活着的已有会话</td></tr><tr><td><code>queued</code></td><td><code>durably queued behind the existing activation</code></td><td>同上，但该会话还在开场激活中，本轮被持久排队</td></tr><tr><td><code>queued</code></td><td><code>queued existing session turn</code></td><td>即发即忘，已有会话的 worker 处于休眠，需重新 fork</td></tr><tr><td><code>queued</code></td><td><code>delivered to existing session; poll by sessionId or triggerId for final output</code></td><td>异步 + 已有会话</td></tr><tr><td><code>queued</code></td><td><code>queued new session turn</code></td><td>即发即忘，新建会话</td></tr><tr><td><code>queued</code></td><td><code>queued new session turn (building worktree)</code></td><td>同上，且正在建 worktree</td></tr><tr><td><code>queued</code></td><td><code>queued new session turn; poll by sessionId or triggerId for final output</code></td><td>异步 + 新建会话</td></tr><tr><td><code>completed</code></td><td><code>delivered to existing session and completed</code></td><td>同步 + 已有会话</td></tr><tr><td><code>completed</code></td><td><code>queued new session turn and completed</code></td><td>同步 + 新建会话</td></tr><tr><td><code>dry_run</code></td><td><code>would inject into existing session</code> / <code>would create or deliver a new session turn</code></td><td><code>dryRun</code></td></tr></tbody></table></div>
+<blockquote>
+<p><code>action</code> 只描述<strong>派发结果</strong>，不描述任务成败：<code>delivered</code>/<code>queued</code> 都只说明「已受理」。要拿产出只有两条路——同步的 <code>output.content</code>，或异步轮询到 <code>completed</code>。</p>
+</blockquote>
+<hr/>
+<h2 class="rp-toc-include" id="11-http-状态码与错误码"><a href="#11-http-状态码与错误码" class="rp-header-anchor rp-link" aria-hidden="true">#</a>11. HTTP 状态码与错误码</h2>
+<h3 class="rp-toc-include" id="111-状态码映射"><a href="#111-状态码映射" class="rp-header-anchor rp-link" aria-hidden="true">#</a>11.1 状态码映射</h3>
+<p><strong>代理层（dashboard）</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th style="text-align:center">状态</th><th><code>errorCode</code></th><th>条件</th></tr></thead><tbody><tr><td style="text-align:center">400</td><td><code>bad_json</code></td><td>JSON 非法（<code>invalid JSON body</code>），或请求体超 512 KiB（<code>request body too large</code>）</td></tr><tr><td style="text-align:center">400</td><td><code>target_required</code></td><td>缺 <code>target.botId</code></td></tr><tr><td style="text-align:center">400</td><td>各种</td><td>校验层拒绝（见 §3）</td></tr><tr><td style="text-align:center">502</td><td><code>daemon_offline</code></td><td>代理调用抛错</td></tr><tr><td style="text-align:center">503</td><td><code>daemon_offline</code></td><td>目标 daemon 未注册</td></tr></tbody></table></div>
+<p><strong>daemon 层</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th style="text-align:center">状态</th><th><code>errorCode</code></th><th>条件</th></tr></thead><tbody><tr><td style="text-align:center">200</td><td>—</td><td><code>ok:true</code>（<code>queued</code> / <code>completed</code> / <code>dry_run</code>）</td></tr><tr><td style="text-align:center">200</td><td><code>no_output</code> 等</td><td><code>ok:false</code> 但 <code>state:&quot;failed&quot;</code>——<strong>这是成功的 HTTP 调用在汇报终态</strong>，按 <code>state</code> 读</td></tr><tr><td style="text-align:center">400</td><td><code>bad_json</code></td><td>JSON 非法</td></tr><tr><td style="text-align:center">400</td><td><code>bad_request</code> / <code>target_required</code></td><td>校验失败、apiOnly 形状违规</td></tr><tr><td style="text-align:center">400</td><td><code>bot_not_found</code></td><td><code>target.botId</code> 与该 daemon 不符</td></tr><tr><td style="text-align:center">403</td><td><code>bot_not_in_chat</code></td><td>机器人不在目标群</td></tr><tr><td style="text-align:center">404</td><td><code>session_not_found</code></td><td><code>target.sessionId</code> 查无活跃会话</td></tr><tr><td style="text-align:center">409</td><td><code>idempotency_conflict</code></td><td>同键异 payload</td></tr><tr><td style="text-align:center">410</td><td><code>legacy_workflow_retired</code></td><td><code>target.kind:&quot;workflow&quot;</code>（已退役）</td></tr><tr><td style="text-align:center">503</td><td><code>bot_not_found</code> / <code>trigger_failed</code></td><td>daemon 尚未就绪（appId 未设 / 会话注册表不可用）</td></tr><tr><td style="text-align:center">504</td><td><code>wait_timeout</code></td><td>同步模式等待超时</td></tr><tr><td style="text-align:center">500</td><td><code>trigger_failed</code> 等</td><td>未分类失败（含下面 11.3 的 <code>chat_not_allowed</code>）</td></tr></tbody></table></div>
+<h3 class="rp-toc-include" id="112-错误码全表20-个按归属分"><a href="#112-错误码全表20-个按归属分" class="rp-header-anchor rp-link" aria-hidden="true">#</a>11.2 错误码全表（20 个，按归属分）</h3>
+<p><strong>本端点会遇到的（13 个）</strong></p>
+<p><code>bad_json</code>、<code>bad_request</code>、<code>bot_not_found</code>、<code>bot_not_in_chat</code>、<code>chat_not_allowed</code>、<code>daemon_offline</code>、<code>idempotency_conflict</code>、<code>legacy_workflow_retired</code>、<code>no_output</code>、<code>session_not_found</code>、<code>target_required</code>、<code>trigger_failed</code>、<code>wait_timeout</code></p>
+<p><strong>仅 <a href="/botmux/webhook.html" class="rp-link">Webhook 接入点</a> 会遇到的（5 个）</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>码</th><th style="text-align:center">状态</th><th>含义</th></tr></thead><tbody><tr><td><code>invalid_signature</code></td><td style="text-align:center">401</td><td>令牌或 HMAC 校验失败</td></tr><tr><td><code>replay</code></td><td style="text-align:center">401</td><td>签名时间戳超出容忍窗口</td></tr><tr><td><code>rate_limited</code></td><td style="text-align:center">429</td><td>超过接入点限流</td></tr><tr><td><code>group_create_failed</code></td><td style="text-align:center">501 / 502</td><td>「每次新建群」模式建群失败</td></tr><tr><td><code>lifecycle_extract_failed</code></td><td style="text-align:center">400</td><td>配了去重字段但事件 body 里取不到</td></tr></tbody></table></div>
+<p><strong>枚举里有、但从不发出的（2 个）</strong></p>
+<ul>
+<li><code>dry_run</code> —— <code>dryRun</code> 是一个 <code>action</code>，不是错误。</li>
+<li><code>workflow_trigger_not_implemented</code> —— 被 daemon 路由层的 410 先挡住，结构上不可达。</li>
+</ul>
+<h3 class="rp-toc-include" id="113-已知不一致"><a href="#113-已知不一致" class="rp-header-anchor rp-link" aria-hidden="true">#</a>11.3 已知不一致</h3>
+<p><code>chat_not_allowed</code>（<code>rootMessageId</code> 不属于你传的 <code>chatId</code>）<strong>没有被列进 daemon 的状态码阶梯</strong>，因此落到兜底的 <strong>HTTP 500</strong>——而 webhook 接入点对同一个码返回 403。客户端在本端点上不要把 500 一律当作「服务端故障可重试」：先读 <code>errorCode</code>，<code>chat_not_allowed</code> 是<strong>请求错误，重试无用</strong>。</p>
+<hr/>
+<h2 class="rp-toc-include" id="12-传输层与边界"><a href="#12-传输层与边界" class="rp-header-anchor rp-link" aria-hidden="true">#</a>12. 传输层与边界</h2>
+<ul>
+<li><strong>请求体上限 512 KiB</strong>，只在 dashboard 代理层强制（超限 → 400 <code>bad_json</code> / <code>request body too large</code>）。直连 daemon IPC 的内部调用不受此限。</li>
+<li><strong>代理层对 dashboard→daemon 这一跳不设超时</strong>。同步模式传 <code>timeoutMs: 300000</code> 就是真的会把 HTTP 连接挂满 5 分钟，唯一的兜底是 daemon 自己那个定时器。<strong>客户端必须自己设连接/读取超时</strong>，不要依赖代理帮你断。</li>
+<li><strong>apiOnly（core-only）机器人的四条硬约束</strong>，违反都是 400 <code>bad_request</code>：
+<ol>
+<li>必须带 <code>waitForFinalOutput</code> 或 <code>asyncReturnSessionId</code>；</li>
+<li>不能传 <code>rootMessageId</code>；</li>
+<li>不能传真实 <code>chatId</code>；</li>
+<li>传 <code>sessionId</code> 时只能指向它自己的 HTTP 虚拟会话。</li>
+</ol>
+</li>
+</ul>
+<hr/>
+<h2 class="rp-toc-include" id="13-客户端伪代码"><a href="#13-客户端伪代码" class="rp-header-anchor rp-link" aria-hidden="true">#</a>13. 客户端伪代码</h2>
 <div class="rp-codeblock language-ts"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="ts"><code><span class="line"><span style="color:var(--shiki-token-comment)">// 触发 + 轮询到终态的最小骨架</span></span>
 <span class="line"><span style="color:var(--shiki-token-keyword)">async</span><span style="color:var(--shiki-token-keyword)"> function</span><span style="color:var(--shiki-token-function)"> runAndAwait</span><span style="color:var(--shiki-foreground)">(instruction</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-constant)"> string</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-foreground)"> botId</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-constant)"> string</span><span style="color:var(--shiki-foreground)">)</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-function)"> Promise</span><span style="color:var(--shiki-foreground)">&lt;</span><span style="color:var(--shiki-token-function)">Result</span><span style="color:var(--shiki-foreground)">&gt; {</span></span>
 <span class="line"><span style="color:var(--shiki-token-comment)">  // 1) 异步触发，拿 sessionId</span></span>
@@ -286,7 +1090,7 @@
 <span class="line"><span style="color:var(--shiki-token-keyword)">    switch</span><span style="color:var(--shiki-foreground)"> (</span><span style="color:var(--shiki-token-constant)">r</span><span style="color:var(--shiki-foreground)">.state) {</span></span>
 <span class="line"><span style="color:var(--shiki-token-keyword)">      case</span><span style="color:var(--shiki-token-string-expression)"> &#x27;running&#x27;</span><span style="color:var(--shiki-foreground)">:   </span><span style="color:var(--shiki-token-keyword)">await</span><span style="color:var(--shiki-token-function)"> sleep</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-constant)">3000</span><span style="color:var(--shiki-foreground)">); </span><span style="color:var(--shiki-token-keyword)">continue</span><span style="color:var(--shiki-foreground)">;</span></span>
 <span class="line"><span style="color:var(--shiki-token-keyword)">      case</span><span style="color:var(--shiki-token-string-expression)"> &#x27;unknown&#x27;</span><span style="color:var(--shiki-foreground)">:   </span><span style="color:var(--shiki-token-keyword)">await</span><span style="color:var(--shiki-token-function)"> sleep</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-constant)">3000</span><span style="color:var(--shiki-foreground)">); </span><span style="color:var(--shiki-token-keyword)">continue</span><span style="color:var(--shiki-foreground)">; </span><span style="color:var(--shiki-token-comment)">// 可重试：网络/超时/5xx/非JSON，任务可能仍在跑</span></span>
-<span class="line"><span style="color:var(--shiki-token-keyword)">      case</span><span style="color:var(--shiki-token-string-expression)"> &#x27;completed&#x27;</span><span style="color:var(--shiki-foreground)">: </span><span style="color:var(--shiki-token-keyword)">return</span><span style="color:var(--shiki-foreground)"> { ok</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-constant)"> true</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-foreground)"> content</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-constant)"> r</span><span style="color:var(--shiki-foreground)">.</span><span style="color:var(--shiki-token-constant)">output</span><span style="color:var(--shiki-foreground)">.content };</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">      case</span><span style="color:var(--shiki-token-string-expression)"> &#x27;completed&#x27;</span><span style="color:var(--shiki-foreground)">: </span><span style="color:var(--shiki-token-keyword)">return</span><span style="color:var(--shiki-foreground)"> { ok</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-constant)"> true</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-foreground)"> content</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-constant)"> r</span><span style="color:var(--shiki-foreground)">.</span><span style="color:var(--shiki-token-constant)">output</span><span style="color:var(--shiki-foreground)">?.content </span><span style="color:var(--shiki-token-keyword)">??</span><span style="color:var(--shiki-token-string-expression)"> &#x27;&#x27;</span><span style="color:var(--shiki-foreground)"> }; </span><span style="color:var(--shiki-token-comment)">// ⚠️ 空串是合法结果</span></span>
 <span class="line"><span style="color:var(--shiki-token-keyword)">      case</span><span style="color:var(--shiki-token-string-expression)"> &#x27;failed&#x27;</span><span style="color:var(--shiki-foreground)">:    </span><span style="color:var(--shiki-token-keyword)">return</span><span style="color:var(--shiki-foreground)"> { ok</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-constant)"> false</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-foreground)"> needsReconcile</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-constant)"> true</span><span style="color:var(--shiki-foreground)"> }; </span><span style="color:var(--shiki-token-comment)">// 软终态，二次确认</span></span>
 <span class="line"><span style="color:var(--shiki-token-keyword)">      case</span><span style="color:var(--shiki-token-string-expression)"> &#x27;not_found&#x27;</span><span style="color:var(--shiki-foreground)">: </span><span style="color:var(--shiki-token-keyword)">return</span><span style="color:var(--shiki-foreground)"> { ok</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-constant)"> false</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-foreground)"> notFound</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-constant)"> true</span><span style="color:var(--shiki-foreground)"> };        </span><span style="color:var(--shiki-token-comment)">// 终止：确认查无</span></span>
 <span class="line"><span style="color:var(--shiki-token-keyword)">      case</span><span style="color:var(--shiki-token-string-expression)"> &#x27;error&#x27;</span><span style="color:var(--shiki-foreground)">:     </span><span style="color:var(--shiki-token-keyword)">return</span><span style="color:var(--shiki-foreground)"> { ok</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-constant)"> false</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-foreground)"> fatal</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-constant)"> true</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-foreground)"> why</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-constant)"> r</span><span style="color:var(--shiki-foreground)">.why }; </span><span style="color:var(--shiki-token-comment)">// 终止：请求/鉴权错误，重试也没用</span></span>
@@ -294,7 +1098,7 @@
 <span class="line"><span style="color:var(--shiki-foreground)">  }</span></span>
 <span class="line"><span style="color:var(--shiki-foreground)">}</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:var(--shiki-token-comment)">// getTriggerResult 把响应分成 5 类，关键是别把&quot;未知/可重试&quot;和&quot;确定终止&quot;搞混：</span></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">// getTriggerResult 把响应分成 5 类，关键是别把「未知/可重试」和「确定终止」搞混：</span></span>
 <span class="line"><span style="color:var(--shiki-token-comment)">//  - not_found  : 确认查无 → 终止（(a) 404 unknown_session；(b) 200 state:not_found）</span></span>
 <span class="line"><span style="color:var(--shiki-token-comment)">//  - completed/running/failed : daemon 四态原样透传</span></span>
 <span class="line"><span style="color:var(--shiki-token-comment)">//  - error      : 请求错误(400)/鉴权(401/403) → 终止，重试无意义</span></span>
@@ -316,13 +1120,13 @@
 <span class="line"><span style="color:var(--shiki-token-keyword)">    const</span><span style="color:var(--shiki-token-constant)"> b</span><span style="color:var(--shiki-token-keyword)"> =</span><span style="color:var(--shiki-token-keyword)"> await</span><span style="color:var(--shiki-token-constant)"> res</span><span style="color:var(--shiki-token-function)">.json</span><span style="color:var(--shiki-foreground)">()</span><span style="color:var(--shiki-token-function)">.catch</span><span style="color:var(--shiki-foreground)">(() </span><span style="color:var(--shiki-token-keyword)">=&gt;</span><span style="color:var(--shiki-foreground)"> ({}));</span></span>
 <span class="line"><span style="color:var(--shiki-token-keyword)">    if</span><span style="color:var(--shiki-foreground)"> (</span><span style="color:var(--shiki-token-constant)">b</span><span style="color:var(--shiki-foreground)">?.error </span><span style="color:var(--shiki-token-keyword)">===</span><span style="color:var(--shiki-token-string-expression)"> &#x27;unknown_session&#x27;</span><span style="color:var(--shiki-foreground)">) </span><span style="color:var(--shiki-token-keyword)">return</span><span style="color:var(--shiki-foreground)"> { state</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-string-expression)"> &#x27;not_found&#x27;</span><span style="color:var(--shiki-foreground)"> }; </span><span style="color:var(--shiki-token-comment)">// (a) 确认查无</span></span>
 <span class="line"><span style="color:var(--shiki-token-keyword)">    if</span><span style="color:var(--shiki-foreground)"> (</span><span style="color:var(--shiki-token-constant)">b</span><span style="color:var(--shiki-foreground)">?.state </span><span style="color:var(--shiki-token-keyword)">===</span><span style="color:var(--shiki-token-string-expression)"> &#x27;not_found&#x27;</span><span style="color:var(--shiki-foreground)">) </span><span style="color:var(--shiki-token-keyword)">return</span><span style="color:var(--shiki-foreground)"> { state</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-string-expression)"> &#x27;not_found&#x27;</span><span style="color:var(--shiki-foreground)"> };       </span><span style="color:var(--shiki-token-comment)">// (b) 适配层翻译的查无</span></span>
-<span class="line"><span style="color:var(--shiki-token-keyword)">    if</span><span style="color:var(--shiki-foreground)"> (</span><span style="color:var(--shiki-token-constant)">b</span><span style="color:var(--shiki-foreground)">?.state) </span><span style="color:var(--shiki-token-keyword)">return</span><span style="color:var(--shiki-foreground)"> b; </span><span style="color:var(--shiki-token-comment)">// 适配层把 failed 等翻成 404 时按 body 的 state 走（透传）</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    if</span><span style="color:var(--shiki-foreground)"> (</span><span style="color:var(--shiki-token-constant)">b</span><span style="color:var(--shiki-foreground)">?.state) </span><span style="color:var(--shiki-token-keyword)">return</span><span style="color:var(--shiki-foreground)"> b; </span><span style="color:var(--shiki-token-comment)">// 适配层把 failed 等翻成 404 时按 body 的 state 走（透传，见 §8.5）</span></span>
 <span class="line"><span style="color:var(--shiki-token-comment)">    // ⚠️ 其它 404（网关/旧路由返回的 HTML、非 JSON → 解析成 {}）**不是**确认查无，</span></span>
 <span class="line"><span style="color:var(--shiki-token-comment)">    // 当可重试 unknown——否则会把「网关抽风」误判成任务丢失而补偿重派、双执行。</span></span>
 <span class="line"><span style="color:var(--shiki-token-keyword)">    return</span><span style="color:var(--shiki-foreground)"> { state</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-string-expression)"> &#x27;unknown&#x27;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-foreground)"> why</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-string-expression)"> &#x27;opaque 404&#x27;</span><span style="color:var(--shiki-foreground)"> };</span></span>
 <span class="line"><span style="color:var(--shiki-foreground)">  }</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:var(--shiki-token-comment)">  // 请求错误：如精确 triggerId 未命中的 400 bad_request → 终止</span></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">  // 请求错误：如精确 triggerId 未命中的 400 bad_request（无 state 字段，见 §8.4）→ 终止</span></span>
 <span class="line"><span style="color:var(--shiki-token-keyword)">  if</span><span style="color:var(--shiki-foreground)"> (</span><span style="color:var(--shiki-token-constant)">res</span><span style="color:var(--shiki-foreground)">.status </span><span style="color:var(--shiki-token-keyword)">===</span><span style="color:var(--shiki-token-constant)"> 400</span><span style="color:var(--shiki-foreground)">) </span><span style="color:var(--shiki-token-keyword)">return</span><span style="color:var(--shiki-foreground)"> { state</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-string-expression)"> &#x27;error&#x27;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-foreground)"> why</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-string-expression)"> &#x27;bad_request&#x27;</span><span style="color:var(--shiki-foreground)"> };</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:var(--shiki-token-comment)">  // 5xx / 502 daemon 不可达 → 可重试（原任务可能仍在跑，绝不能当查无重派）</span></span>
@@ -336,23 +1140,35 @@
 <span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="切换代码换行" aria-label="切换代码换行"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="复制代码"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
 <p>健壮性要点（都来自实测契约）：</p>
 <ul>
-<li><code>timeoutMs</code> 传参前先 clamp 到 <code>[1000, 300000]</code>。</li>
-<li>同步模式把 <code>504/wait_timeout</code> 当「可能仍在运行」，留 <code>sessionId</code> 兜底查，别判死。</li>
-<li>轮询按 5 类分流，别把「可重试」和「终止」混为一谈：<strong>not_found</strong>（404 unknown_session / <code>state:not_found</code>）与 <strong>error</strong>（400 请求错误、401/403 鉴权）是终止态；<strong>unknown</strong>（网络异常/超时/5xx/502/非 JSON）是可重试态——原任务可能仍在后台跑，误当查无补偿重派会导致重复执行。<code>fetch</code> 与 <code>res.json()</code> 都要包 try/catch，别让异常冒泡打断轮询。</li>
+<li><code>timeoutMs</code> 传参前先 clamp 到 <code>[1000, 300000]</code>；并且<strong>自己设 HTTP 客户端超时</strong>（§12）。</li>
+<li>同步模式把 <code>504/wait_timeout</code> 当「可能仍在运行」，但要知道<strong>响应里没有 <code>sessionId</code></strong>，无法兜底查——在意这点就用异步。</li>
+<li><code>completed</code> 的 <code>output.content</code> <strong>可能是空串</strong>（模型判定无需回答，见 §6），这是合法终态，不要当失败。</li>
+<li>轮询按 5 类分流，别把「可重试」和「终止」混为一谈：<strong>not_found</strong>（404 unknown_session / <code>state:not_found</code>）与 <strong>error</strong>（400 请求错误、401/403 鉴权）是终止态；<strong>unknown</strong>（网络异常/超时/5xx/502/非 JSON）是可重试态——原任务可能仍在后台跑，误当查无补偿重派会导致重复执行。</li>
+<li>在本端点上收到 <strong>500</strong> 时先读 <code>errorCode</code>：<code>chat_not_allowed</code> 是请求错误、重试无用（§11.3）。</li>
+<li><code>fetch</code> 与 <code>res.json()</code> 都要包 try/catch，别让异常冒泡打断轮询。</li>
 </ul>
 <hr/>
-<h2 class="rp-toc-include" id="8-已知项"><a href="#8-已知项" class="rp-header-anchor rp-link" aria-hidden="true">#</a>8. 已知项</h2>
+<h2 class="rp-toc-include" id="14-已知项"><a href="#14-已知项" class="rp-header-anchor rp-link" aria-hidden="true">#</a>14. 已知项</h2>
 <ul>
 <li>
 <p><strong>异步结果磁盘文件目前不自动回收</strong>：<code>data/async-triggers/&lt;sessionId&gt;.json</code> 只增不删（故意——否则会话关闭后 <code>completed</code> 结果会丢，破坏重启存活）。好处是即便会话记录将来被清理，只要该文件在，<code>completed</code> 仍查得到；代价是文件长期累积。后续会加保守 TTL 清扫（完成超过 N 天才清），届时本文更新。</p>
 </li>
 <li>
-<p><strong><code>output.content</code> 极少数情况可能带一段前言</strong>：botmux 已在源头（HTTP 应答模式 prompt）引导模型「只输出最终答案、不要 preamble/元推理」，绝大多数回复是干净的。但这是 prompt 层引导、非硬保证——个别情况仍可能冒出一句前言。若你要把 <code>output.content</code> 直接展示给用户且要求「绝对干净」，可在<strong>展示层</strong>叠一层<strong>保守裁剪</strong>作为兜底：</p>
+<p><strong><code>output.content</code> 极少数情况可能带一段前言</strong>：botmux 已在源头（§6 的 HTTP 应答模式提示块）引导模型「只输出最终答案、不要 preamble/元推理」，绝大多数回复是干净的。但这是 prompt 层引导、非硬保证。若你要把 <code>output.content</code> 直接展示给用户且要求「绝对干净」，可在<strong>展示层</strong>叠一层<strong>保守裁剪</strong>作为兜底：</p>
 <ul>
 <li>✅ 只裁<strong>已知的确定性前言前缀</strong>（如匹配到 <code>This is a system routing header…</code> / <code>here&#x27;s my answer:</code> 这类固定模式才裁，裁完保留其后<strong>全部</strong>内容）。</li>
-<li>❌ <strong>不要</strong>用「只取最后一个非空段落」这类激进截取——<code>output.content</code> 可能是合法多段（分点回答、含代码块），激进截取会把正文裁没，这是比偶发前言严重得多的正确性问题。宁可展示带一句前言的完整答案，也不能丢正文。</li>
+<li>❌ <strong>不要</strong>用「只取最后一个非空段落」这类激进截取——<code>output.content</code> 可能是合法多段（分点回答、含代码块），激进截取会把正文裁没，这是比偶发前言严重得多的正确性问题。</li>
 <li>裁剪只在<strong>展示层</strong>做；<strong>持久化/审计/回放请存原始 <code>content</code></strong>。</li>
 </ul>
+</li>
+<li>
+<p><strong>同步模式在「真沉默」上会超时</strong>（§6）。异步模式没有这个问题。</p>
+</li>
+<li>
+<p><strong><code>chat_not_allowed</code> 在本端点映射成 500</strong>（§11.3），与 webhook 接入点的 403 不一致。</p>
+</li>
+<li>
+<p><strong><code>source.type</code> 不校验</strong>（§3.1）；<code>envelope.format</code>、<code>options.dedupKey</code>、<code>options.status</code> 均无读取方（§3.5）。</p>
 </li>
 </ul>
 <hr/>
@@ -387,8 +1203,8 @@
 
 
 
-<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>端点</th><th>方法</th><th>用途</th></tr></thead><tbody><tr><td><code>/api/trigger</code></td><td>POST</td><td>触发任务（同步/异步由 <code>options</code> 决定）</td></tr><tr><td><code>/api/sessions/:id/trigger-result</code></td><td>GET</td><td>异步轮询结果（四态）</td></tr><tr><td><code>/api/sessions/:id</code></td><td>GET</td><td>查会话元信息（状态/标题等）</td></tr><tr><td><code>/api/sessions/:id/close</code></td><td>POST</td><td>取消/关闭会话</td></tr></tbody></table></div>
-<p>关键 <code>errorCode</code>：<code>target_required</code>、<code>bad_request</code>（含 <code>trusted</code> 校验、<code>timeoutMs</code> 越界、<code>idempotencyKey</code> 超范围）、<code>idempotency_conflict</code>（同键异 payload）、<code>bot_not_found</code>、<code>bot_not_in_chat</code>、<code>wait_timeout</code>、<code>no_output</code>、<code>session_not_found</code>。</p><!--/$--></div><footer class="rp-doc-footer"><div class="rp-doc-footer__edit"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/zh/api-task-trigger.md" target="_blank" rel="noopener noreferrer" class="rp-edit-link rp-link">编辑此页面</a><div class="rp-last-updated"><p>最后更新于<!-- -->: <span>2026/9/12 15:54:56</span></p></div></div><div class="rp-doc-footer__divider"></div><div class="rp-prev-next-page"><a href="/botmux/webhook.html" class="rp-prev-next-page__item rp-prev-next-page__prev rp-link"><span class="rp-prev-next-page__item__desc">上一页</span><span class="rp-prev-next-page__item__title"><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon rp-prev-next-page__rotate_180"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg><span>接入点（Webhook）</span></span></a><a href="/botmux/api-core-only.html" class="rp-prev-next-page__item rp-prev-next-page__next rp-link"><span class="rp-prev-next-page__item__desc">下一页</span><span class="rp-prev-next-page__item__title"><span>Core-only API 控制</span><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></span></a></div></footer></main></div><aside class="rp-doc-layout__outline rp-scrollbar"><div class="rp-outline"><div class="rp-outline__title">目录<svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg></div><nav class="rp-outline__toc rp-scrollbar"><a href="#1-两种执行模式" class="rp-toc-item rp-link" title="1. 两种执行模式" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">1. 两种执行模式</span></a><a href="#2-鉴权" class="rp-toc-item rp-link" title="2. 鉴权" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">2. 鉴权</span></a><a href="#3-触发任务" class="rp-toc-item rp-link" title="3. 触发任务" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">3. 触发任务</span></a><a href="#请求体结构" class="rp-toc-item rp-link" title="请求体结构" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">请求体结构</span></a><a href="#同步模式waitforfinaloutput" class="rp-toc-item rp-link" title="同步模式（waitForFinalOutput）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">同步模式（waitForFinalOutput）</span></a><a href="#异步模式asyncreturnsessionid" class="rp-toc-item rp-link" title="异步模式（asyncReturnSessionId）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">异步模式（asyncReturnSessionId）</span></a><a href="#幂等键optionsidempotencykey-防止重试重复执行" class="rp-toc-item rp-link" title="幂等键（options.idempotencyKey）—— 防止重试重复执行" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">幂等键（<code>options.idempotencyKey</code>）—— 防止重试重复执行</span></a><a href="#续会话轮幂等键optionsturnidempotencykey-给追问轮同样的保证" class="rp-toc-item rp-link" title="续会话轮幂等键（options.turnIdempotencyKey）—— 给追问轮同样的保证" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">续会话轮幂等键（<code>options.turnIdempotencyKey</code>）—— 给追问轮同样的保证</span></a><a href="#4-轮询结果四态契约" class="rp-toc-item rp-link" title="4. 轮询结果（四态契约）" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">4. 轮询结果（四态契约）</span></a><a href="#failed-是软终态不要立即判死" class="rp-toc-item rp-link" title="failed 是软终态，不要立即判死" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc"><code>failed</code> 是软终态，不要立即判死</span></a><a href="#not_found-的两种物理表现" class="rp-toc-item rp-link" title="not_found 的两种物理表现" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc"><code>not_found</code> 的两种物理表现</span></a><a href="#5-重启存活保证重要" class="rp-toc-item rp-link" title="5. 重启存活保证（重要）" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">5. 重启存活保证（重要）</span></a><a href="#6-取消任务" class="rp-toc-item rp-link" title="6. 取消任务" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">6. 取消任务</span></a><a href="#7-客户端伪代码" class="rp-toc-item rp-link" title="7. 客户端伪代码" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">7. 客户端伪代码</span></a><a href="#8-已知项" class="rp-toc-item rp-link" title="8. 已知项" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">8. 已知项</span></a><a href="#附端点速查" class="rp-toc-item rp-link" title="附：端点速查" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">附：端点速查</span></a></nav><div class="rp-outline__divider"></div><div class="rp-outline__bottom"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/zh/api-task-trigger.md" target="_blank" rel="noopener noreferrer" class="rp-outline__action-row rp-edit-link rp-link"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"></path></svg><span>编辑此页面</span></a></div></div></aside></div></div>
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>端点</th><th>方法</th><th>用途</th></tr></thead><tbody><tr><td><code>/api/trigger</code></td><td>POST</td><td>触发任务（执行模式由 <code>options</code> 决定，投递目标由 <code>target</code> 决定）</td></tr><tr><td><code>/api/sessions/:id/trigger-result</code></td><td>GET</td><td>异步轮询结果（四态，可选 <code>?triggerId=</code>）</td></tr><tr><td><code>/api/sessions/:id</code></td><td>GET</td><td>查会话元信息（状态/标题等）</td></tr><tr><td><code>/api/sessions/:id/close</code></td><td>POST</td><td>取消/关闭会话</td></tr></tbody></table></div>
+<p>想要「每次自动新建一个群来处置事件」，见 <a href="/botmux/webhook.html" class="rp-link">Webhook 接入点</a>——那是它独有的投递模式，本端点没有。</p><!--/$--></div><footer class="rp-doc-footer"><div class="rp-doc-footer__edit"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/zh/api-task-trigger.md" target="_blank" rel="noopener noreferrer" class="rp-edit-link rp-link">编辑此页面</a><div class="rp-last-updated"><p>最后更新于<!-- -->: <span>2026/9/14 08:10:14</span></p></div></div><div class="rp-doc-footer__divider"></div><div class="rp-prev-next-page"><a href="/botmux/webhook.html" class="rp-prev-next-page__item rp-prev-next-page__prev rp-link"><span class="rp-prev-next-page__item__desc">上一页</span><span class="rp-prev-next-page__item__title"><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon rp-prev-next-page__rotate_180"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg><span>接入点（Webhook）</span></span></a><a href="/botmux/api-core-only.html" class="rp-prev-next-page__item rp-prev-next-page__next rp-link"><span class="rp-prev-next-page__item__desc">下一页</span><span class="rp-prev-next-page__item__title"><span>Core-only API 控制</span><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></span></a></div></footer></main></div><aside class="rp-doc-layout__outline rp-scrollbar"><div class="rp-outline"><div class="rp-outline__title">目录<svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg></div><nav class="rp-outline__toc rp-scrollbar"><a href="#1-先分清两个正交维度" class="rp-toc-item rp-link" title="1. 先分清两个正交维度" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">1. 先分清两个正交维度</span></a><a href="#2-鉴权" class="rp-toc-item rp-link" title="2. 鉴权" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">2. 鉴权</span></a><a href="#3-请求体完整字段" class="rp-toc-item rp-link" title="3. 请求体完整字段" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">3. 请求体完整字段</span></a><a href="#31-source" class="rp-toc-item rp-link" title="3.1 source" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">3.1 <code>source</code></span></a><a href="#32-target" class="rp-toc-item rp-link" title="3.2 target" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">3.2 <code>target</code></span></a><a href="#33-envelope不可信事件数据" class="rp-toc-item rp-link" title="3.3 envelope（不可信事件数据）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">3.3 <code>envelope</code>（不可信事件数据）</span></a><a href="#34-presentation可选控制飞书里的呈现" class="rp-toc-item rp-link" title="3.4 presentation（可选，控制飞书里的呈现）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">3.4 <code>presentation</code>（可选，控制飞书里的呈现）</span></a><a href="#35-options" class="rp-toc-item rp-link" title="3.5 options" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">3.5 <code>options</code></span></a><a href="#4-投递目标任务落在哪飞书里看得见什么" class="rp-toc-item rp-link" title="4. 投递目标：任务落在哪、飞书里看得见什么" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">4. 投递目标：任务落在哪、飞书里看得见什么</span></a><a href="#41-不传-chatid--虚拟会话飞书零打扰" class="rp-toc-item rp-link" title="4.1 不传 chatId → 虚拟会话（飞书零打扰）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">4.1 不传 <code>chatId</code> → 虚拟会话（飞书零打扰）</span></a><a href="#42-传真-chatid--真实群会话" class="rp-toc-item rp-link" title="4.2 传真 chatId → 真实群会话" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">4.2 传真 <code>chatId</code> → 真实群会话</span></a><a href="#43-chatid--rootmessageid--落到已有话题" class="rp-toc-item rp-link" title="4.3 chatId + rootMessageId → 落到已有话题" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">4.3 <code>chatId</code> + <code>rootMessageId</code> → 落到已有话题</span></a><a href="#44-sessionid--给已有会话追加一轮" class="rp-toc-item rp-link" title="4.4 sessionId → 给已有会话追加一轮" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">4.4 <code>sessionId</code> → 给已有会话追加一轮</span></a><a href="#45-交付矩阵群里到底能看到什么" class="rp-toc-item rp-link" title="4.5 交付矩阵：群里到底能看到什么" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">4.5 交付矩阵：群里到底能看到什么</span></a><a href="#46-自动新建群不在这个端点上" class="rp-toc-item rp-link" title="4.6 「自动新建群」不在这个端点上" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">4.6 「自动新建群」不在这个端点上</span></a><a href="#47-与交互式会话的两处行为差异" class="rp-toc-item rp-link" title="4.7 与交互式会话的两处行为差异" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">4.7 与交互式会话的两处行为差异</span></a><a href="#5-执行模式" class="rp-toc-item rp-link" title="5. 执行模式" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">5. 执行模式</span></a><a href="#51-同步waitforfinaloutput" class="rp-toc-item rp-link" title="5.1 同步（waitForFinalOutput）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">5.1 同步（<code>waitForFinalOutput</code>）</span></a><a href="#52-异步asyncreturnsessionid" class="rp-toc-item rp-link" title="5.2 异步（asyncReturnSessionId）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">5.2 异步（<code>asyncReturnSessionId</code>）</span></a><a href="#53-即发即忘两个模式开关都不传" class="rp-toc-item rp-link" title="5.3 即发即忘（两个模式开关都不传）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">5.3 即发即忘（两个模式开关都不传）</span></a><a href="#54-dryrun只渲染不派发" class="rp-toc-item rp-link" title="5.4 dryRun：只渲染不派发" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">5.4 <code>dryRun</code>：只渲染不派发</span></a><a href="#6-空回答契约botmux_nothing_to_send" class="rp-toc-item rp-link" title="6. 空回答契约（BOTMUX_NOTHING_TO_SEND）" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">6. 空回答契约（<code>BOTMUX_NOTHING_TO_SEND</code>）</span></a><a href="#7-幂等键" class="rp-toc-item rp-link" title="7. 幂等键" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">7. 幂等键</span></a><a href="#71-optionsidempotencykey新建会话" class="rp-toc-item rp-link" title="7.1 options.idempotencyKey（新建会话）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">7.1 <code>options.idempotencyKey</code>（新建会话）</span></a><a href="#72-optionsturnidempotencykey续会话轮" class="rp-toc-item rp-link" title="7.2 options.turnIdempotencyKey（续会话轮）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">7.2 <code>options.turnIdempotencyKey</code>（续会话轮）</span></a><a href="#8-轮询结果四态契约" class="rp-toc-item rp-link" title="8. 轮询结果（四态契约）" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">8. 轮询结果（四态契约）</span></a><a href="#81-哪些触发是可轮询的" class="rp-toc-item rp-link" title="8.1 哪些触发是可轮询的" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">8.1 哪些触发是可轮询的</span></a><a href="#82-failed-是软终态不要立即判死" class="rp-toc-item rp-link" title="8.2 failed 是软终态，不要立即判死" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">8.2 <code>failed</code> 是软终态，不要立即判死</span></a><a href="#83-not_found-的两种物理表现" class="rp-toc-item rp-link" title="8.3 not_found 的两种物理表现" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">8.3 <code>not_found</code> 的两种物理表现</span></a><a href="#84-精确-triggerid-未命中" class="rp-toc-item rp-link" title="8.4 精确 ?triggerId= 未命中" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">8.4 精确 <code>?triggerId=</code> 未命中</span></a><a href="#85-️-另一条轮询路径的形状不一样" class="rp-toc-item rp-link" title="8.5 ⚠️ 另一条轮询路径的形状不一样" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">8.5 ⚠️ 另一条轮询路径的形状不一样</span></a><a href="#9-重启存活取消" class="rp-toc-item rp-link" title="9. 重启存活、取消" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">9. 重启存活、取消</span></a><a href="#91-重启存活保证" class="rp-toc-item rp-link" title="9.1 重启存活保证" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">9.1 重启存活保证</span></a><a href="#92-取消任务" class="rp-toc-item rp-link" title="9.2 取消任务" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">9.2 取消任务</span></a><a href="#10-响应字段" class="rp-toc-item rp-link" title="10. 响应字段" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">10. 响应字段</span></a><a href="#101-action--message-对照" class="rp-toc-item rp-link" title="10.1 action + message 对照" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">10.1 <code>action</code> + <code>message</code> 对照</span></a><a href="#11-http-状态码与错误码" class="rp-toc-item rp-link" title="11. HTTP 状态码与错误码" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">11. HTTP 状态码与错误码</span></a><a href="#111-状态码映射" class="rp-toc-item rp-link" title="11.1 状态码映射" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">11.1 状态码映射</span></a><a href="#112-错误码全表20-个按归属分" class="rp-toc-item rp-link" title="11.2 错误码全表（20 个，按归属分）" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">11.2 错误码全表（20 个，按归属分）</span></a><a href="#113-已知不一致" class="rp-toc-item rp-link" title="11.3 已知不一致" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">11.3 已知不一致</span></a><a href="#12-传输层与边界" class="rp-toc-item rp-link" title="12. 传输层与边界" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">12. 传输层与边界</span></a><a href="#13-客户端伪代码" class="rp-toc-item rp-link" title="13. 客户端伪代码" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">13. 客户端伪代码</span></a><a href="#14-已知项" class="rp-toc-item rp-link" title="14. 已知项" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">14. 已知项</span></a><a href="#附端点速查" class="rp-toc-item rp-link" title="附：端点速查" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">附：端点速查</span></a></nav><div class="rp-outline__divider"></div><div class="rp-outline__bottom"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/zh/api-task-trigger.md" target="_blank" rel="noopener noreferrer" class="rp-outline__action-row rp-edit-link rp-link"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"></path></svg><span>编辑此页面</span></a></div></div></aside></div></div>
     <div id="__rspress_modal_container"></div>
   </body>
 </html>
