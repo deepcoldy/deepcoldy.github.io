@@ -1529,6 +1529,7 @@ This option addresses one narrow gap: Codex running through Botmux's app-server 
 | `messageQuota` | Message-quota override `{ "defaultLimit": N }`: **applies only to grantees admitted by grant cards or self-service requests** — once a positive integer is configured, new grant cards use an N-message quota; when unset they default to 3 messages per person. **Oncall groups are always unmetered and never read this value.** An explicit `/grant @user N` always uses N. Only constrains talk authorization, does not affect `canOperate` |
 | `restrictGrantCommands` | When `true`, people granted only via per-user authorization (`chatGrants` / `globalGrants`) are disabled from **all slash commands** and can only have plain conversations; owner / `allowedUsers` / oncall / whole-group members are unaffected. Defaults to `false` |
 | `autoGrantRequestCards` | Enabled by default. Set to `false` to stop automatically sending `/grant` request cards to the owner when an unauthorized person or external bot @mentions this bot in a group and the talk gate blocks it; the message is dropped silently instead |
+| `blockedUsers` | Block list (same identifier forms as `allowedUsers`: email / mobile / `on_xxx` / `ou_xxx`), a sender-dimension global deny: effective in both groups and DMs, and evaluated before every allow leg — on-call, whole-group open, guest grants, team trust. A blocked sender gets no grant request card. Owners / admins cannot be blocked (the write entry refuses it). It does not affect message-listener matching. Also maintained in Dashboard **Bot Config** and the group-member modal. See [Permissions & Access · Block list](/botmux/en/permissions.md#block-list-blockedusers) |
 
 ## File sandbox
 
@@ -1735,6 +1736,35 @@ Every conversation turn produces a live-updating Lark card, your primary window 
 * **A fresh card per turn**: the previous card freezes as an archive, keeping conversation history clear and traceable; after a session is moved to another group with [`/relay`](/botmux/en/relay.md), the original card also automatically freezes as an archive (buttons removed).
 * **A "recoverable" card on close**: it carries a "▶️ Resume session" button to click back in anytime; **if the CLI supports native resume** (the adapter implements `buildResumeCommand` and a native session id exists), it also includes the native command (e.g. `claude --resume <id>`) for manual recovery; when unsupported, only botmux's resume button plus a short note is shown.
 
+## The four display layers of a turn
+
+botmux's "presence" in Lark has four independently switched layers:
+
+| Layer | What it is | How to turn it off |
+|-------|------------|--------------------|
+| **Streaming status card** | The per-turn live-screenshot card (the main subject of this page) | Bot-level `disableStreamingCard`, or `/card off` for this chat |
+| **Thinking bubble (CoT)** | Intermediate narration / thinking messages while the CLI works | Bot-level `thinkingCard: false`, or `/cot off` for this chat; `/cot show` reveals one round on demand |
+| **✋ → ✅ reactions** | Progress reactions on **your triggering message**: ✋ when accepted, flipped to ✅ when the worker goes idle | Bot-level `silentTurnReactions: true` |
+| **Proactive CLI messages** | Rich-text / image messages the agent sends via `botmux send` | No switch — sent on demand (see below) |
+
+Reactions and streaming cards are **mutually exclusive per turn**: the ✋→✅ reactions appear only when "streaming cards are off for this chat" — with no live status window, the reaction is the only lightweight progress signal; a card-enabled chat gets no reactions.
+
+## Card / thinking switches: bot-level vs per-chat
+
+| Display layer | Bot-level default (Bot config / Dashboard **Bot Defaults**) | Per-chat override (in-group slash command) | Default |
+|---------------|-------------------------------------------------------------|--------------------------------------------|---------|
+| Streaming status card | `disableStreamingCard` | `/card off` / `/card on` (writes `noCardChats`); bare `/card` summons one immediately; `/card pin …` controls pinning | On |
+| Thinking bubble | `thinkingCard` | `/cot off` / `/cot on` (writes `noCotChats`); `/cot show` reveals one round; bare `/cot` shows status | On |
+| ✋ → ✅ reactions | `silentTurnReactions` | No per-chat command | Card-off chats get reactions automatically; `silentTurnReactions: true` silences even those |
+| Card controls | `hiddenStreamingCardButtons` (choose which buttons to hide) | — | All shown |
+| Card pinning | `pinStreamingCard` (default off) | `/card pin off｜on｜status` | Off |
+
+A per-chat override wins over the bot-level default and affects only that chat.
+
+**`/card` and `/cot` are admin-only (`allowedUsers`, canOperate)**, status subcommands included. The reason: Lark cards have no "show different views per person" capability — these switches are bot-level / chat-wide, so one change alters what **everyone in the group** sees; guests (talk access, no operate rights) get an "authorized users only" notice.
+
+**Quiet preset** (Dashboard **Bot Defaults** page, new in this batch): one click performs a **one-time linked write** — `thinkingCard:false` + `silentTurnReactions:true` + `disableStreamingCard:true` — for groups that only want the conclusion, quietly. It is **not a persistent binding**: it simply writes those three existing switches to the values above once and shows a toast; turning the preset off later does **not** revert the three values, so re-enable each switch manually if you want it back.
+
 ## Pinning The Current Live Card
 
 When a bot enables `pinStreamingCard`, Botmux tries to pin the **current public live-status card** to the top of the chat so the close-session and terminal entry points stay easy to reach.
@@ -1843,6 +1873,8 @@ Session info is inferred automatically from ancestor-process markers, so the age
 | `botmux history [--limit N]` | Pull the session history (JSON) |
 | `botmux quoted <message_id>` | Pull a single quoted message (JSON) |
 | `botmux schedule add/list/remove/pause/resume/run` | Manage scheduled tasks |
+| `botmux session rename "<title>"` | Rename the **current session's** botmux canonical title (the session is auto-detected; no `--session-id` or any way to target another session). Dashboard and the `/sessions` list update instantly, and the CLI-native session name is synced best-effort. The Lark group name and omt topic name are unchanged (no platform API for topic titles). Recommended shape "type | subject", up to 200 characters |
+| `botmux chat rename <new group name> [--proactive]` | Rename the **Lark group that hosts the current session** (in a topic group this is the whole `oc_` group, visible across every topic and to every member). `--proactive` is for agent-initiated renames on a phase change, with a 10-minute debounce |
 
 
 
@@ -1919,8 +1951,8 @@ botmux dashboard rotate   # Rotate the token and print the new URL
 
 * **Sessions**: lists active + closed sessions across all bots, filterable by CLI / status / adopt / text. Open a detail view to copy various IDs, close sessions, and multi-select batch close; "locate topic" has the bot post an **@-mention of the session owner** in the original topic (a bare @, no other text) to help you jump back to the context. Chat-scope session rows also carry a Lark group AppLink straight to the chat.
 * **Schedules**: creates, edits, and manages scheduled tasks, including Run now, Pause/Resume, multiple target chats, execution logs, and testable [Bash preconditions](/botmux/en/schedule.md#bash-preconditions-dashboard).
-* **Groups**: one-click create a new group (auto @-notifies the invited user), add bots to a group, and auto-transfer group ownership; disband groups and have bots leave groups (associated sessions are cleaned up automatically).
-* **Team / Roles / Bot Defaults**: the Team panel handles [cross-deployment collaboration](/botmux/en/roles.md) (invite someone else's deployment into your team, create cross-deployment groups); Roles manages each bot's per-group persona; Bot Defaults (Bot configuration) sets default behaviors (new-group on-call, card signature, **default role**, etc.).
+* **Groups**: one-click create a new group (auto @-notifies the invited user), add bots to a group, and auto-transfer group ownership; disband groups and have bots leave groups (associated sessions are cleaned up automatically). The group **Manage** modal also handles **authorization management**: multi-select **member batch grant** (up to 50 at a time, live membership re-check before writing, optional message quota and duration), **authorize the whole group in one click** (the Dashboard equivalent of bare `/grant`), **block** an individual member, and toggle on-call per bot.
+* **Team / Roles / Bot Defaults**: the Team panel handles [cross-deployment collaboration](/botmux/en/roles.md) (invite someone else's deployment into your team, create cross-deployment groups); Roles manages each bot's per-group persona; Bot Defaults (Bot configuration) sets default behaviors (new-group on-call, group mention policy, the **`blockedUsers` block list**, the **quiet preset** — a one-time write that turns off streaming cards / thinking bubbles and silences ✋✅ reactions, not a persistent binding, card signature, **default role**, etc.).
 * **Workflows control panel**: Run List polling; Run Detail shows the summary / dangling red zone / node-activity / event timeline / concurrent-execution timeline; you can **cancel a run** directly.
 * **Settings / System & Maintenance**: authenticated administrators can manage **Start the botmux background service at boot**.
 
@@ -2228,11 +2260,13 @@ Check these in order (PersonalAgent comes configured correctly by default; norma
 
 ### B. Others can't use it / auth card
 
-botmux has two permission layers (see [permissions](#how-are-permissions-divided-who-can-operate-it)): **talk permission** (who can ask) and **operate permission** (who can `/cd` `/restart` / tap buttons). By default only the owner has talk permission, so others get refused / see an auth card.
+botmux has two permission layers (the full layer model is in [Permissions & Access](/botmux/en/permissions.md); quick reference below in [How are permissions divided](#how-are-permissions-divided-who-can-operate-it)): **talk permission** (who can ask) and **operate permission** (who can `/cd` `/restart` / tap buttons). By default only people on the `allowedUsers` list have talk permission, so others get refused / see an auth card. **Being added to a group does not authorize any member.**
 
-* **Let a whole group use it**: give the bot `allowedChatGroups` (everyone in that group can talk), or authorize a specific group with `/grant`.
-* **Group @ policy** (must-@ vs no-@): multi-person groups require @ by default; no-@-in-topic / no-@-whole-group can be configured in the group @ policy. Note a 1-on-1 "you + 1 bot" group is @-free already.
+* **Let a whole group use it**: send bare `@bot /grant` in the group (writes `allowedChatGroups`; everyone takes effect immediately, no quota), or use **authorize the whole group in one click** in Dashboard **Groups → Manage**; no need to add people one by one.
+* **Trial access for specific people**: `@bot /grant @someone` opens a card defaulting to 3 messages / 1 hour, with quota and duration adjustable on the card; the Dashboard group-member modal also supports multi-select **batch grant** (up to 50).
+* **Group @ policy** (must-@ vs no-@): multi-person groups require @ by default; `/mention-mode topic|never|ambient` changes it, and the four modes plus the 8 no-@ exceptions are explained in [Mention Policy](/botmux/en/mention-mode.md). A 1-on-1 "you + 1 bot" group is @-free already.
 * **On-call scenario** (a new group per ticket, everyone asks @-free): see [On-Call Mode](/botmux/en/oncall.md).
+* **Block someone**: Dashboard **Bot Config → `blockedUsers`** — denied globally in groups and DMs, with no more request cards.
 
 ### C. Terminal has output but nothing sent to Lark
 
@@ -2295,7 +2329,27 @@ It keeps running, and there is **currently no idle-TTL automatic reclamation**. 
 
 ## How are permissions divided? Who can operate it?
 
-Three layers: `allowedChatGroups` / `globalGrants` grant **conversation rights** (everyone in the group can ask); `allowedUsers` grants **operation rights** (only the owner can `/cd`, `/restart`, `/close`, click buttons). When `allowedChatGroups` is configured, `allowedUsers` must have at least one owner.
+Quick reference: `allowedUsers` grants **operate rights** (owner and admins — `/cd`, `/restart`, `/close`, card buttons, and changing `/card`, `/cot`, `/mention-mode`); `allowedChatGroups` (bare `/grant`, whole group, no quota), on-call (whole group, always allowed + directory bound), and `chatGrants` / `globalGrants` (per person, default 3 messages / 1 hour) grant **talk rights**; `blockedUsers` is the global deny that precedes every allow leg. Layers, quotas, expiry, and request cards are fully documented in [Permissions & Access](/botmux/en/permissions.md).
+
+## How do I let the whole group use it without authorizing people one by one?
+
+Send bare `@bot /grant` (equivalent to `/grant all`) in the group: it adds the group to `allowedChatGroups` in one step, so everyone in the group can talk immediately, with no quota and no expiry; new members take effect automatically and leaving the group revokes access. Revoke with bare `/revoke`. In a topic group it is keyed by the `oc_` group and covers all its topics. Dashboard **Groups → Manage** also has **authorize the whole group in one click**. It grants talk only; operate rights remain with `allowedUsers`.
+
+## How do I give someone just a 3-message trial?
+
+`@bot /grant @someone` — the grant card defaults to **3 messages / 1 hour** per person. To set the count directly use `@bot /grant @someone 20`; both duration and quota are editable on the card (1 hour / 8 hours / 1 day / 7 days / permanent; leave the quota blank for unlimited).
+
+## What's the difference between on-call and bare `/grant`?
+
+Both grant talk only (never operate) and neither is quota-limited. The difference is the directory: `/oncall bind <dir>` also anchors the group to a working directory, so new topics skip repository picking and start immediately; bare `/grant` only opens talk and binds no directory. Use on-call for duty Q\&A, and `/grant` when the group just needs to ask in topics whose repo is already chosen.
+
+## Why must I @ the bot in a group? Can it answer without an @?
+
+In the default `always` mode, regular groups respond only to explicit @-mentions, which prevents bots from answering over each other in multi-bot / multi-person groups. Send `/mention-mode` in the group to change it: `topic` (no @ inside its own topics), `never` (no @ group-wide), `ambient` (no @, but yields when someone else is named). Changing it requires operate rights and works in regular groups only; 8 further no-@ exceptions exist (1-person-1-bot groups, the message listener, and more) — see [Mention Policy](/botmux/en/mention-mode.md).
+
+## Can I forbid people from adding this bot to groups?
+
+"Who can add the bot to a group" is controlled on the **Lark platform side** (app availability scope / who can add bots); botmux has no such switch and cannot fake one. Two things the bot side can do: ① turn off **Auto-start when added to a new group** (`autoStartOnGroupJoin`, Dashboard **Bot Defaults → Proactive Start** — and that gate itself still requires an authorized user in the group); ② keep the bot restricted — **being added is not authorization**, so a non-listed member @-mentioning it is blocked and the owner gets a request card instead. Whether the owner is auto-invited into new groups is controlled by `autoInviteOwnerOnGroupAdd` in `bots.json` (on by default).
 
 ## Can I ask a follow-up / interrupt a running session?
 
@@ -2698,6 +2752,60 @@ Compared to approaches like OpenClaw that are "rebuilt on top of an Agent SDK":
 
 
 ---
+url: /botmux/en/mention-mode.md
+---
+
+# Mention Policy (`mention-mode`)
+
+In a regular group, by default the bot responds only to messages that explicitly **@-mention it**. The mention policy controls when @ is *not* required; it is a routing rule for **human messages in regular groups** and has nothing to do with authorization — skipping @ never skips the talk gate, so someone without talk access is still blocked (see [Permissions & Authorization](/botmux/en/permissions.md)).
+
+## The four modes
+
+| Mode | Semantics |
+|------|-----------|
+| `always` (default) | In a multi-person group the bot responds **only when explicitly @-mentioned** |
+| `topic` | Top-level messages still need @; replies **inside a topic the bot already owns** need no @ (both shared topics in regular groups and its topics inside a topic group count) |
+| `never` | **@ never required**: anyone with talk access is answered in the group, including non-@ top-level messages (which directly create or resume a session). Suits dedicated-person groups and duty groups |
+| `ambient` | @ is not required, just like `never`, **but when a message @-mentions another specific member (person or bot) and does not @ this bot, the bot yields and stays silent** — someone else was explicitly called. `@all` does not count as naming someone, so the bot still responds. Suits the role of "default responder" in multi-bot / multi-person groups |
+
+* Two levels: the bot-level default `regularGroupMentionMode` (Dashboard **Bot Config → Group mention policy**) and the per-group override `chatMentionModes` (set by the in-group command); the per-group value wins.
+* **Regular groups only**: DMs never need @; topic groups are already topic-shaped, so the command replies "no need to set it there"; a session group created via `/group` is managed by the bot itself and rejects changes.
+
+## Commands
+
+Send in a regular group (in a multi-bot group @ the specific bot):
+
+```text
+@bot /mention-mode always
+@bot /mention-mode topic
+@bot /mention-mode never
+@bot /mention-mode ambient
+@bot /mention-mode status
+```
+
+* Querying (`status`, or no argument) only requires talk access; **changing the mode requires operate rights** (owner / `allowedUsers`).
+* A per-group change takes effect immediately, affects only that group, and never touches the bot-level default.
+
+## Mode is `always`, so why does it still answer without an @? — the 8 no-@ exceptions
+
+"Must be @-mentioned" is the main default rule, but the code also has a set of parallel no-@ clauses; matching any one of them makes the bot respond. When the bot "won't listen", it is almost always one of these:
+
+1. **A reply continuing a thread already addressed to this bot**: upstream routing has already decided the reply is directed at this bot (internal marker `replyRootId`; the typical case is a thread reply folded back into the group session), so it goes through without re-running the @ gate.
+2. **Substitute trigger**: the group has substitute mode on (`/substitute`); when a message @-mentions the configured substitute target, the configuring bot answers on its behalf.
+3. **Message-listener match**: once a [message-listening rule](/botmux/en/bots-json.md#group-message-listener) configured under Dashboard **Roles** matches, it fires per the rule — this clause is **independent of both the mention policy and the regular talk gate** (the listener has its own sender filters).
+4. **The mode is `never`**: the bot-level default or this group was switched to no-@-required.
+5. **The mode is `ambient` and the message does not @-mention anyone else**.
+6. **The mode is `topic` and the message is inside a topic the bot owns**.
+7. **No-@ slash commands**: commands configured in `commandTriggers` (e.g. `/solve` in some groups) also fire when sent bare in a regular group (top-level or inside an in-group thread); it only opens up allowlisted commands, not the whole group.
+8. **1-person-1-bot group**: when a group contains exactly 1 human and 1 bot, @ was never needed (decided live from group membership; the moment another member is @-mentioned the exception stops applying, preventing the old bot from grabbing the turn in the cache window right after a new bot is pulled in).
+
+Except for the message listener (clause 3), every clause still requires the sender to **have talk access**. In multi-bot groups where you want the bots not to talk over each other, prefer `ambient`: whoever is named answers.
+
+> Related: whether a reply lands in a new topic or the current session is controlled by `/reply-mode`; see [Slash Commands](/botmux/en/slash-commands.md).
+
+
+
+---
 url: /botmux/en/multi-bot.md
 ---
 
@@ -2809,6 +2917,8 @@ url: /botmux/en/oncall.md
 
 Add a bot to an on-call / duty / alert group and bind it to a project directory. Then **any member** of the group can @ the bot to ask questions — no need to pick a repository, no need to start a new session — going straight into that project directory to chat. Especially suited to "many people, asking anytime, all asking about the same project" scenarios like duty groups, alert groups, and cross-team Q\&A.
 
+> **Adding the bot to a group is not authorization by itself**: being added writes no allowlist entry. Anyone-in-the-group Q\&A takes effect only **once the on-call binding is in place** (or after a bare `/grant` opens the whole group); on an unbound, restricted bot, a non-listed member @-mentioning it is blocked and triggers a grant request card instead. See [Permissions & Access · Being added to a group is not authorization](/botmux/en/permissions.md#being-added-to-a-group-is-not-authorization).
+
 ## How to Enable (pick one of three)
 
 You can enable it **per group**, or set a default in the **bot config** so every group enables it automatically.
@@ -2821,7 +2931,7 @@ The fastest way — just send a line in the group:
 /oncall bind ~/projects/your-service
 ```
 
-This anchors **this bot** to that directory in the current group, and the initiator automatically becomes the owner. Binding is **per-bot** — it only affects this bot; bind several at once with `@bot1 @bot2 /oncall bind <path>`. Good for when you just spun up a group and want to use it immediately.
+This anchors **this bot** to that directory in the current group. Binding is **per-bot** — it only affects this bot; bind several at once with `@bot1 @bot2 /oncall bind <path>`. It requires operate rights (owner / `allowedUsers`). Good for when you just spun up a group and want to use it immediately.
 
 ### Option 2: Enable per group (Dashboard)
 
@@ -2850,14 +2960,14 @@ From then on, **all of the bot's unbound groups** automatically bind to this dir
 
 | Command | Description |
 |------|------|
-| `/oncall bind <path>` | Bind this bot to a project directory in the current group (multi-bot: `@bot1 @bot2 /oncall bind`); the initiator automatically becomes the owner |
-| `/oncall unbind` | Unbind (owner only) |
+| `/oncall bind <path>` | Bind this bot to a project directory in the current group; requires operate rights (owner / `allowedUsers`; multi-bot: `@bot1 @bot2 /oncall bind`) |
+| `/oncall unbind` | Unbind (operate rights required) |
 | `/oncall status` | View the current binding |
 
 ## Permission Tiers
 
-* **Everyone** in the group can talk to the bot (ask questions, check logs, read code)
-* Only the **owner** can switch session state (`/cd`, `/restart`, `/close`, clicking the streaming card buttons)
+* Once on-call is bound, **everyone** in the group can talk to the bot (ask questions, check logs, read code) — always allowed, never quota-limited
+* Only the **owner / admins** (`allowedUsers`) can switch session state (`/cd`, `/restart`, `/close`, clicking the streaming card buttons)
 * This prevents external group members from accidentally messing up the session
 
 > Want semi-trusted members' **changes to also never touch the real repo**? Enable the [File Sandbox](/botmux/en/sandbox.md) — all writes are isolated and only land after the owner reviews the diff.
@@ -2869,6 +2979,86 @@ In an on-call group, send `/schedule 每天9:00 检查昨天的报警趋势并�
 **Typical scenarios**: duty groups, alert groups (Argos alert analysis), cross-team consultation groups, on-call Q\&A.
 
 ![On-Call Mode demo](https://magic-builder.tos-cn-beijing.volces.com/uploads/1780419243198_oncall.png)
+
+
+
+---
+url: /botmux/en/permissions.md
+---
+
+# Permissions & Authorization
+
+botmux permissions answer two questions: **who can talk to the bot** (canTalk) and **who can change session state** (canOperate — `/cd`, `/restart`, `/close`, card buttons). There are several authorization layers, from "a few named admins" to "the whole group can ask freely". This page covers all of them in one place.
+
+## Authorization layers
+
+| Layer | Who gets access | Scope | Quota / expiry | Operate rights | How it is written |
+|-------|-----------------|-------|----------------|----------------|-------------------|
+| **Admins** `allowedUsers` | Listed members | Every group and DM of this bot | Long-lived, maintained by hand | Talk **and** operate | `botmux setup`, editing `bots.json`, `/botconfig set allowedUsers` in a group |
+| **Guest (per group)** `chatGrants` | Named members (people or bots) | Only the one group chosen when granting; in a topic group the grant is keyed by the `oc_` group and covers **all its topics** | **3 messages / 1 hour** by default, adjustable on approval | Talk only | `@bot /grant @someone` grant card; Dashboard member batch grant |
+| **Guest (global)** `globalGrants` | Named members | Any group | Same, optional quota and expiry | Talk only | "Grant global talk" on the owner-initiated grant card |
+| **Whole group open** `allowedChatGroups` | **Everyone in the group** (sender-independent; leaving the group revokes access automatically, new members take effect immediately) | One group | No quota, no expiry, until explicitly revoked | Talk only | Bare `/grant` in the group; Dashboard "authorize whole group" action |
+| **On-call** | Everyone in the group | One group | **Always allowed, never quota-limited** | Talk only; new topics go straight into the bound directory, skipping repo picking | `/oncall bind <dir>`; Dashboard on-call toggle |
+| **Open DMs** `p2pOpen` | Everyone inside the Lark app's availability scope | DMs only | — | Talk only | Bot config / `bots.json` |
+| **Open mode** | **Anyone** | Everywhere | — | Talk and operate | The fallback state when **none** of the lists above is configured; not recommended for long-term use |
+
+Notes:
+
+* A bot created through normal onboarding always has its owner in `allowedUsers`, so it is a **restricted** bot by default — only listed people can use it.
+* Team-trust legs (same-team peer bots / team bots / platform team members) grant talk only; see [Roles & Teams](/botmux/en/roles.md).
+* Field-level reference: [bots.json · Permissions and authorization](/botmux/en/bots-json.md).
+
+## Common operations
+
+| What you want | How |
+|---------------|-----|
+| Let **the whole group** ask (no quota) | `@bot /grant` (or `/grant all`) in the group; revoke with bare `/revoke`. In a topic group it is keyed by the `oc_` group and covers all topics |
+| Give **specific people** trial access for a few messages | `@bot /grant @Alice @Bob` — the bot replies with a grant card, defaulting to 3 messages / 1 hour per person |
+| Set the count directly | `@bot /grant @Alice 20` — 20 messages each; the duration is still picked on the card |
+| Fine-tune on the card | Duration: **1 hour / 8 hours / 1 day / 7 days / permanent**. Message quota: an integer from 1 to 1000; **leave blank for unlimited**. Whichever limit comes first ends the grant |
+| Revoke someone's grant | `@bot /revoke @Alice`: removes the per-group and global guest grants; **if the person is also on the `allowedUsers` admin list, that entry is removed as well** (the reply names the affected scopes). Revoking the owner themselves, or a revoke that would leave the bot with no admin, is refused |
+| Duty-group instant Q\&A without repo picking | `/oncall bind ~/projects/foo` — see [On-Call Mode](/botmux/en/oncall.md) |
+| Do it in bulk in the Dashboard | **Groups** page → the group's **Manage** modal: **member batch grant** (multi-select up to 50 members, live membership re-check before writing, optional quota and duration) and **authorize the whole group in one click** |
+
+Only owners / admins (`allowedUsers`) can run `/grant`, `/revoke`, on-call toggles, and management commands such as `/card`, `/cot`, `/mention-mode`. Graduated guests can only talk.
+
+## Being added to a group is not authorization
+
+**Pulling the bot into a group does not write any allowlist entry.** When the bot receives the "added to chat" event it does not open up talk access for that group:
+
+* On a **restricted bot** (one with an owner / allowlist — every bot created via onboarding is such a bot), a non-listed member @-mentioning the bot is **refused**, and the bot automatically sends the owner a **grant request card**. The owner approves in one click (after which the original message is replayed automatically, so the person doesn't need to resend it).
+* **Only a fully unconfigured open-mode bot** can be used by anyone (operate rights included). That is a fallback state, not something "being added to a group" grants.
+* "Auto-start when added to a group" (`autoStartOnGroupJoin`) is not an authorization either: it has its own gate — the group must contain at least one `allowedUsers` member before the bot auto-starts a session.
+
+Precisely controlling who can add the bot to groups belongs to the Lark platform side (app availability scope / who can add bots); see the FAQ at the bottom.
+
+## Block list `blockedUsers`
+
+The block list is a **sender-dimension global deny**, maintained on the Bot config page (Dashboard **Bot Config**), with a quick "block" action available in the group-member modal as well:
+
+* It applies to **both groups and DMs**; a blocked person is denied in on-call groups, whole-group-open groups, and team groups alike.
+* The deny leg runs **before every allow leg** — on-call, whole-group open, guest grants, team trust — so there is no "works again in another group" escape.
+* When a blocked person is rejected, **no grant request card** is sent to the owner (no approval-spam from someone you explicitly blocked).
+* **Owners / admins cannot be blocked** — the write entry refuses it (self-lockout guard).
+* The block list governs **talk access only**; the [message listener](/botmux/en/bots-json.md#group-message-listener) feature (rules that make a bot watch messages automatically) has its own matching configuration and is not affected by it.
+
+## Grant request cards
+
+On a restricted bot, when an unauthorized person explicitly @-mentions the bot in a group and the talk gate blocks them, a request card is sent to the owner by default (`autoGrantRequestCards`, on by default; can be turned off in Bot config, after which messages are blocked silently).
+
+* On the request card the owner can **Grant talk in this group** or **Deny**, adjusting quota and duration right on the card.
+* The owner-initiated `@bot /grant @someone` card additionally offers **Grant global talk** (effective in any group).
+* After approval, the message that triggered the request is replayed into the session automatically; the requester doesn't need to @ again.
+* Pending requests are throttled, so one person cannot spam cards.
+* **A rejected DM (p2p) is currently silent**: there is no owner present in that DM, and replying with a card would go to the stranger themselves (unusable for them, and it would expose the owner), so no card is sent.
+
+## Common questions
+
+* **On-call vs bare `/grant`?** Both grant talk only, never operate. On-call is always allowed with no quota and also binds the group to a working directory (new topics skip repo picking); `/grant` only opens talk and binds no directory.
+* **How do I give someone exactly 3 messages?** `@bot /grant @someone` produces the card with 3 messages / 1 hour as the defaults; pass a number after the mention or change it on the card.
+* **Does every new member need owner approval?** No — whole-group open (bare `/grant`) or on-call means anyone in the group can ask immediately; per-person grants and request cards exist for when you want to keep the gate.
+
+For more Q\&A see the [FAQ / Troubleshooting](/botmux/en/faq.md); for when @-mentioning is required, see [@ Policy](/botmux/en/mention-mode.md).
 
 
 
@@ -4015,6 +4205,8 @@ url: /botmux/en/schedule.md
 
 Supports three schedule types plus natural-language input. Tasks run at their configured execution position when due. **In group chats, the default is chat top level, even when the task is created inside a topic.** To continue in the current topic, explicitly pass `--topic` when creating the task through the CLI, or select the original topic under **Execution position** in the Dashboard.
 
+There are four execution positions: **chat top level** (the default; all top-level tasks in one group share the chat-scope session context), **a specified topic** (`--topic`, bound to one existing topic), **a new topic per run** (`--new-topic`, every run stands alone), and **a dedicated task topic** (opt-in; each task owns its own topic session — see below).
+
 ## Two Ways to Create
 
 * **Slash command** (quick): `/schedule 每日17:50 帮我看看AI圈有什么新闻`
@@ -4117,7 +4309,31 @@ botmux schedule add "每日17:30" "generate digest" --new-topic
 botmux schedule add "每日17:30" "generate digest" --deliver new-topic
 ```
 
-You can also edit a task on the Dashboard's **Schedules** page and use **Execution position** to choose the original topic, chat top level, or a new topic for every run.
+You can also edit a task on the Dashboard's **Schedules** page and use **Execution position** to choose the original topic, chat top level, a new topic for every run, or the task's dedicated topic.
+
+## A Dedicated Topic Per Task
+
+"A new topic per run" keeps every run of the same task unrelated; chat top level goes the other way, with all top-level tasks in one group sharing one chat-scope session. A **dedicated task topic** gives each task a topic session that belongs to it alone:
+
+* Every run of the same task lands in the **same topic**, so the context carries over — just like a topic-pinned task.
+* Different tasks in the same group use separate topics and are **isolated from one another, never sharing context** — a sentinel task and a daily-report task never end up in the same session history.
+* The topic is created **on the first fire**: a non-silent task posts a seed message (the "task started" banner) first, anchored as that topic's root; a silent task defers creation until the bot's first `botmux send`, exactly like "new topic per run" combined with silent.
+
+How to set it:
+
+* **Natural language**: prefix the prompt with the dedicated-topic keyword — `独立话题` / `专属话题` in Chinese, "dedicated topic" in English. It combines with the silent keyword in either order, for example:
+
+```bash
+/schedule 每日18:00 独立话题 summarize today's service health checks
+/schedule 工作日9:00 静默 专属话题 write the morning brief; speak up only on anomalies
+```
+
+* **Lark schedule card / Dashboard**: on the card, the execution-position button cycles **chat top level → new topic per run → dedicated task topic → chat top level**; the Dashboard **Schedules** form lets you pick the position directly.
+
+Limits and notes:
+
+* **Single-group tasks only**; a multi-group task cannot choose the dedicated task topic.
+* The per-task model behaves exactly like `--topic`: it applies only on the first fire that creates the session; later runs reuse the model that session started with (see the next section).
 
 ## Follow the Active Topic
 
@@ -4165,7 +4381,7 @@ The Dashboard "Schedules" page has both fields too; empty means "follow the bot 
 | Execution position | Effect |
 | --- | --- |
 | `--new-topic` | Every run starts a new session, so the model applies **every time** |
-| `--topic` / `--top-level` | Applies on the run that creates the session; later runs reuse it with the model it started with |
+| Dedicated task topic / `--topic` / `--top-level` | Applies on the run that creates the session; later runs reuse it with the model it started with |
 
 Use `--new-topic` when it must apply on every run. Both the CLI and the Dashboard say which case you are in when you save.
 
@@ -4178,7 +4394,7 @@ Supported CLIs are Codex, Claude Code, Grok and TraeX (the same gate as the trig
 /schedule remove|enable|disable|run <id>
 ```
 
-> Execution behavior: the execution position determines the target first. With an explicit `--topic`, an active session in the target topic receives the prompt directly (no new worker); otherwise, a new worker starts in the task's saved working directory. Chat-top-level tasks select a session according to the bot/chat session mode. `--new-topic` uses a fresh session for every run; combined with `--silent`, it creates the topic only when the first `botmux send` needs to deliver content.
+> Execution behavior: the execution position determines the target first. With an explicit `--topic`, an active session in the target topic receives the prompt directly (no new worker); otherwise, a new worker starts in the task's saved working directory. Chat-top-level tasks select a session according to the bot/chat session mode. `--new-topic` uses a fresh session for every run; combined with `--silent`, it creates the topic only when the first `botmux send` needs to deliver content. A dedicated task topic creates the task's own topic on its first fire (a non-silent run posts a seed message anchored as the root; a silent run defers materialization to the first `botmux send`), and every later run is appended to that same session.
 
 
 
@@ -4217,15 +4433,32 @@ The status indicator at the top of the streaming card:
 
 Each reply creates a **new** streaming card; the previous card freezes at its final state, making it easy to review history.
 
+## The four names of a session
+
+"I renamed it — why didn't the name change in Lark?" A session carries four name layers at once, and each is independent:
+
+| Layer | What it is | Who changes it / how |
+|-------|------------|----------------------|
+| **Lark group name** (the `oc_` group) | The name of the group itself, visible to everyone in it | Run `botmux chat rename "New group name"` from inside a session (the `botmux-chat-rename` skill; an agent renaming proactively on a phase change adds `--proactive`, with a 10-minute debounce). This renames the **whole group**: in a topic group every topic and every member sees the new name |
+| **Lark topic name** (`omt`) | The name a topic shows in Lark's topic list | **Cannot be changed**: the Lark Open Platform has no topic-title API, so the topic list always shows the topic's **first message**. This is a platform limitation — don't expect botmux to rename it |
+| **botmux canonical title** | The session title shown across Dashboard views and in the `/sessions` list | Humans send `/rename <title>` in the group (talk access suffices); agents inside a session use `botmux session rename "<title>"` (see below). Up to 200 characters; Dashboard and lists update instantly |
+| **CLI-native session name** | The resume-list name kept by Claude Code / Codex / other CLIs | botmux syncs it **best-effort** when renaming; when the CLI is offline or doesn't support native renaming it simply isn't synced, which doesn't affect the botmux title |
+
+`botmux session rename` is the new in-session primitive from this batch:
+
+* It works **only inside a session**; the session id is read solely from the session environment, and it takes **no `--session-id`-style argument** — you cannot rename someone else's session.
+* Recommended title shape is "type | subject", e.g. `Debug | payment-link timeout` (the `botmux-session-rename` skill).
+* It changes **only the botmux/Dashboard title**: the Lark group name is untouched (that's `botmux chat rename`), and the Lark omt topic name cannot be changed by the platform.
+
 ## Permission model (three tiers)
 
 | Tier | Capabilities | Controlled by |
 |------|------|---------|
-| **Talk (canTalk)** | Ask questions, view logs, read code | `allowedChatGroups` (everyone in the group) / `globalGrants` (global list) / `/grant` |
-| **Operate (canOperate)** | Switch directory `/cd`, `/restart`, `/close`, click card buttons | `allowedUsers` (owner list) |
-| **Owner-only** | `/grant` / `/revoke` to authorize others | owner |
+| **Talk (canTalk)** | Ask questions, view logs, read code | Several allow legs: `allowedUsers`, `allowedChatGroups` (everyone in the group), quota-scoped `chatGrants` / `globalGrants`, on-call, open mode; plus the `blockedUsers` global deny |
+| **Operate (canOperate)** | Switch directory `/cd`, `/restart`, `/close`, `/card`, `/cot`, `/mention-mode`, click card buttons | `allowedUsers` (owner + admin list); in open mode everyone passes |
+| **Management commands** | `/grant` / `/revoke` to authorize others, on-call toggles | owner / admins (`allowedUsers`) |
 
-This tiered model lets you confidently add the bot to an on-call group: everyone can ask, but only the owner can change session state, and an external member clicking by mistake won't mess up the session.
+This tiered model lets you confidently add the bot to an on-call group: everyone can ask, but only admins can change session state, and an external member clicking by mistake won't mess up the session. For the full layer model (quota, expiry, "being added ≠ authorized", block list, grant request cards) see [Permissions & Access](/botmux/en/permissions.md).
 
 ## Common confusions
 
@@ -4233,7 +4466,7 @@ This tiered model lets you confidently add the bot to an on-call group: everyone
 * **A new group / topic can't pull in earlier chat**: a new session starts clean by default. To have it read group history, just say "look at the earlier chat history" (the bot needs group-message read permission, see [FAQ](/botmux/en/faq.md)).
 * **Switch the underlying CLI while keeping context**: not possible today — there's **no lossless hot-swap across CLIs**; native session history isn't translated into another CLI. To switch CLIs, start a new bot / session and have the old bot emit a handoff summary. ([`/relay`](/botmux/en/relay.md) moves the **same session** to another group without changing the CLI; [`/adopt`](/botmux/en/adopt.md) attaches an existing local tmux/zellij / resumable session into Lark, also without changing the CLI.)
 
-**Next**: permission details in [FAQ · permissions](/botmux/en/faq.md); moving a session to another group in [Relay](/botmux/en/relay.md).
+**Next**: permission details in [Permissions & Access](/botmux/en/permissions.md) and the [FAQ](/botmux/en/faq.md); the mention policy in [Mention Policy](/botmux/en/mention-mode.md); moving a session to another group in [Relay](/botmux/en/relay.md).
 
 
 
@@ -4318,8 +4551,9 @@ Just send these commands directly in a topic, and the daemon intercepts and hand
 | `/fork --create <group name>` | Clone the current session into a freshly-created group instead of a sub-topic |
 | `/rename <title>` | Rename this Botmux session and sync the running Codex/Claude native session name |
 | `/fork --create <new group name>` | Clone the current idle session into a newly-created group while leaving the source session untouched (Claude family, Codex terminal, or TraeX terminal mode; Hybrid RPC / external app-server sessions are unsupported; invoke inside the source session) |
-| `/card` | Manually summon the current session's streaming card (can summon and restore live refresh even when streaming is off; in private-card mode, sends a static snapshot visible only to authorized users instead). `/card off` and `/card on` toggle streaming cards for this chat; `/card pin off`, `/card pin on`, and `/card pin status` control the per-chat streaming-card Pin override |
-| `/cot` | Thinking-process message switch: `/cot off` mutes this chat's thinking bubble, `/cot on` restores it, `/cot show` summons a one-off peek at the current turn's bubble while the switches are off, `/cot status` reports the state (bot-level master switch `thinkingCard`, on by default; supports claude-code / codex / traex) |
+| `/card` | Manually summon the current session's streaming card (can summon and restore live refresh even when streaming is off; in private-card mode, sends a static snapshot visible only to authorized users instead). `/card off` and `/card on` toggle streaming cards for this chat; `/card pin off`, `/card pin on`, and `/card pin status` control the per-chat streaming-card Pin override. `allowedUsers` only (the switch affects the whole chat — Lark has no per-person card view) |
+| `/cot` | Thinking-process message switch: `/cot off` mutes this chat's thinking bubble, `/cot on` restores it, `/cot show` summons a one-off peek at the current turn's bubble while the switches are off, `/cot status` reports the state (bot-level master switch `thinkingCard`, on by default; supports claude-code / codex / traex). `allowedUsers` only |
+| `/mention-mode [always\|topic\|never\|ambient\|status]` | The regular-group mention policy: when the bot answers without an @. Querying needs talk access, changing needs operate rights; **regular groups only** (rejected in DMs, topic groups, and session groups). The four modes and the 8 no-@ exceptions are explained in [Mention Policy](/botmux/en/mention-mode.md) |
 | `/term` | Get the operable (write-enabled) terminal link for this session, delivered privately to the owner (visible-to-you in-chat, falling back to DM in topic/p2p — never exposed in the group) |
 | `/quote` | Pop a picker of this chat's topics; choosing one reads that topic's transcript into the current session. This fills a gap in Feishu itself — its quote-reply UI can only reference a single message, never a whole topic. The bot replies with a short acknowledgement (how many messages, time span, subject) and waits for your next instruction |
 | `/quote <instruction>` | Same, but runs your instruction as soon as you pick a topic, saving a round trip. The transcript is still injected explicitly labelled as material rather than instructions |
@@ -4400,6 +4634,13 @@ Controls how the bot opens a session when @mentioned. No argument (or `status`) 
 The group-level setting overrides the dashboard "Bot Config → Regular Group Mode" default.
 
 `/substitute [status|on|off]` — show or toggle **substitute mode** for the current group (owner-only to change).
+
+## 📢 Mention Policy (`/mention-mode`, regular groups only)
+
+`/mention-mode always|topic|never|ambient` switches this chat's policy; `/mention-mode status` (or no argument) reports it. Regular groups only: DMs never need @, and topic groups and `/group` session groups reject the command. Querying needs only talk access; changing needs operate rights (`allowedUsers`).
+
+* `always`: @ required to get an answer (default); `topic`: replies inside the bot's own topics skip @; `never`: no @ required anywhere in the group; `ambient`: no @ required, but the bot yields when a message explicitly @-mentions someone else.
+* Skipping @ never skips the permission gate, and 8 no-@ exceptions still apply (in-topic replies, substitute triggers, the message listener, and more) — see [Mention Policy](/botmux/en/mention-mode.md) for the full semantics.
 
 ## 📑 Chat Tabs
 
@@ -4490,13 +4731,15 @@ See [Session Relay](/botmux/en/relay.md) for details.
 
 `/oncall bind <path>` · `/oncall unbind` · `/oncall status`
 
-## 🔑 Usage Authorization (owner-only)
+## 🔑 Usage Authorization (owner / admins)
 
 | Command | Description |
 |------|------|
-| `@bot /grant @someone` | Authorize that person to chat in this group; `/grant` (without a person) authorizes **all members of this group** to chat |
-| `@bot /revoke @someone` | Revoke that person's chat permission in this group; `/revoke` (without a person) revokes the whole group's authorization |
+| `@bot /grant` (or `/grant all`) | Authorize **all members of this group** to talk (writes `allowedChatGroups`; no quota, no expiry; in a topic group keyed by the `oc_` group and covers all topics); bare `/revoke` removes it |
+| `@bot /grant @someone [N]` | Open a grant card authorizing **talk in this group** for specific members, defaulting to 3 messages / 1 hour each; the card offers 1 hour / 8 hours / 1 day / 7 days / permanent and a quota field (blank = unlimited). The owner-initiated card also offers **global talk**. `@bot /revoke @someone` removes the per-group and global guest grants together, and also removes the person from `allowedUsers` if listed there (revoking the owner themselves, or a revoke that would leave no admin, is refused; the reply names the affected scopes) |
 | `/vc-auth @someone` | While meeting-listening is on, temporarily trust an in-meeting instruction source; `/vc-auth revoke @someone` revokes; `/vc-auth list` shows current grants |
+
+Layers, quotas, grant request cards, and the block list are documented in [Permissions & Access](/botmux/en/permissions.md). Note: **being added to a group is not authorization** — a restricted bot still accepts only listed members.
 
 ## ⚙️ Remote Config & Skills (owner-only)
 
@@ -4807,6 +5050,19 @@ curl -X POST 'http://<lan-ip>:7891/webhook/conn_xxx/<token>' \
 ```
 
 Run this command and the bot is triggered in the group you chose, reading this JSON event.
+
+## Network prerequisites
+
+The connector HTTP endpoint is served by the Dashboard process (default port `7891`, the `<lan-ip>:7891` in the example above). **The caller must be able to reach that address from its own network:**
+
+* Intranet IPs and `m-` internal machine domains are reachable only inside the corporate intranet. Internal systems such as same-datacenter monitoring or intranet CI can call them directly.
+* A public sender (external SaaS, public CI / monitoring) cannot reach an intranet address directly, so the deployment must provide a public entry point, in one of two common ways:
+  1. **Public reverse proxy / gateway**: front the Dashboard listening port (default `7891`) with an HTTPS gateway, and set `BOTMUX_PUBLIC_URL` to that external base URL (see [environment variables](/botmux/en/env.md)) so the links Dashboard generates use that domain.
+  2. **Corporate network egress**: expose the Dashboard port to the caller's network through the Service Mesh HTTP Egress / egress gateway.
+
+This is a deployment-side prerequisite: botmux does **not** bundle a NAT-traversal tunnel, so public reachability must be provided by your own gateway / ops chain. Note that Feishu group messages themselves arrive over a long-lived connection and do not require the Dashboard to be publicly reachable; the requirement here applies only to external systems calling a connector.
+
+> Connectors currently deliver at group granularity (fixed group / request-specified / new group each time). **Session-anchor isolation** — each connector owning one fixed topic session so separate connectors never share context — is planned for a later release and is not supported in the current version.
 
 ## Verification method
 
