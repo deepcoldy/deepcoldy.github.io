@@ -1636,6 +1636,7 @@ Or write it directly into the bot's config:
 
 | Field | Description |
 |------|------|
+| `autoInviteOwnerOnGroupAdd` | On by default: when the bot is added to a new chat, its owner is automatically added to the same chat so the bot never ends up somewhere its owner cannot see; set `false` to turn it off (useful when an alert/on-call platform batch-adds the bot to incident chats). Applies only to the bot being passively added. Editable in Dashboard → Bot defaults → Proactive start or via `/botconfig set autoInviteOwnerOnGroupAdd off`; switching it back on clears the key to the default |
 | `autoStartOnGroupJoin` | When `true`, the bot starts working automatically when added to a new group containing at least one `allowedUsers` member (no @ needed). Requires subscribing the `im.chat.member.bot.added_v1` event for this app in the Lark admin console |
 | `autoStartOnGroupJoinPrompt` | Paired with the above: the first-round prompt for proactive start; if empty / blank, opens with an empty message and lets the bot read the group context itself. Meaningless when `autoStartOnGroupJoin` is off |
 | `autoStartOnNewTopic` | When `true`, the first message of every new topic in a topic group starts working automatically without an @ (no effect in plain groups). Defaults to passive (only @ triggers) |
@@ -2395,7 +2396,7 @@ In the default `always` mode, regular groups respond only to explicit @-mentions
 
 ## Can I forbid people from adding this bot to groups?
 
-"Who can add the bot to a group" is controlled on the **Lark platform side** (app availability scope / who can add bots); botmux has no such switch and cannot fake one. Two things the bot side can do: ① turn off **Auto-start when added to a new group** (`autoStartOnGroupJoin`, Dashboard **Bot Defaults → Proactive Start** — and that gate itself still requires an authorized user in the group); ② keep the bot restricted — **being added is not authorization**, so a non-listed member @-mentioning it is blocked and the owner gets a request card instead. Whether the owner is auto-invited into new groups is controlled by `autoInviteOwnerOnGroupAdd` in `bots.json` (on by default).
+"Who can add the bot to a group" is controlled on the **Lark platform side** (app availability scope / who can add bots); botmux has no such switch and cannot fake one. Two things the bot side can do: ① turn off **Auto-start when added to a new group** (`autoStartOnGroupJoin`, Dashboard **Bot Defaults → Proactive Start** — and that gate itself still requires an authorized user in the group); ② keep the bot restricted — **being added is not authorization**, so a non-listed member @-mentioning it is blocked and the owner gets a request card instead. Whether the owner is auto-invited into new groups is controlled by `autoInviteOwnerOnGroupAdd` (on by default): turn it off in Dashboard → Bot Defaults → Proactive Start, via `/botconfig set autoInviteOwnerOnGroupAdd off`, or in `bots.json`. Turn it off when an alert/on-call platform batch-adds the bot to incident chats and the owner should not be pulled into every one.
 
 ## Can I ask a follow-up / interrupt a running session?
 
