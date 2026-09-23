@@ -6,9 +6,9 @@
       "name": "Navigate the core read-only Dashboard pages",
       "project": "dashboard-smoke",
       "status": "success",
-      "durationMs": 39209,
+      "durationMs": 72737,
       "attempts": 1,
-      "stepId": "83928d88-dc5d-4b45-9d19-cffe4c8d25d9:steps:6",
+      "stepId": "a25480a0-ef89-423a-8d07-4cc70e072b88:steps:6",
       "reportPath": "dashboard/index.html",
       "previewPath": "previews/case-preview-dashboard-smoke-9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88.jpg"
     },
