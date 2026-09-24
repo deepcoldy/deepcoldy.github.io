@@ -1967,7 +1967,7 @@ session 信息通过祖先进程标记自动推断，agent 直接调：
 | `botmux bots invite --chat <chatId> --team <id> --agent <appId>...` | 往「你已在场」的群补入同团队 agent + 各自 owner（平台 app 不在时自动拉进群再补） |
 | `botmux history [--limit N]` | 拉会话历史（JSON） |
 | `botmux quoted <message_id>` | 拉被引用的单条消息（JSON） |
-| `botmux schedule add/list/remove/pause/resume/run` | 管理定时任务 |
+| `botmux schedule add/list/update/remove/pause/resume/run` | 管理定时任务 |
 | `botmux session rename "<标题>"` | 改**当前会话**的 botmux 规范标题（会话自动识别，不接受 `--session-id` 指定他人会话）；Dashboard 与 `/sessions` 列表即时更新，并 best-effort 同步 CLI 原生会话名。飞书群名、omt 话题名均不变（话题名平台无接口）。建议「类型｜具体事项」，最长 200 字符 |
 | `botmux chat rename <新群名称> [--proactive]` | 改**当前会话所在飞书群**的群名（话题群里是整个 `oc_` 群，全部话题/成员可见）；`--proactive` 用于 agent 因阶段变化主动改名，带 10 分钟防抖 |
 
@@ -4488,6 +4488,22 @@ Dashboard 的「定时任务」页也有这两个字段，留空即跟随 Bot �
 ```
 
 > 执行行为：任务先按执行位置确定目标。显式设置 `--topic` 时，若目标话题的会话还活着，prompt 直接注入现有会话（不另起 worker）；否则新拉一个 worker，使用任务保存的工作目录。群顶层任务按 Bot / 群的会话模式选择会话。`--new-topic` 每次使用全新会话；配合 `--silent` 时，仅在首次 `botmux send` 需要发送内容时创建话题。任务独立话题在首次触发时创建该任务专属话题（非静默先发种子消息并以其为话题 root，静默延迟到首次 `botmux send` 才物化），此后每次触发都续入这同一个会话。
+
+## 原地修改提示词
+
+修改已有任务时使用 `update`，无需先删除再创建：
+
+```bash
+botmux schedule update <id> --prompt-file report-prompt.md
+# 短提示词也可以直接传入（两种方式只能选一种）
+botmux schedule update <id> --prompt "新的完整提示词"
+```
+
+文件按 UTF-8 读取，保留换行。更新只修改 prompt，保留任务 ID、定时规则、启停状态、执行位置和运行记录；不触发补跑。已经开始的执行继续使用原 prompt，后续执行采用新版。输入或权限校验失败不会删除旧任务；更新使用与其他任务操作相同的加锁原子存储。
+
+在定时任务创建的无 owner 话题中，Botmux 通过宿主 daemon 验证当前操作者，无需向沙盒开放机器人配置或凭据。CLI 与 daemon 应配套升级；旧 daemon 缺少此授权能力时会明确拒绝，而不会删除任务或绕过验证。
+
+绑定了守护前置条件（precondition）的任务不能用 `update` 修改：前置条件记录了任务输入的校验哈希，而其定义文件保存在宿主侧、沙盒内无法重绑；直接改 prompt 会让任务之后每次触发都校验失败、静默停止。这类任务请在 Dashboard 的定时任务页修改。
 
 
 

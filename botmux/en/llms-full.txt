@@ -1919,7 +1919,7 @@ Session info is inferred automatically from ancestor-process markers, so the age
 | `botmux bots invite --chat <chatId> --team <id> --agent <appId>...` | Add same-team agents + their owners into a group you're already in (auto-adds the platform app first if absent) |
 | `botmux history [--limit N]` | Pull the session history (JSON) |
 | `botmux quoted <message_id>` | Pull a single quoted message (JSON) |
-| `botmux schedule add/list/remove/pause/resume/run` | Manage scheduled tasks |
+| `botmux schedule add/list/update/remove/pause/resume/run` | Manage scheduled tasks |
 | `botmux session rename "<title>"` | Rename the **current session's** botmux canonical title (the session is auto-detected; no `--session-id` or any way to target another session). Dashboard and the `/sessions` list update instantly, and the CLI-native session name is synced best-effort. The Lark group name and omt topic name are unchanged (no platform API for topic titles). Recommended shape "type | subject", up to 200 characters |
 | `botmux chat rename <new group name> [--proactive]` | Rename the **Lark group that hosts the current session** (in a topic group this is the whole `oc_` group, visible across every topic and to every member). `--proactive` is for agent-initiated renames on a phase change, with a 10-minute debounce |
 
@@ -4482,6 +4482,22 @@ Supported CLIs are Codex, Claude Code, Grok and TraeX (the same gate as the trig
 ```
 
 > Execution behavior: the execution position determines the target first. With an explicit `--topic`, an active session in the target topic receives the prompt directly (no new worker); otherwise, a new worker starts in the task's saved working directory. Chat-top-level tasks select a session according to the bot/chat session mode. `--new-topic` uses a fresh session for every run; combined with `--silent`, it creates the topic only when the first `botmux send` needs to deliver content. A dedicated task topic creates the task's own topic on its first fire (a non-silent run posts a seed message anchored as the root; a silent run defers materialization to the first `botmux send`), and every later run is appended to that same session.
+
+## Update a prompt in place
+
+Use `update` to change an existing task without deleting and recreating it:
+
+```bash
+botmux schedule update <id> --prompt-file report-prompt.md
+# For short prompts, use exactly one of these two input options.
+botmux schedule update <id> --prompt "The complete replacement prompt"
+```
+
+Files are read as UTF-8 with line breaks preserved. Only the prompt changes: the task ID, schedule, enabled state, execution position and run history remain intact. Updating does not trigger a run. Already dispatched runs keep their original prompt; subsequent runs use the replacement. Input or authorization failures do not delete the task. Updates use the same locked atomic storage as other task operations.
+
+For ownerless topics created by scheduled tasks, the host daemon authorizes the current caller without exposing bot configuration or credentials to the sandbox. Upgrade the CLI and daemon together: an older daemon without this authorization capability is rejected explicitly, without deleting the task or bypassing verification.
+
+A task bound to a protected precondition cannot be changed with `update`: the precondition records a hash of the task input, while its definition file is host-only and cannot be rebound from inside the sandbox. Rewriting the prompt would make every later fire fail validation and stop the task silently. Edit such tasks on the Dashboard scheduled-tasks page instead.
 
 
 
