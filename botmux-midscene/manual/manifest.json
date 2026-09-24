@@ -6,9 +6,9 @@
       "name": "Navigate the core read-only Dashboard pages",
       "project": "dashboard-smoke",
       "status": "success",
-      "durationMs": 62405,
+      "durationMs": 81351,
       "attempts": 1,
-      "stepId": "14834461-d2e8-4469-a605-373497db9405:steps:6",
+      "stepId": "abe44fae-c3e8-402c-8c3a-8941d4cc4dc6:steps:6",
       "reportPath": "dashboard/index.html",
       "previewPath": "previews/case-preview-dashboard-smoke-9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88.jpg"
     },
@@ -17,10 +17,10 @@
       "name": "Claude basic bot flow",
       "project": "feishu-browser",
       "status": "failed",
-      "durationMs": 37458,
+      "durationMs": 654526,
       "attempts": 2,
-      "stepId": "88d4bc28-1559-41e3-8dc5-5b3c76392819:steps:0",
-      "reportPath": "feishu/midscene-e2e-20260924162245-41fe93a8.html",
+      "stepId": "f3f88a4e-fe9b-4879-82c9-061d81294dfd:steps:0",
+      "reportPath": "feishu/midscene-e2e-20260924163458-eae290f4.html",
       "previewPath": null
     },
     {
@@ -28,10 +28,10 @@
       "name": "Codex basic bot flow",
       "project": "feishu-browser",
       "status": "failed",
-      "durationMs": 37355,
+      "durationMs": 319440,
       "attempts": 2,
-      "stepId": "0934bb97-d3af-4c2a-9c25-bbf62c4b6209:steps:0",
-      "reportPath": "feishu/midscene-e2e-20260924162245-41fe93a8.html",
+      "stepId": "2481b290-1951-4a86-bdd5-1fde1f4f1848:steps:0",
+      "reportPath": "feishu/midscene-e2e-20260924163458-eae290f4.html",
       "previewPath": null
     },
     {
@@ -39,10 +39,10 @@
       "name": "Codex prompt submission",
       "project": "feishu-browser",
       "status": "failed",
-      "durationMs": 37489,
+      "durationMs": 307435,
       "attempts": 2,
-      "stepId": "f7ac4a62-d2d8-493d-84aa-4817335f9bdb:steps:0",
-      "reportPath": "feishu/midscene-e2e-20260924162245-41fe93a8.html",
+      "stepId": "5e4a1e29-e084-4587-bd6a-6f3d08208707:steps:0",
+      "reportPath": "feishu/midscene-e2e-20260924163458-eae290f4.html",
       "previewPath": null
     },
     {
