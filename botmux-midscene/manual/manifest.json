@@ -6,9 +6,9 @@
       "name": "Navigate the core read-only Dashboard pages",
       "project": "dashboard-smoke",
       "status": "success",
-      "durationMs": 43367,
+      "durationMs": 41607,
       "attempts": 1,
-      "stepId": "c471c530-a6c8-45d0-84fa-e874aac80cae:steps:6",
+      "stepId": "53c033bf-ac07-4f7c-9f28-2bb01176a200:steps:6",
       "reportPath": "dashboard/index.html",
       "previewPath": "previews/case-preview-dashboard-smoke-9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88.jpg"
     },
@@ -17,10 +17,10 @@
       "name": "Claude basic bot flow",
       "project": "feishu-browser",
       "status": "failed",
-      "durationMs": 424211,
+      "durationMs": 339225,
       "attempts": 2,
-      "stepId": "319d2018-f474-4e32-8b7c-90ca1723a4c9:steps:0",
-      "reportPath": "feishu/midscene-e2e-20260924172621-f6d8bedb.html",
+      "stepId": "4dca20ee-8d97-463d-919d-3d91e6c0148f:steps:0",
+      "reportPath": "feishu/midscene-e2e-20260924182455-584bdc88.html",
       "previewPath": null
     },
     {
@@ -28,10 +28,10 @@
       "name": "Codex basic bot flow",
       "project": "feishu-browser",
       "status": "failed",
-      "durationMs": 70016,
+      "durationMs": 264012,
       "attempts": 2,
-      "stepId": "1a0ae51b-5947-4c55-b117-a63ca0de0d38:steps:0",
-      "reportPath": "feishu/midscene-e2e-20260924172621-f6d8bedb.html",
+      "stepId": "4ab53ea0-fdd0-427e-b94a-00cf0e10ee74:steps:0",
+      "reportPath": "feishu/midscene-e2e-20260924182455-584bdc88.html",
       "previewPath": null
     },
     {
@@ -39,10 +39,10 @@
       "name": "Codex prompt submission",
       "project": "feishu-browser",
       "status": "failed",
-      "durationMs": 352766,
+      "durationMs": 238123,
       "attempts": 2,
-      "stepId": "0688b482-31ba-4838-a3a6-30000107814e:steps:0",
-      "reportPath": "feishu/midscene-e2e-20260924172621-f6d8bedb.html",
+      "stepId": "b0dbc116-b7c0-4fba-af99-bca4283935b6:steps:0",
+      "reportPath": "feishu/midscene-e2e-20260924182455-584bdc88.html",
       "previewPath": null
     },
     {
