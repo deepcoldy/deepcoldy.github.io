@@ -6,11 +6,44 @@
       "name": "Navigate the core read-only Dashboard pages",
       "project": "dashboard-smoke",
       "status": "success",
-      "durationMs": 43467,
+      "durationMs": 75246,
       "attempts": 1,
-      "stepId": "8a13fe4f-ec6b-4099-b6c5-4f2db9debbaf:steps:6",
+      "stepId": "e184b8f9-9998-43a1-8d41-d5c9725a9b7e:steps:6",
       "reportPath": "dashboard/index.html",
       "previewPath": "previews/case-preview-dashboard-smoke-9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88.jpg"
+    },
+    {
+      "caseId": "73dbd99e26ee2aa7b84f2a220451e7ccf3e2a3f5ff5ee012671c5141ac19dd08",
+      "name": "Claude basic bot flow",
+      "project": "feishu-browser",
+      "status": "failed",
+      "durationMs": 229362,
+      "attempts": 2,
+      "stepId": "aaef21e0-656c-4511-8c9c-1033ad7b20ee:steps:0",
+      "reportPath": "feishu/midscene-e2e-20260924172656-32e2a90a.html",
+      "previewPath": null
+    },
+    {
+      "caseId": "8ec257ffd8f73327e9e99aba017f571d2e6f38ceecb5570577f9bef1e4e4c398",
+      "name": "Codex basic bot flow",
+      "project": "feishu-browser",
+      "status": "failed",
+      "durationMs": 426461,
+      "attempts": 2,
+      "stepId": "2061088b-bf28-46cb-8ce6-8e0e39bc6ea2:steps:0",
+      "reportPath": "feishu/midscene-e2e-20260924172656-32e2a90a.html",
+      "previewPath": null
+    },
+    {
+      "caseId": "a8ae208dde87c90466a9a14e09b2104d6dcc74dd8431cd95e1fdddf89621b987",
+      "name": "Codex prompt submission",
+      "project": "feishu-browser",
+      "status": "failed",
+      "durationMs": 269703,
+      "attempts": 2,
+      "stepId": "56df64e5-27da-43ab-8219-8398b2d994d7:steps:0",
+      "reportPath": "feishu/midscene-e2e-20260924172656-32e2a90a.html",
+      "previewPath": null
     },
     {
       "name": "Aiden basic bot flow",
@@ -22,34 +55,7 @@
       "stepId": null
     },
     {
-      "name": "Claude basic bot flow",
-      "project": "feishu-browser",
-      "status": "not-run",
-      "attempts": 0,
-      "reportPath": null,
-      "previewPath": null,
-      "stepId": null
-    },
-    {
       "name": "CoCo basic bot flow",
-      "project": "feishu-browser",
-      "status": "not-run",
-      "attempts": 0,
-      "reportPath": null,
-      "previewPath": null,
-      "stepId": null
-    },
-    {
-      "name": "Codex basic bot flow",
-      "project": "feishu-browser",
-      "status": "not-run",
-      "attempts": 0,
-      "reportPath": null,
-      "previewPath": null,
-      "stepId": null
-    },
-    {
-      "name": "Codex prompt submission",
       "project": "feishu-browser",
       "status": "not-run",
       "attempts": 0,
@@ -77,33 +83,6 @@
     },
     {
       "name": "Aiden and CoCo collaboration",
-      "project": "feishu-browser",
-      "status": "not-run",
-      "attempts": 0,
-      "reportPath": null,
-      "previewPath": null,
-      "stepId": null
-    },
-    {
-      "name": "Claude basic bot flow",
-      "project": "feishu-browser",
-      "status": "not-run",
-      "attempts": 0,
-      "reportPath": null,
-      "previewPath": null,
-      "stepId": null
-    },
-    {
-      "name": "Codex basic bot flow",
-      "project": "feishu-browser",
-      "status": "not-run",
-      "attempts": 0,
-      "reportPath": null,
-      "previewPath": null,
-      "stepId": null
-    },
-    {
-      "name": "Codex prompt submission",
       "project": "feishu-browser",
       "status": "not-run",
       "attempts": 0,
