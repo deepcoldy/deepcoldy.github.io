@@ -2441,7 +2441,25 @@ It hasn't been verified on native Windows, but WSL2 should be fine.
 
 ## How do I upgrade?
 
-`botmux upgrade` — it routes by how you installed: a curl install gets its binary replaced in place, an npm install is handed back to `npm i -g botmux@latest`. curl users can equally just re-run the install command (also an in-place upgrade, and it won't write a second PATH line). The `botmux` wrapper version inside sessions always stays in sync with the daemon, so it doesn't need to be upgraded separately. Run `botmux restart` afterwards to pick up the new version.
+**Re-run the install command (curl), no matter how you originally installed** — this upgrades npm/pnpm global installs too:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/deepcoldy/botmux/master/install.sh | sh
+```
+
+It replaces the self-contained binary in place at `~/.botmux/bin/botmux`: the downloaded binary is smoke-run on this host first, and if it cannot run the installer fails explicitly and **preserves your existing version**; it is idempotent (no second PATH line) and never needs Node. Then open a **new terminal** and run `botmux restart` — the installer prepends `~/.botmux/bin` to PATH, and only a new shell guarantees `botmux` resolves to the new version (in an old npm user's current shell it may still point at the npm global directory). The `botmux` wrapper inside sessions always tracks the daemon version, so it needs no separate upgrade.
+
+**Installing a pinned version** (same mechanism for rollbacks / version pinning; the tag needs the `v` prefix):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/deepcoldy/botmux/master/install.sh | BOTMUX_VERSION=v3.18.8 sh
+```
+
+> ⚠️ `BOTMUX_VERSION` must precede the `sh` on the **right** side of the pipe. Written as `BOTMUX_VERSION=… curl … | sh`, the variable only reaches curl — `sh` never sees it and the installer silently falls back to latest.
+
+### Why can't I npm-upgrade from a release older than v3.18.0?
+
+Starting with v3.18.0 the npm package changed form, from "Node + `dist/` sources" to a **platform binary subpackage**, and `node-pty` left `dependencies`. Old builds shipped a `botmux upgrade` that simply delegated to npm; when npm installs across that boundary it prunes `node-pty` from the old tree, while the old daemon's first restart step is still `node …/dist/cli.js restart` — and that file still statically imports `node-pty`. The driver dies on `ERR_MODULE_NOT_FOUND` and the whole daemon fleet never comes back, even though output may already have said "restarting to apply". The curl route drops in the new binary and points the launcher at it without touching the old directory or depending on what npm prunes, which makes it the one reliable way across this boundary. On current (≥3.18) binary installs `botmux upgrade` is equivalent to re-running curl; when you don't remember your install form, curl always works.
 
 ## CoCo loses messages while busy?
 
@@ -3908,9 +3926,9 @@ curl -fsSL https://raw.githubusercontent.com/deepcoldy/botmux/master/install.sh 
 
 botmux is a **self-contained single-file binary** with its runtime embedded — **neither installing nor running it needs Node**. It installs to `~/.botmux/bin/botmux` (override with `BOTMUX_INSTALL_DIR`), picks the binary for your OS/arch, verifies its SHA-256, and adds `~/.botmux/bin` to the startup file your shell actually reads (zsh / bash / fish each get the correct one), so **a new terminal has the command**. Supported: linux / macOS × x64 / arm64, with musl builds selected automatically on Alpine and similar. **On Windows, install inside WSL2.**
 
-> 🔁 **Upgrading**: `botmux upgrade` (replaces the binary in place), or just re-run the curl command — also an in-place upgrade, and it won't append a second PATH line. To install a specific version: `BOTMUX_VERSION=v3.18.8 curl … | sh`.
+> 🔁 **Upgrading is always the curl command**, regardless of how you originally installed (npm/pnpm global installs included): re-run the command above to replace the binary in place — it won't append a second PATH line — then open a new terminal and run `botmux restart`. To install a specific version: `curl -fsSL https://raw.githubusercontent.com/deepcoldy/botmux/master/install.sh | BOTMUX_VERSION=v3.18.8 sh` (the variable must precede the `sh` on the right side of the pipe to take effect). ⚠️ **Do not npm-upgrade from releases older than v3.18.0** — crossing the Node-sources → binary form boundary leaves the daemon unable to restart; see [FAQ · How do I upgrade?](/botmux/en/faq.md#how-do-i-upgrade).
 
-> 📦 **npm works too** (`npm install -g botmux`, needs Node ≥ 22 to run the install itself): the npm package carries **the same self-contained binary** (verified byte-identical to the GitHub Release asset by SHA-256; only the one matching your os/arch is installed), and its postinstall points `~/.botmux/bin/botmux` at it and writes PATH the same way. The only difference is **who installs it and who upgrades it later**: the npm path needs Node and hands upgrades back to `npm i -g botmux@latest`; the curl path never touches Node. Once running, the two are identical.
+> 📦 **npm works too** (`npm install -g botmux`, needs Node ≥ 22 to run the install itself): the npm package carries **the same self-contained binary** (verified byte-identical to the GitHub Release asset by SHA-256; only the one matching your os/arch is installed), and its postinstall points `~/.botmux/bin/botmux` at it and writes PATH the same way. The only difference is **who installs it**: the npm path needs Node, the curl path never touches it; **upgrades always re-run the curl command, no matter how you installed** (npm-upgrading from a pre-v3.18.0 install across that form boundary can leave the daemon unable to restart — see [FAQ · How do I upgrade?](/botmux/en/faq.md#how-do-i-upgrade)). Once running, the two are identical.
 
 Running botmux itself needs no Node, but you do need **at least one AI coding CLI installed and signed in locally** (`claude` / `codex` / `cursor-agent` / `gemini` / `opencode` / `coco` / `agy`, etc. — each with its own runtime requirements). **The default session backend is tmux (≥3.x), so install it** — when it's unavailable botmux hard-gates with a card instead of silently downgrading to pty; only pick an explicit backend (`BACKEND_TYPE=pty` or per-bot `backendType`: `pty`/`herdr`/`zellij`) if you truly need a tmux-free environment (riff is a cloud agent and doesn't occupy a local backend).
 
