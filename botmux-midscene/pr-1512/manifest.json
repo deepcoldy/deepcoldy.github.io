@@ -6,9 +6,9 @@
       "name": "Navigate the core read-only Dashboard pages",
       "project": "dashboard-smoke",
       "status": "success",
-      "durationMs": 44158,
-      "attempts": 2,
-      "stepId": "55d06dc3-71fb-4a0c-bde4-7949897099f4:steps:6",
+      "durationMs": 43467,
+      "attempts": 1,
+      "stepId": "8a13fe4f-ec6b-4099-b6c5-4f2db9debbaf:steps:6",
       "reportPath": "dashboard/index.html",
       "previewPath": "previews/case-preview-dashboard-smoke-9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88.jpg"
     },
@@ -77,6 +77,33 @@
     },
     {
       "name": "Aiden and CoCo collaboration",
+      "project": "feishu-browser",
+      "status": "not-run",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Claude basic bot flow",
+      "project": "feishu-browser",
+      "status": "not-run",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Codex basic bot flow",
+      "project": "feishu-browser",
+      "status": "not-run",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Codex prompt submission",
       "project": "feishu-browser",
       "status": "not-run",
       "attempts": 0,
