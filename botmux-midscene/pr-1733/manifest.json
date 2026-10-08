@@ -6,9 +6,9 @@
       "name": "Navigate the core read-only Dashboard pages",
       "project": "dashboard-smoke",
       "status": "success",
-      "durationMs": 38725,
-      "attempts": 1,
-      "stepId": "e8731419-7309-46ad-8855-a6c9b83278b4:steps:6",
+      "durationMs": 41578,
+      "attempts": 2,
+      "stepId": "e32c665c-9b17-48ce-a3c4-dc24eab65c54:steps:6",
       "reportPath": "dashboard/index.html",
       "previewPath": "previews/case-preview-dashboard-smoke-9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88.jpg"
     },
@@ -17,10 +17,10 @@
       "name": "Claude basic bot flow",
       "project": "feishu-browser",
       "status": "failed",
-      "durationMs": 52505,
+      "durationMs": 53108,
       "attempts": 2,
-      "stepId": "0f715852-cc19-44b9-bd7b-ac96534db996:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261008173356-1aa9655e.html",
+      "stepId": "0dd6530b-118e-41fe-9a6a-399d56defc3b:steps:0",
+      "reportPath": "feishu/midscene-e2e-20261008175237-2a3428c0.html",
       "previewPath": null
     },
     {
@@ -28,10 +28,10 @@
       "name": "Codex basic bot flow",
       "project": "feishu-browser",
       "status": "failed",
-      "durationMs": 54604,
+      "durationMs": 175956,
       "attempts": 2,
-      "stepId": "518d151d-0ca8-4ce2-b4aa-1d9dc644aef9:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261008173356-1aa9655e.html",
+      "stepId": "0ff807fb-7280-403f-ae49-3a8fb6ee7a65:steps:0",
+      "reportPath": "feishu/midscene-e2e-20261008175237-2a3428c0.html",
       "previewPath": null
     },
     {
@@ -39,10 +39,10 @@
       "name": "Codex prompt submission",
       "project": "feishu-browser",
       "status": "failed",
-      "durationMs": 195820,
+      "durationMs": 206455,
       "attempts": 2,
-      "stepId": "3d6a30c3-f444-4de5-9c2b-c73a30a00da1:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261008173356-1aa9655e.html",
+      "stepId": "cc0a38c0-6e82-4256-979b-d2b0268b026c:steps:0",
+      "reportPath": "feishu/midscene-e2e-20261008175237-2a3428c0.html",
       "previewPath": null
     },
     {
