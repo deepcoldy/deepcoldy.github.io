@@ -6,9 +6,9 @@
       "name": "Navigate the core read-only Dashboard pages",
       "project": "dashboard-smoke",
       "status": "success",
-      "durationMs": 39984,
+      "durationMs": 38725,
       "attempts": 1,
-      "stepId": "0dde290c-246d-4b9c-938f-ae1d6a84eab4:steps:6",
+      "stepId": "e8731419-7309-46ad-8855-a6c9b83278b4:steps:6",
       "reportPath": "dashboard/index.html",
       "previewPath": "previews/case-preview-dashboard-smoke-9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88.jpg"
     },
@@ -17,10 +17,10 @@
       "name": "Claude basic bot flow",
       "project": "feishu-browser",
       "status": "failed",
-      "durationMs": 54437,
+      "durationMs": 52505,
       "attempts": 2,
-      "stepId": "95d8e9bc-eacc-458a-bb98-40b2a25ccbf0:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261007135828-9ebbcad2.html",
+      "stepId": "0f715852-cc19-44b9-bd7b-ac96534db996:steps:0",
+      "reportPath": "feishu/midscene-e2e-20261008173356-1aa9655e.html",
       "previewPath": null
     },
     {
@@ -28,10 +28,10 @@
       "name": "Codex basic bot flow",
       "project": "feishu-browser",
       "status": "failed",
-      "durationMs": 53587,
+      "durationMs": 54604,
       "attempts": 2,
-      "stepId": "da301804-9fd2-4a3c-9e28-689772665654:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261007135828-9ebbcad2.html",
+      "stepId": "518d151d-0ca8-4ce2-b4aa-1d9dc644aef9:steps:0",
+      "reportPath": "feishu/midscene-e2e-20261008173356-1aa9655e.html",
       "previewPath": null
     },
     {
@@ -39,10 +39,10 @@
       "name": "Codex prompt submission",
       "project": "feishu-browser",
       "status": "failed",
-      "durationMs": 198220,
+      "durationMs": 195820,
       "attempts": 2,
-      "stepId": "b2631517-b81c-47d3-8677-fe062ec96920:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261007135828-9ebbcad2.html",
+      "stepId": "3d6a30c3-f444-4de5-9c2b-c73a30a00da1:steps:0",
+      "reportPath": "feishu/midscene-e2e-20261008173356-1aa9655e.html",
       "previewPath": null
     },
     {
