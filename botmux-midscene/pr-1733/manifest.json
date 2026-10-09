@@ -6,9 +6,9 @@
       "name": "Navigate the core read-only Dashboard pages",
       "project": "dashboard-smoke",
       "status": "success",
-      "durationMs": 84133,
-      "attempts": 1,
-      "stepId": "b5245490-b841-43f7-82cc-ae8ec806829f:steps:6",
+      "durationMs": 39838,
+      "attempts": 2,
+      "stepId": "6b4c3ec8-8752-4c13-b92e-7eba3b2a29d3:steps:6",
       "reportPath": "dashboard/index.html",
       "previewPath": "previews/case-preview-dashboard-smoke-9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88.jpg"
     },
@@ -17,10 +17,10 @@
       "name": "Claude basic bot flow",
       "project": "feishu-browser",
       "status": "failed",
-      "durationMs": 428300,
+      "durationMs": 262171,
       "attempts": 2,
-      "stepId": "1a6b9527-8ce3-45a4-8065-fab7b86c024d:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261009072048-cdc08b29.html",
+      "stepId": "093ffcc7-e0c9-4663-9191-20c32cb355ce:steps:0",
+      "reportPath": "feishu/midscene-e2e-20261009120052-66fa1572.html",
       "previewPath": null
     },
     {
@@ -28,10 +28,10 @@
       "name": "Codex basic bot flow",
       "project": "feishu-browser",
       "status": "failed",
-      "durationMs": 341464,
+      "durationMs": 333274,
       "attempts": 2,
-      "stepId": "647338bb-3110-4d8f-a352-af4e3dd04fec:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261009072048-cdc08b29.html",
+      "stepId": "8d590ad9-336e-420e-afc0-0bfe23f55ac4:steps:0",
+      "reportPath": "feishu/midscene-e2e-20261009120052-66fa1572.html",
       "previewPath": null
     },
     {
@@ -39,10 +39,10 @@
       "name": "Codex prompt submission",
       "project": "feishu-browser",
       "status": "success",
-      "durationMs": 147089,
+      "durationMs": 211521,
       "attempts": 1,
-      "stepId": "1a4cf775-bc3e-440a-99ba-263c2bb5ee31:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261009072048-cdc08b29.html",
+      "stepId": "04b30cd1-802c-45d6-9742-99ab5e7db9a8:steps:0",
+      "reportPath": "feishu/midscene-e2e-20261009120052-66fa1572.html",
       "previewPath": null
     },
     {
