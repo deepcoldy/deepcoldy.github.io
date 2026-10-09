@@ -6,9 +6,9 @@
       "name": "Navigate the core read-only Dashboard pages",
       "project": "dashboard-smoke",
       "status": "success",
-      "durationMs": 37607,
-      "attempts": 2,
-      "stepId": "f22e92d0-6888-482e-8d9f-dd905208d3a0:steps:6",
+      "durationMs": 40435,
+      "attempts": 1,
+      "stepId": "4a3ab055-f560-486a-adb8-b523113f6eb2:steps:6",
       "reportPath": "dashboard/index.html",
       "previewPath": "previews/case-preview-dashboard-smoke-9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88.jpg"
     },
@@ -17,10 +17,10 @@
       "name": "Claude basic bot flow",
       "project": "feishu-browser",
       "status": "failed",
-      "durationMs": 194740,
+      "durationMs": 164213,
       "attempts": 2,
-      "stepId": "6d84a774-9e17-4858-b588-4abecbce678c:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261008182958-bee18745.html",
+      "stepId": "8685f208-a095-4889-942d-31ce4c75bedd:steps:0",
+      "reportPath": "feishu/midscene-e2e-20261009022527-07c7c8cb.html",
       "previewPath": null
     },
     {
@@ -28,10 +28,10 @@
       "name": "Codex basic bot flow",
       "project": "feishu-browser",
       "status": "failed",
-      "durationMs": 164850,
+      "durationMs": 179098,
       "attempts": 2,
-      "stepId": "be0d43a0-e6e7-42a2-9916-e3cf77b3e8d1:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261008182958-bee18745.html",
+      "stepId": "3e9ed4a9-8249-49cb-9b5a-04fbbe46ba6f:steps:0",
+      "reportPath": "feishu/midscene-e2e-20261009022527-07c7c8cb.html",
       "previewPath": null
     },
     {
@@ -39,10 +39,10 @@
       "name": "Codex prompt submission",
       "project": "feishu-browser",
       "status": "failed",
-      "durationMs": 193430,
+      "durationMs": 189230,
       "attempts": 2,
-      "stepId": "319f5c68-7767-4195-a45e-71399606e3bc:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261008182958-bee18745.html",
+      "stepId": "da77ca94-cc9c-4d47-826e-92e6ffc755a7:steps:0",
+      "reportPath": "feishu/midscene-e2e-20261009022527-07c7c8cb.html",
       "previewPath": null
     },
     {
