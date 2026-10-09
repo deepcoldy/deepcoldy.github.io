@@ -6,9 +6,9 @@
       "name": "Navigate the core read-only Dashboard pages",
       "project": "dashboard-smoke",
       "status": "success",
-      "durationMs": 40435,
-      "attempts": 1,
-      "stepId": "4a3ab055-f560-486a-adb8-b523113f6eb2:steps:6",
+      "durationMs": 90455,
+      "attempts": 2,
+      "stepId": "2182f2f8-d3c8-42a0-8634-bb42edd31558:steps:6",
       "reportPath": "dashboard/index.html",
       "previewPath": "previews/case-preview-dashboard-smoke-9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88.jpg"
     },
@@ -17,10 +17,10 @@
       "name": "Claude basic bot flow",
       "project": "feishu-browser",
       "status": "failed",
-      "durationMs": 164213,
+      "durationMs": 381201,
       "attempts": 2,
-      "stepId": "8685f208-a095-4889-942d-31ce4c75bedd:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261009022527-07c7c8cb.html",
+      "stepId": "5d2408fb-f189-44c4-a23c-fb8110116d4a:steps:0",
+      "reportPath": "feishu/midscene-e2e-20261009061859-5f4dc2eb.html",
       "previewPath": null
     },
     {
@@ -28,10 +28,10 @@
       "name": "Codex basic bot flow",
       "project": "feishu-browser",
       "status": "failed",
-      "durationMs": 179098,
+      "durationMs": 348947,
       "attempts": 2,
-      "stepId": "3e9ed4a9-8249-49cb-9b5a-04fbbe46ba6f:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261009022527-07c7c8cb.html",
+      "stepId": "0d55845d-a954-4c9c-bb55-85f01e9d45f3:steps:0",
+      "reportPath": "feishu/midscene-e2e-20261009061859-5f4dc2eb.html",
       "previewPath": null
     },
     {
@@ -39,10 +39,10 @@
       "name": "Codex prompt submission",
       "project": "feishu-browser",
       "status": "failed",
-      "durationMs": 189230,
+      "durationMs": 389088,
       "attempts": 2,
-      "stepId": "da77ca94-cc9c-4d47-826e-92e6ffc755a7:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261009022527-07c7c8cb.html",
+      "stepId": "2be7dfcf-9d83-4afd-bae8-5d8b5e1f2d87:steps:0",
+      "reportPath": "feishu/midscene-e2e-20261009061859-5f4dc2eb.html",
       "previewPath": null
     },
     {
