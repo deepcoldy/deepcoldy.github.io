@@ -6,9 +6,9 @@
       "name": "Navigate the core read-only Dashboard pages",
       "project": "dashboard-smoke",
       "status": "success",
-      "durationMs": 39535,
+      "durationMs": 38785,
       "attempts": 1,
-      "stepId": "0e0de2e1-01e8-488b-81be-e49a836afcce:steps:6",
+      "stepId": "70bc136c-dd18-4033-9a87-f67425847f51:steps:6",
       "reportPath": "dashboard/index.html",
       "previewPath": "previews/case-preview-dashboard-smoke-9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88.jpg"
     },
@@ -16,11 +16,11 @@
       "caseId": "73dbd99e26ee2aa7b84f2a220451e7ccf3e2a3f5ff5ee012671c5141ac19dd08",
       "name": "Claude basic bot flow",
       "project": "feishu-browser",
-      "status": "failed",
-      "durationMs": 137870,
+      "status": "success",
+      "durationMs": 125428,
       "attempts": 2,
-      "stepId": "61e2528a-d0e3-42ef-9e11-b74405ec752a:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261009162532-f92c9297.html",
+      "stepId": "5bd51911-6929-4783-aca9-4ff6094aa8af:steps:0",
+      "reportPath": "feishu/midscene-e2e-20261009165049-4cbf0eab.html",
       "previewPath": null
     },
     {
@@ -28,10 +28,10 @@
       "name": "Codex basic bot flow",
       "project": "feishu-browser",
       "status": "success",
-      "durationMs": 104333,
-      "attempts": 2,
-      "stepId": "fb825feb-d877-49b5-bd2b-ef96b1ef59fd:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261009162532-f92c9297.html",
+      "durationMs": 141905,
+      "attempts": 1,
+      "stepId": "f5c56fe1-fd92-450f-b328-6cbde60f0cb2:steps:0",
+      "reportPath": "feishu/midscene-e2e-20261009165049-4cbf0eab.html",
       "previewPath": null
     },
     {
@@ -39,10 +39,10 @@
       "name": "Codex prompt submission",
       "project": "feishu-browser",
       "status": "success",
-      "durationMs": 122915,
-      "attempts": 1,
-      "stepId": "6e63eb58-650a-4a71-8c24-1e2577904a5d:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261009162532-f92c9297.html",
+      "durationMs": 102937,
+      "attempts": 2,
+      "stepId": "44b1fbb5-25a6-4f6a-a213-c5afef9f8437:steps:0",
+      "reportPath": "feishu/midscene-e2e-20261009165049-4cbf0eab.html",
       "previewPath": null
     },
     {
