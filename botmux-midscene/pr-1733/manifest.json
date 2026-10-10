@@ -6,9 +6,9 @@
       "name": "Navigate the core read-only Dashboard pages",
       "project": "dashboard-smoke",
       "status": "success",
-      "durationMs": 38785,
+      "durationMs": 40786,
       "attempts": 1,
-      "stepId": "70bc136c-dd18-4033-9a87-f67425847f51:steps:6",
+      "stepId": "8a6dfb16-f737-41f2-92a2-d0c5da917bcc:steps:6",
       "reportPath": "dashboard/index.html",
       "previewPath": "previews/case-preview-dashboard-smoke-9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88.jpg"
     },
@@ -16,34 +16,34 @@
       "caseId": "73dbd99e26ee2aa7b84f2a220451e7ccf3e2a3f5ff5ee012671c5141ac19dd08",
       "name": "Claude basic bot flow",
       "project": "feishu-browser",
-      "status": "success",
-      "durationMs": 125428,
+      "status": "failed",
+      "durationMs": 161790,
       "attempts": 2,
-      "stepId": "5bd51911-6929-4783-aca9-4ff6094aa8af:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261009165049-4cbf0eab.html",
-      "previewPath": null
+      "stepId": "2bb01236-a0d5-4de3-afe7-31b9e22fee57:steps:3",
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-browser-73dbd99e26ee2aa7b84f2a220451e7ccf3e2a3f5ff5ee012671c5141ac19dd08.jpg"
     },
     {
       "caseId": "8ec257ffd8f73327e9e99aba017f571d2e6f38ceecb5570577f9bef1e4e4c398",
       "name": "Codex basic bot flow",
       "project": "feishu-browser",
       "status": "success",
-      "durationMs": 141905,
+      "durationMs": 118249,
       "attempts": 1,
-      "stepId": "f5c56fe1-fd92-450f-b328-6cbde60f0cb2:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261009165049-4cbf0eab.html",
-      "previewPath": null
+      "stepId": "cef907df-e526-46d2-a586-e11550d6a547:steps:1",
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-browser-8ec257ffd8f73327e9e99aba017f571d2e6f38ceecb5570577f9bef1e4e4c398.jpg"
     },
     {
       "caseId": "a8ae208dde87c90466a9a14e09b2104d6dcc74dd8431cd95e1fdddf89621b987",
       "name": "Codex prompt submission",
       "project": "feishu-browser",
       "status": "success",
-      "durationMs": 102937,
+      "durationMs": 117884,
       "attempts": 2,
-      "stepId": "44b1fbb5-25a6-4f6a-a213-c5afef9f8437:steps:0",
-      "reportPath": "feishu/midscene-e2e-20261009165049-4cbf0eab.html",
-      "previewPath": null
+      "stepId": "75bc4615-5593-4d72-81c8-f051e5fb3c92:steps:1",
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-browser-a8ae208dde87c90466a9a14e09b2104d6dcc74dd8431cd95e1fdddf89621b987.jpg"
     },
     {
       "name": "Aiden basic bot flow",
