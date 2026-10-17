@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Botmux Midscene report</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    body { margin: 0; background: #0b0d13; color: #e8eaf2; }
+    main { width: min(1280px, calc(100% - 40px)); margin: 48px auto; }
+    .summary, .unavailable { color: #aeb4c6; }
+    a { color: #a99bff; }
+    table { width: 100%; border-collapse: collapse; background: #131722; border: 1px solid #2b3142; }
+    th, td { padding: 12px 14px; border-bottom: 1px solid #2b3142; text-align: left; vertical-align: top; }
+    th { color: #aeb4c6; font-size: 13px; text-transform: uppercase; }
+    img, video { width: 260px; max-height: 160px; object-fit: cover; border-radius: 8px; border: 1px solid #343b50; background: #000; }
+  </style>
+</head>
+<body><main>
+  <h1>Botmux × Midscene</h1>
+  <p class="summary"><strong>4/18 cases passed</strong> · 0 failed · 0 skipped · 14 not run</p>
+  <table>
+    <thead><tr><th></th><th>Case</th><th>Project</th><th>Status</th><th>Duration</th><th>Node screenshot</th><th>Replay</th></tr></thead>
+    <tbody><tr><td>✅</td><td><a href="dashboard/index.html#runner-step=a1034194-f5f0-4f9b-8dbd-de5ffb9e6244%3Asteps%3A6">Navigate the core read-only Dashboard pages</a></td><td>dashboard-smoke</td><td>success</td><td>45.3 s</td><td><a href="dashboard/index.html#runner-step=a1034194-f5f0-4f9b-8dbd-de5ffb9e6244%3Asteps%3A6"><img src="previews/case-preview-dashboard-smoke-9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88.jpg" alt="Navigate the core read-only Dashboard pages screenshot" loading="lazy"></a></td><td><video controls preload="metadata" src="videos/dashboard-smoke.webm"></video></td></tr>
+<tr><td>✅</td><td><a href="feishu/index.html#runner-step=3ed886aa-bd27-49df-aef9-aed223dc716d%3Asteps%3A3">Claude basic bot flow</a></td><td>feishu-browser</td><td>success</td><td>201.3 s</td><td><a href="feishu/index.html#runner-step=3ed886aa-bd27-49df-aef9-aed223dc716d%3Asteps%3A3"><img src="previews/case-preview-feishu-browser-73dbd99e26ee2aa7b84f2a220451e7ccf3e2a3f5ff5ee012671c5141ac19dd08.jpg" alt="Claude basic bot flow screenshot" loading="lazy"></a></td><td><video controls preload="metadata" src="videos/bot-claude-basic.webm"></video></td></tr>
+<tr><td>✅</td><td><a href="feishu/index.html#runner-step=03ad85e4-be11-430e-b26e-94a5e60e4b89%3Asteps%3A1">Codex basic bot flow</a></td><td>feishu-browser</td><td>success</td><td>120.5 s</td><td><a href="feishu/index.html#runner-step=03ad85e4-be11-430e-b26e-94a5e60e4b89%3Asteps%3A1"><img src="previews/case-preview-feishu-browser-8ec257ffd8f73327e9e99aba017f571d2e6f38ceecb5570577f9bef1e4e4c398.jpg" alt="Codex basic bot flow screenshot" loading="lazy"></a></td><td><video controls preload="metadata" src="videos/bot-codex-basic.webm"></video></td></tr>
+<tr><td>✅</td><td><a href="feishu/index.html#runner-step=7c639a9f-8f94-489e-9bb2-e562d98bb608%3Asteps%3A1">Codex prompt submission</a></td><td>feishu-browser</td><td>success</td><td>124.0 s</td><td><a href="feishu/index.html#runner-step=7c639a9f-8f94-489e-9bb2-e562d98bb608%3Asteps%3A1"><img src="previews/case-preview-feishu-browser-a8ae208dde87c90466a9a14e09b2104d6dcc74dd8431cd95e1fdddf89621b987.jpg" alt="Codex prompt submission screenshot" loading="lazy"></a></td><td><video controls preload="metadata" src="videos/bot-codex-prompt.webm"></video></td></tr>
+<tr><td>⏸️</td><td>Aiden basic bot flow</td><td>feishu-browser</td><td>not-run</td><td>—</td><td><span class="unavailable">Not available</span></td><td><span class="unavailable">Not available</span></td></tr>
+<tr><td>⏸️</td><td>CoCo basic bot flow</td><td>feishu-browser</td><td>not-run</td><td>—</td><td><span class="unavailable">Not available</span></td><td><span class="unavailable">Not available</span></td></tr>
+<tr><td>⏸️</td><td>OpenCode basic bot flow</td><td>feishu-browser</td><td>not-run</td><td>—</td><td><span class="unavailable">Not available</span></td><td><span class="unavailable">Not available</span></td></tr>
+<tr><td>⏸️</td><td>Bot reply smoke test</td><td>feishu-browser</td><td>not-run</td><td>—</td><td><span class="unavailable">Not available</span></td><td><span class="unavailable">Not available</span></td></tr>
+<tr><td>⏸️</td><td>Aiden and CoCo collaboration</td><td>feishu-browser</td><td>not-run</td><td>—</td><td><span class="unavailable">Not available</span></td><td><span class="unavailable">Not available</span></td></tr>
+<tr><td>⏸️</td><td>Streaming card lifecycle</td><td>feishu-browser</td><td>not-run</td><td>—</td><td><span class="unavailable">Not available</span></td><td><span class="unavailable">Not available</span></td></tr>
+<tr><td>⏸️</td><td>Consecutive message queue</td><td>feishu-browser</td><td>not-run</td><td>—</td><td><span class="unavailable">Not available</span></td><td><span class="unavailable">Not available</span></td></tr>
+<tr><td>⏸️</td><td>Group message without a mention</td><td>feishu-browser</td><td>not-run</td><td>—</td><td><span class="unavailable">Not available</span></td><td><span class="unavailable">Not available</span></td></tr>
+<tr><td>⏸️</td><td>Group message with one bot mention</td><td>feishu-browser</td><td>not-run</td><td>—</td><td><span class="unavailable">Not available</span></td><td><span class="unavailable">Not available</span></td></tr>
+<tr><td>⏸️</td><td>Group chat topic reply</td><td>feishu-browser</td><td>not-run</td><td>—</td><td><span class="unavailable">Not available</span></td><td><span class="unavailable">Not available</span></td></tr>
+<tr><td>⏸️</td><td>Private chat topic reply</td><td>feishu-browser</td><td>not-run</td><td>—</td><td><span class="unavailable">Not available</span></td><td><span class="unavailable">Not available</span></td></tr>
+<tr><td>⏸️</td><td>Mixed image and text card</td><td>feishu-browser</td><td>not-run</td><td>—</td><td><span class="unavailable">Not available</span></td><td><span class="unavailable">Not available</span></td></tr>
+<tr><td>⏸️</td><td>Scheduled task remains in its source thread</td><td>feishu-browser</td><td>not-run</td><td>—</td><td><span class="unavailable">Not available</span></td><td><span class="unavailable">Not available</span></td></tr>
+<tr><td>⏸️</td><td>Web terminal opens from the streaming card</td><td>feishu-browser</td><td>not-run</td><td>—</td><td><span class="unavailable">Not available</span></td><td><span class="unavailable">Not available</span></td></tr></tbody>
+  </table>
+</main></body>
+</html>

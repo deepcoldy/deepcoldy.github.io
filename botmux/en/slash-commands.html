@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slash Commands - botmux 文档</title>
+<script>{;const saved = localStorage.getItem('rspress-theme-appearance');const preferDark = window.matchMedia('(prefers-color-scheme: dark)').matches;const isDark = !saved || saved === 'auto' ? preferDark : saved === 'dark';document.documentElement.classList.toggle('dark', isDark);document.documentElement.classList.toggle('rp-dark', isDark);document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';}</script>
+<link href="/botmux/static/css/styles.788f7d0799.css" rel="stylesheet">
+<script defer src="/botmux/static/js/styles.b78d054ff9.js"></script>
+<script defer src="/botmux/static/js/lib-react.9b7f575772.js"></script>
+<script defer src="/botmux/static/js/lib-router.00d9fd057a.js"></script>
+<script defer src="/botmux/static/js/805.746bc2f44c.js"></script>
+<script defer src="/botmux/static/js/index.9f1f6d90d5.js"></script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Rspress v2.0.13">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://deepcoldy.github.io/botmux/">
+<meta property="og:image" content="https://deepcoldy.github.io/botmux/botmux-logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://deepcoldy.github.io/botmux/botmux-logo.png">
+<meta name="theme-color" content="#646CEA">
+<link rel="icon" href="/botmux/botmux-logo.png">
+<meta property="og:title" content="Slash Commands - botmux 文档">
+<meta name="description" content="Just send these commands directly in a topic, and the daemon intercepts and handles them. Only the allowlisted commands in the passthrough section are forwarded verbatim to the underlying CLI; any other /xxx the daemon doesn't recognize is treated as ordinary conversation text and relayed as a normal message. Send /help anytime to view the full list.">
+<meta property="og:description" content="Just send these commands directly in a topic, and the daemon intercepts and handles them. Only the allowlisted commands in the passthrough section are forwarded verbatim to the underlying CLI; any other /xxx the daemon doesn't recognize is treated as ordinary conversation text and relayed as a normal message. Send /help anytime to view the full list."></head>
+
+  <body>
+    <div id="__rspress_root"><link rel="preload" as="image" href="/botmux/botmux-logo.png"/><link rel="preload" as="image" href="/botmux/img/sessions-command-card.png"/><header class="rp-nav"><div class="rp-nav__left"><div class="rp-nav__title"><a href="/botmux/en/" class="rp-nav__title__link rp-link"><div class="rp-nav__title__logo"><img src="/botmux/botmux-logo.png" alt="logo" id="logo" class="rspress-logo rp-nav__title__logo-image"/></div><span>botmux 文档</span></a></div></div><div class="rp-nav__right"><button class="rp-search-button"><div class="rp-search-button__content"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21" class="rp-search-button__icon"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg><span class="rp-search-button__word">Search</span></div><div class="rp-search-button__hotkey" style="opacity:0"><span></span><span>K</span></div></button><div class="rp-search-button--mobile"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg></div><div class="rp-nav__others"><div class="rp-nav-menu__divider"></div><li class="rp-nav-menu__item"><div class="rp-nav-menu__item__container">English<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-menu__item__icon"><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--center"><li class="rp-hover-group__item" style="padding-left:8px" data-depth="0"><a href="/botmux/slash-commands.html" class="rp-hover-group__item__link rp-link" aria-label="简体中文" lang="zh" hrefLang="zh" rel="alternate">简体中文</a></li><li class="rp-hover-group__item rp-hover-group__item--active" style="padding-left:8px" data-depth="0"><a href="/botmux/en/slash-commands.html" class="rp-hover-group__item__link rp-link" aria-label="English" lang="en" hrefLang="en" rel="alternate">English</a></li></ul></li><div class="rp-switch-appearance"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" class="rp-switch-appearance__icon rp-switch-appearance__icon--sun"><path fill="currentColor" d="m7.001 15.848-1.226 1.226a.58.58 0 0 0 0 .818.58.58 0 0 0 .818 0l1.226-1.226a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0m-.352-8.735a.584.584 0 0 0 .825-.825L6.237 5.051a.584.584 0 0 0-.825.825zM5.011 11.07h-1.75a.584.584 0 0 0 0 1.167h1.75c.324 0 .584-.26.584-.583a.585.585 0 0 0-.584-.584m7.003-5.835c.324 0 .584-.26.584-.584V2.9a.58.58 0 0 0-.584-.584.58.58 0 0 0-.583.583V4.65c0 .323.262.584.583.584m5.616 1.621 1.226-1.225a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0l-1.226 1.225a.58.58 0 0 0 0 .818.576.576 0 0 0 .818 0m3.138 4.214h-1.75a.58.58 0 0 0-.584.584c0 .324.26.584.583.584h1.751a.584.584 0 1 0 0-1.167m-3.389 5.124a.584.584 0 0 0-.825.825l1.238 1.238a.584.584 0 0 0 .825-.826zm-5.365-9.795a5.256 5.256 0 0 0-5.257 5.258 5.256 5.256 0 0 0 5.257 5.257 5.256 5.256 0 0 0 5.257-5.257 5.256 5.256 0 0 0-5.257-5.258m0 11.675a.58.58 0 0 0-.583.583v1.751a.582.582 0 1 0 1.167 0v-1.75a.584.584 0 0 0-.584-.584"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" viewBox="0 0 19 19" class="rp-switch-appearance__icon rp-switch-appearance__icon--moon"><path fill="currentColor" d="M9.166 0a9.2 9.2 0 0 1 1.857.188.834.834 0 0 1 .042 1.623 4.47 4.47 0 1 0 5.457 5.457l.048-.135a.834.834 0 0 1 1.575.177q.186.902.188 1.856A9.168 9.168 0 1 1 9.166 0"></path></svg></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__sm"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg></button><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__md"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"><div class="rp-nav-menu__others-mobile__container"><div class="rp-nav-hamburger__md__hover-group"><div class="rp-nav-screen-appearance"><div class="rp-nav-screen-appearance__left">Theme</div><div class="rp-nav-screen-appearance__right"></div></div><div class="rp-nav-screen-langs"><div class="rp-nav-screen-langs__left">Languages</div><div class="rp-nav-screen-langs__right">English<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-screen-langs__icon "><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div></div><div class="rp-nav-screen-langs-group" style="display:grid;grid-template-rows:0fr;transition:grid-template-rows 0.2s ease-out"><div class="rp-nav-screen-langs-group__inner"><a href="/botmux/slash-commands.html" class="rp-nav-screen-langs-group__item rp-link" hrefLang="zh" lang="zh" rel="alternate">简体中文</a><span class="rp-nav-screen-langs-group__item rp-nav-screen-langs-group__item--active" aria-current="page" aria-disabled="true">English</span></div></div><div class="rp-nav-screen-divider"></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div></div></ul></button></div></header><div class="rp-doc-layout__menu"><div class="rp-sidebar-menu"><button type="button" class="rp-sidebar-menu__left"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M4 6h24v2H4zm0 18h24v2H4zm0-12h24v2H4zm0 6h24v2H4z"></path></svg><span>Menu</span></button><button type="button" class="rp-sidebar-menu__right"><span class="rp-sidebar-menu__right__text">ON THIS PAGE</span><svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-sidebar-menu__right__icon" style="transform:rotate(0deg);transition:transform 0.2s ease-out"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></button></div></div><div class="rp-doc-layout__container"><aside class="rp-doc-layout__sidebar rp-scrollbar"><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Getting Started</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/index.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Introduction</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/quickstart.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">5-Minute Quickstart</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/prerequisites.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Prerequisites</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Core Concepts</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/architecture.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Architecture</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/session-model.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Session &amp; Topic Model</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Features</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/cards.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Streaming Cards</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/topic-unavailable-policy.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Unavailable Topic Policy</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/web-terminal.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Web Terminal</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/multi-bot.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Multi-Bot Collaboration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/multi-topic.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Multi-Topic Orchestration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/mention-mode.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Mention Policy</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/whiteboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Local Whiteboard</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/roles.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Roles &amp; Teams</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/tmux.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">tmux Session Persistence</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/zmx.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">ZMX Session Backend</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/adopt.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Adopt a Session</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/relay.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Relay a Session</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/group.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">One-Click Session Groups</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/doc-comment.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Feishu Doc Comment Entry</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/schedule.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Scheduled Tasks</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/oncall.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">On-Call Mode</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/permissions.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Permissions &amp; Access</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/sandbox.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">File Sandbox</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/voice.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Voice Summary</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/dashboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Dashboard</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/webhook.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Webhook Ingress</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/api-task-trigger.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Programmatic Task Trigger API</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/turn-results.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Turn Results</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/api-core-only.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Core-only API Control</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/workflow.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Workflow (Experimental)</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/hooks.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Lifecycle Hooks</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/skill-cli.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Skill + CLI Interaction</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Development &amp; Extensions</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/plugins.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Plugin Development &amp; Market</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Command Reference</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/slash-commands.html" class="rp-sidebar-item rp-sidebar-item--active rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Slash Commands</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/cli-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">CLI Commands</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Configuration</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/bots-json.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">bots.json</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/env.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Environment &amp; File Locations</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/companion-api.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Local Companion API</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/adapters.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">CLI Adapters</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Practices &amp; Troubleshooting</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/best-practices.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Best Practices</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/pitfalls.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Common Pitfalls</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/faq.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">FAQ / Troubleshooting</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/about.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">About &amp; Resources</span></div><div class="rp-sidebar-item__right"></div></a></div></div></aside><div class="rp-doc-layout__doc"><main class="rp-doc-layout__doc-container"><div class="rp-doc rspress-doc"><!--$--><h1 class="rp-toc-include" id="slash-commands"><a href="#slash-commands" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Slash Commands<!-- --> </h1>
+<p>Just send these commands directly in a topic, and the daemon intercepts and handles them. Only the allowlisted commands in the <a href="#-passthrough-to-the-underlying-cli" class="rp-link">passthrough section</a> are forwarded verbatim to the underlying CLI; any other <code>/xxx</code> the daemon doesn&#x27;t recognize is treated as ordinary conversation text and relayed as a normal message. Send <code>/help</code> anytime to view the full list.</p>
+<h2 class="rp-toc-include" id="-session-management"><a href="#-session-management" class="rp-header-anchor rp-link" aria-hidden="true">#</a>📌 Session Management</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody><tr><td><code>/repo</code></td><td>When a repository is pending selection, start with the default workingDir; if a session is in progress, pop up the project selection card</td></tr><tr><td><code>/repo &lt;N&gt;</code></td><td>Switch to the Nth project from the last scan</td></tr><tr><td><code>/repo &lt;path|project name&gt;</code></td><td>Directly specify a path or a top-level project name under workingDir</td></tr><tr><td><code>/cd &lt;path&gt;</code></td><td>Switch the working directory and restart the CLI process</td></tr><tr><td><code>/status</code></td><td>View session info (uptime, terminal address, etc.)</td></tr><tr><td><code>/lane status</code></td><td>Inspect your isolated principal lane, including its branch, worktree, dirty state, and unpushed commit count (available when the existing bot-level XPI switch enables principal lanes)</td></tr><tr><td><code>/lane close</code></td><td>Safely close your isolated principal lane: refuses while work is running/queued or files are uncommitted, pushes unpublished commits before cleanup, and never auto-merges or deletes the branch</td></tr><tr><td><code>/retry</code></td><td>Retry the most recent failed or interrupted turn (10s cooldown)</td></tr><tr><td><code>/queue &lt;text&gt;</code></td><td>Codex App live sessions: submit a separate turn after the active task, or start immediately when idle. Multiline plain text supported; rich text and attachments are not supported yet. Requires command permission (canTalkDaemonCommands may grant access). Missing/unready sessions and other CLIs are explicitly rejected Trigger-user identity is refreshed before admission; later messages may overwrite the single credential slot, so a waiting turn may still see bytedcli/lark-cli turn-mismatch rejection and require retry.</td></tr><tr><td><code>/stop</code></td><td>Interrupt the current turn while keeping the session; same as the streaming card&#x27;s Stop button</td></tr><tr><td><code>/restart</code></td><td>Restart the CLI process (preserving the session context)</td></tr><tr><td><code>/close</code></td><td>Close the session and send a recoverable card (including the CLI&#x27;s own resume command). A later message starts a new session</td></tr><tr><td><code>/resume [session id]</code></td><td>When this topic/chat has <strong>no session</strong>, resume a closed one: no argument resumes the latest one closed here; an id from elsewhere is copied here like <code>/fork</code> (full context, original untouched; fork-capable CLIs only; closed Codex / TraeX sessions must be resumed where they were). <strong>With a session</strong>, it goes to the CLI&#x27;s own <code>/resume</code> unchanged. Anyone who can talk to the bot may use it; cross-location copies are keyed by the session id (visible only in the original chat, not guessable), the same trust level as <code>/fork</code></td></tr><tr><td><code>/dismiss</code></td><td>Top level of a dedicated session group only: after confirmation, closes the session and disbands the whole group (the creator with operator permission only; code and worktrees are kept; not supported in DMs, ordinary groups, subtopics, or adopted sessions). To keep the chat, use <code>/close</code></td></tr><tr><td><code>/cleanup-wt &lt;ID&gt;</code></td><td>Retry a persisted worktree cleanup after a final removal failure; revalidates authorization, active sessions, worktree identity, and safety state before deleting</td></tr><tr><td><code>/fork &lt;task&gt;</code></td><td>Fork the current session with full context into a new sub-topic of the same topic group; the source session keeps running untouched (Claude family, Codex terminal, or TraeX terminal mode)</td></tr><tr><td><code>/forklist</code></td><td>Re-post the current session&#x27;s forked-task panel with live/closed status and links to the child topics</td></tr><tr><td><code>/fork --create &lt;group name&gt;</code></td><td>Clone the current session into a freshly-created group instead of a sub-topic</td></tr><tr><td><code>/rename &lt;title&gt;</code></td><td>Rename this Botmux session and sync the running Codex/Claude native session name</td></tr><tr><td><code>/fork --create &lt;new group name&gt;</code></td><td>Clone the current idle session into a newly-created group while leaving the source session untouched (Claude family, Codex terminal, or TraeX terminal mode; Hybrid RPC / external app-server sessions are unsupported; invoke inside the source session)</td></tr><tr><td><code>/card</code></td><td>Manually summon the current session&#x27;s streaming card (can summon and restore live refresh even when streaming is off; in private-card mode, sends a static snapshot visible only to authorized users instead). <code>/card off</code> and <code>/card on</code> toggle streaming cards for this chat; <code>/card pin off</code>, <code>/card pin on</code>, and <code>/card pin status</code> control the per-chat streaming-card Pin override. <code>allowedUsers</code> only (the switch affects the whole chat — Lark has no per-person card view)</td></tr><tr><td><code>/cot</code></td><td>CoT switch: <code>/cot off</code> mutes this chat&#x27;s thinking and tool activity, <code>/cot on</code> restores it, <code>/cot show</code> reveals the current turn once while the switch is off, <code>/cot status</code> reports the state (bot-level master switch <code>cotEnabled</code>, on by default; supports claude-code / codex / traex). <code>allowedUsers</code> only</td></tr><tr><td><code>/mention-mode [always|topic|never|ambient|status]</code></td><td>The regular-group mention policy: when the bot answers without an @. Querying needs talk access, changing needs operate rights; <strong>regular groups only</strong> (rejected in DMs, topic groups, and session groups). The four modes and the 8 no-@ exceptions are explained in <a href="/botmux/en/mention-mode.html" class="rp-link">Mention Policy</a></td></tr><tr><td><code>/term</code></td><td>Get the operable (write-enabled) terminal link for this session, delivered privately to the owner (visible-to-you in-chat, falling back to DM in topic/p2p — never exposed in the group)</td></tr><tr><td><code>/quote</code></td><td>Pop a picker of this chat&#x27;s topics; choosing one reads that topic&#x27;s transcript into the current session. This fills a gap in Feishu itself — its quote-reply UI can only reference a single message, never a whole topic. The bot replies with a short acknowledgement (how many messages, time span, subject) and waits for your next instruction</td></tr><tr><td><code>/quote &lt;instruction&gt;</code></td><td>Same, but runs your instruction as soon as you pick a topic, saving a round trip. The transcript is still injected explicitly labelled as material rather than instructions</td></tr><tr><td><code>/sessions</code></td><td>List this bot&#x27;s active topic sessions in the current group and jump directly back to a topic (legacy sessions use a safe locate fallback)</td></tr><tr><td><code>/dashboard [module]</code></td><td>Open Dashboard control cards in Feishu (sessions/schedules/groups/settings/help, etc.)</td></tr><tr><td><code>@bot /project enable|status|roles|disable</code></td><td>Enable, inspect, configure agent roles, or leave project-group mode in the current ordinary group (owner/allowedUsers only; does not consume a session slot)</td></tr><tr><td><code>@bot /context-sharing on|off|status</code></td><td>Enable, disable, or inspect passive context sharing for the current group (off by default; owner/allowedUsers only; creates no session or extra model turn)</td></tr><tr><td><code>/insight</code></td><td>owner-only: instantly posts a &quot;session insight summary&quot; card for the current session (aggregate metrics + rule suggestions; action-span detail / per-turn reconciliation / conversation replay live on the Dashboard &quot;Insights&quot; page)</td></tr><tr><td><code>/vc prepare &lt;meeting link or number&gt;</code></td><td>Use the current regular group as a meeting-prep chat and reuse the same Agent session during the meeting</td></tr><tr><td><code>/introduce</code></td><td>Register the bots in this chat with each other by <code>open_id</code>, so they can @-mention one another precisely when collaborating</td></tr><tr><td><code>@bot /summary</code></td><td>Read the current topic (or the configured regular-group history range) and generate a summary (default: latest 50 messages / 24 hours). If the bot has <code>summaryMemory</code> enabled, the summary is appended to the configured memory file (<code>summaryMemoryPath</code>, defaults to <code>summary.md</code>), and text following <code>/summary</code> acts as a hard &quot;summarize only from this message&quot; boundary; when memory is off, trailing text is only a focus hint for this summary</td></tr><tr><td><code>[title] /t [/repo &lt;repo&gt; | /repo wt &lt;repo&gt; [branch]] [/model &lt;model&gt;] [/effort &lt;level&gt;] [&lt;first task&gt;]</code> (alias <code>/topic</code>)</td><td>Force a new topic inside a regular group, declaring the title, repository (or a fresh worktree on it), model, reasoning effort and first task in one message. Newlines are equivalent to spaces; the title goes <strong>before</strong> <code>/t</code> (Lark shows the raw message in its topic list and a bot cannot rewrite it); quote paths containing spaces; one bad field voids the whole header and replies with a usage error. A bare <code>/t</code> opens topic setup</td></tr><tr><td><code>/th [&lt;first task&gt;]</code>, <code>/tw [&lt;first task&gt;]</code> (same as <code>/t here …</code> / <code>/t worktree …</code>)</td><td>Lifecycle variants: <code>/th</code> opens the topic in the <strong>current group session working directory</strong>; <code>/tw</code> first creates a deterministically named, multi-bot-shareable worktree from that directory. They combine with a title, <code>/model</code> and <code>/effort</code>, but <strong>not with <code>/repo</code></strong> (one says &quot;use the current directory&quot;, the other names a repo, so the header is rejected)</td></tr><tr><td><code>/issue</code></td><td>Open the Issue Board card and claim a botmux platform task in place: pick a repo and botmux creates a group, adds you, binds the platform task and starts the agent. Requires this machine to be bound to the platform, and the invoker to be in the bot&#x27;s <code>allowedUsers</code>; only the invoker can operate the card</td></tr><tr><td><code>/issue status</code></td><td>Run inside the task group to see which platform task it is bound to and where things stand: platform status / claimant / local binding / whether any status write-back is still stuck in the outbox. Read-only, also limited to the bot&#x27;s <code>allowedUsers</code></td></tr><tr><td><code>/issue done</code></td><td>Run inside the task group to <strong>accept the work</strong> and move the task to its terminal state on the platform. An agent can only deliver up to &quot;in review&quot;; marking it done is a human decision. Once done, the platform clears the claim and the task can no longer be released. Also limited to the bot&#x27;s <code>allowedUsers</code></td></tr><tr><td><code>/issue release</code></td><td>Run inside the group created when the task was claimed: hands the task back to the platform&#x27;s todo pool so someone else can take it. The group and session are <strong>not</strong> disbanded — the conversation is kept. Also limited to the bot&#x27;s <code>allowedUsers</code></td></tr></tbody></table></div>
+<p><code>/sessions</code> card preview:</p>
+<p><img src="/botmux/img/sessions-command-card.png" alt="Current-group active topic sessions card"/></p>
+<p>See <a href="/botmux/en/session-model.html" class="rp-link">Session &amp; Topic Model</a> for the repository-picker and pinned-directory branches of bare <code>/t</code>.</p>
+<p>The header directives:</p>
+<ul>
+<li><code>/repo &lt;path|project name&gt;</code> — pin the repository directly, skipping the picker card. Note it takes <strong>exactly one token</strong>: quote a path containing spaces, as in <code>/repo &quot;~/Code/my project&quot;</code>.</li>
+<li><code>/repo</code> (no argument) — start right away in the default working directory, the same as the picker card&#x27;s start-directly button.</li>
+<li><code>/repo wt &lt;path|project name&gt; [branch]</code> — create a fresh worktree on that repository (off the remote default branch) and start the session inside it. The branch may be omitted (auto-named from the title / first task); when given, it is <strong>only taken from the next word on the same line as the repo that looks like a branch name</strong> (<code>ci/temp_split</code> and the like), so a Chinese first task is never swallowed, but start a latin first task on a new line. An invalid branch name or an existing target directory is rejected before the topic is opened; if git itself fails, the topic exists and the session waits in repo selection. Resending while creation is still running is told to wait; after failure, send <code>/repo &lt;path|project name&gt;</code> or <code>/repo wt &lt;repo&gt; [branch]</code> in the topic — the earlier message stays queued.</li>
+<li><code>/model &lt;model&gt;</code> — the model to launch with this time. Only available on CLIs that can actually carry a model in their launch arguments; the rest reject it rather than ignoring it silently.</li>
+<li><code>/effort &lt;level&gt;</code> — reasoning effort (<code>low</code>/<code>medium</code>/<code>high</code>/<code>xhigh</code>/<code>max</code>/<code>ultra</code>), validated against the model this launch will actually use.</li>
+</ul>
+<p>The whole message can be written on one line or split across lines — the result is identical:</p>
+<div class="rp-codeblock language-text"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="text"><code><span class="line"><span>botmux ops /t /repo botmux /model sonnet check the restart records in the daemon log</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<div class="rp-codeblock language-text"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="text"><code><span class="line"><span>botmux ops</span></span>
+<span class="line"><span>/t</span></span>
+<span class="line"><span>/repo botmux</span></span>
+<span class="line"><span>/model sonnet</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>check the restart records in the daemon log</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>With no first task (e.g. <code>/t /repo botmux</code>), the CLI boots idle and waits for your next message instead of answering an empty turn.</p>
+<p>A few boundaries:</p>
+<ul>
+<li>A header only takes effect on the <strong>first message of a new topic</strong>. To change repository/model/reasoning effort inside a running topic, send <code>/repo</code>, <code>/model</code> or <code>/effort</code> on their own; use <code>/rename</code> to change the title.</li>
+<li>The header&#x27;s <code>/repo wt</code> does not accept the numeric form (numbers only mean something on the picker card); the in-session <code>/repo wt &lt;N|project name&gt; [branch]</code> still does.</li>
+<li>A standalone mid-session <code>/repo</code> still takes the rest of the line, unlike the single-token rule inside the header.</li>
+</ul>
+<p>Codex capacity recovery is <strong>off by default</strong>. Administrators can enable it with <code>/botconfig set codexCapacityRecovery on</code> and disable it with <code>/botconfig set codexCapacityRecovery off</code>. When enabled, managed Codex Lark sessions automatically continue explicit model-capacity failures (<code>server_overloaded</code>) after 15 seconds and, if needed, another 45 seconds. Each continuation appends a recovery input to the native session (at most two per task); these inputs may remain in model context, and disabling recovery does not delete history. An opted-out pending recovery is saved as cancelled with one notice, so re-enabling recovery or restarting does not revive that old task. Detection is not specific to modelhub and does not guarantee a quick recovery. Continuations resume existing progress instead of replaying the original task. New input, <code>/stop</code>, or closing the session cancels the previous recovery. After a process restart, pending or unconfirmed recovery stops and requires manual continuation. Already running work can still deliver a successful result, but a late capacity failure will not trigger another automatic continuation, avoiding replay of a cancellation that could not be saved. After two unsuccessful continuations, the failure card offers a manual retry. Generic 503, stream, authentication and rate-limit errors retain their existing behavior, as do adopted, HTTP and meeting-receiver sessions.</p>
+<h2 class="rp-toc-include" id="-reply-mode-reply-mode"><a href="#-reply-mode-reply-mode" class="rp-header-anchor rp-link" aria-hidden="true">#</a>💬 Reply Mode (<code>/reply-mode</code>)</h2>
+<p>Controls how the bot opens a session when @mentioned. No argument (or <code>status</code>) shows the current mode; changing it needs <code>canOperate</code>, viewing needs <code>canTalk</code>. In group chats you must @ the target bot (in multi-bot groups, @ the specific bot). Only regular groups and 1:1 DMs are supported; topic groups need no setting (they&#x27;re already topics) and the command is rejected there.</p>
+<p><strong>DM (1:1)</strong> — the mode applies to <strong>all of this bot&#x27;s DMs</strong> (bot-level global config, not per-chat), but different users&#x27; DMs with the bot still keep isolated sessions. The modes are <code>chat</code> / <code>topic</code> / <code>group</code> (<code>new-topic</code> is a compat alias of <code>topic</code>):</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody><tr><td><code>/reply-mode</code> <code>/reply-mode status</code></td><td>Show the current DM session mode</td></tr><tr><td><code>/reply-mode chat</code></td><td>Each 1:1 DM is one flat continuous session — all messages in that DM share one session (<strong>default</strong>)</td></tr><tr><td><code>/reply-mode topic</code> <code>/reply-mode new-topic</code></td><td>Each <strong>top-level</strong> DM opens its own session/thread; replies inside an existing thread continue that thread&#x27;s session</td></tr><tr><td><code>/reply-mode group</code></td><td>Each <strong>top-level</strong> DM births a dedicated user+bot session group hosting the conversation (AI-generated name; after the session closes a new message starts a fresh one — use the close card&#x27;s &quot;Resume session&quot; or <code>/resume</code> to continue; see <code>p2pMode=group</code>)</td></tr></tbody></table></div>
+<p><code>shared</code> / <code>chat-topic</code> rely on native group topics and are rejected in DMs.</p>
+<p><strong>Regular groups</strong> — how top-level @mentions open sessions (per-chat override, higher priority than the dashboard default):</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody><tr><td><code>/reply-mode</code> <code>/reply-mode status</code></td><td>Show the current group reply mode and where it comes from (bot default / group override)</td></tr><tr><td><code>/reply-mode inherit</code></td><td>Clear this group&#x27;s override and follow the bot default again (aliases <code>default</code> / <code>reset</code> / <code>clear</code>)</td></tr><tr><td><code>/reply-mode chat</code></td><td>One continuous group session (all top-level @mentions share it)</td></tr><tr><td><code>/reply-mode chat-topic</code></td><td>Flat at top level, native topics each get their own session</td></tr><tr><td><code>/reply-mode new-topic</code></td><td>Each @mention opens a new topic and its own session</td></tr><tr><td><code>/reply-mode topic</code> <code>/reply-mode shared</code></td><td>Topic UI but a shared session (<code>topic</code> is a compat alias of <code>shared</code>)</td></tr></tbody></table></div>
+<p>The group-level setting overrides the dashboard &quot;Bot Config → Regular Group Mode&quot; default. An explicit setting is kept as an override even when it equals the current default (later default changes do not affect this group); use <code>/reply-mode inherit</code> to follow the default again. You can also pick it per bot in the dashboard under &quot;Groups → Manage&quot;. Setting a new mode requires confirming the chat is a regular group; status and clearing are not gated.</p>
+<p><code>/substitute [status|on|off]</code> — show or toggle <strong>substitute mode</strong> for the current group (owner-only to change).</p>
+<h2 class="rp-toc-include" id="-mention-policy-mention-mode-regular-groups-only"><a href="#-mention-policy-mention-mode-regular-groups-only" class="rp-header-anchor rp-link" aria-hidden="true">#</a>📢 Mention Policy (<code>/mention-mode</code>, regular groups only)</h2>
+<p><code>/mention-mode always|topic|never|ambient</code> switches this chat&#x27;s policy; <code>/mention-mode status</code> (or no argument) reports it. Regular groups only: DMs never need @, and topic groups and <code>/group</code> session groups reject the command. Querying needs only talk access; changing needs operate rights (<code>allowedUsers</code>).</p>
+<ul>
+<li><code>always</code>: @ required to get an answer (default); <code>topic</code>: replies inside the bot&#x27;s own topics skip @; <code>never</code>: no @ required anywhere in the group; <code>ambient</code>: no @ required, but the bot yields when a message explicitly @-mentions someone else.</li>
+<li>Skipping @ never skips the permission gate, and 8 no-@ exceptions still apply (in-topic replies, substitute triggers, the message listener, and more) — see <a href="/botmux/en/mention-mode.html" class="rp-link">Mention Policy</a> for the full semantics.</li>
+</ul>
+<h2 class="rp-toc-include" id="-chat-tabs"><a href="#-chat-tabs" class="rp-header-anchor rp-link" aria-hidden="true">#</a>📑 Chat Tabs</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody><tr><td><code>/tabs</code> / <code>/tab</code> / <code>/tabs list</code></td><td>List every tab in the current chat and its Tab ID (<code>/tab</code> is a compatibility alias)</td></tr><tr><td><code>/tabs add &lt;url&gt; [name]</code></td><td>Add a URL tab (owner or authorized operator required)</td></tr><tr><td><code>/tabs rename &lt;tab_id&gt; &lt;name&gt;</code></td><td>Rename an editable URL or document tab</td></tr><tr><td><code>/tabs delete &lt;tab_id&gt;</code></td><td>Delete an editable URL or document tab</td></tr><tr><td><code>/tabs sort &lt;tab_id&gt; ...</code></td><td>Reorder tabs; the command must include every Tab ID returned by <code>/tabs</code></td></tr></tbody></table></div>
+<p>Built-in Lark tabs are read-only through OpenAPI, though they must still be included when sorting. If the chat only allows its owner and administrators to manage tabs, the bot also needs that chat-level privilege.</p>
+<p>AI agents and background scripts should use the CLI instead of sending a slash command into the chat:</p>
+<div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-function)">botmux</span><span style="color:var(--shiki-token-string)"> tabs</span><span style="color:var(--shiki-token-string)"> add</span><span style="color:var(--shiki-token-string-expression)"> &quot;https://example.com/project/releases/2026&quot;</span><span style="color:var(--shiki-foreground)"> \</span></span>
+<span class="line"><span style="color:var(--shiki-token-string)">  --name</span><span style="color:var(--shiki-token-string-expression)"> &quot;Project release&quot;</span><span style="color:var(--shiki-token-string)"> --json</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>The CLI resolves the bot and chat from the current <code>BOTMUX_SESSION_ID</code>. Use <code>--session-id</code> outside the current process tree or <code>--chat-id</code> to override the destination. <code>add</code> is idempotent by URL: an existing page tab is reused and renamed when needed. This works for merge requests, project boards, release pages, and other automation scenarios. Background callers can also use <code>botmux tabs list|update|remove|sort</code>.</p>
+<h2 class="rp-toc-include" id="change-reasoning-effort-in-a-codex-app-session"><a href="#change-reasoning-effort-in-a-codex-app-session" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Change Reasoning Effort in a Codex App Session</h2>
+<p>Send <code>/effort low|medium|high|xhigh|max|ultra</code> in an existing Codex App session. Available levels are validated against the current model&#x27;s advertised capabilities. The command saves settings for future turns without adding a model message or interrupting the task.</p>
+<p><strong>Updating the active turn requires explicitly enabling the experimental Codex <code>step_model_switching</code> feature.</strong> In the verified Codex 0.160 / 0.162.1 versions, it is UnderDevelopment and off by default; Botmux does not enable it automatically. To opt in, merge the following into the <code>CODEX_HOME/config.toml</code> actually used by this session&#x27;s app-server, then use it after the next app-server start (if <code>[features]</code> already exists, add or update only this key):</p>
+<div class="rp-codeblock language-toml"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="toml"><code><span class="line"><span style="color:var(--shiki-foreground)">[features]</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">step_model_switching </span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-constant)"> true</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>With the feature disabled, commands sent during a task still save future-turn settings and explicitly report why the active turn was not updated. A completed or unavailable target turn produces a separate notice. Only an <code>applied</code> response confirms that the server accepted the active-turn update; requests already issued keep their original parameters, and the turn may have no further inference steps.</p>
+<p>For ordinary Codex CLI, Claude Code and other CLIs, <code>/effort</code> continues to follow the passthrough rules below.</p>
+<h2 class="rp-toc-include" id="-passthrough-to-the-underlying-cli"><a href="#-passthrough-to-the-underlying-cli" class="rp-header-anchor rp-link" aria-hidden="true">#</a>🔀 Passthrough to the Underlying CLI</h2>
+<p><code>/compact</code> <code>/model</code> <code>/clear</code> <code>/plugin</code> <code>/usage</code> <code>/new</code> <code>/context</code> <code>/cost</code> <code>/mcp</code> <code>/diff</code> <code>/code-review</code> <code>/security-review</code> <code>/review</code> <code>/btw</code> <code>/effort</code> <code>/fast</code> — delivered literally to the underlying CLI and handled by its built-in commands (except Codex App <code>/effort</code>, described above).</p>
+<p><code>/fast</code> is Codex-specific: it toggles Codex&#x27;s native service tier, and the streaming card shows a read-only <code>⚡ &lt;tier&gt;</code> badge reflecting whatever tier Codex actually runs. On RPC-input or Riff backends the keystroke can&#x27;t reach Codex&#x27;s executor, so <code>/fast</code> fails closed there with a clear notice instead of a silent no-op.</p>
+<p>Some CLIs also declare adapter-default passthrough commands: Claude Code and Codex default-allow <code>/goal</code>, so a new topic whose first message is <code>/goal ...</code> will start/select the repository first and then send <code>/goal ...</code> to the CLI literally.</p>
+<p>To allow more commands through, configure <a href="/botmux/en/bots-json.html" class="rp-link"><code>customPassthroughCommands</code></a> for that bot (e.g. <code>[&quot;/export&quot;]</code>) to extend beyond the allowlist above as needed. Entries that would shadow a botmux daemon command (such as <code>/status</code>, <code>/help</code>, <code>/cd</code>) are automatically dropped — daemon commands always keep their own semantics and cannot be overridden via passthrough.</p>
+<p><strong>Cascading several passthrough commands in one message</strong> (inside a running session): put one passthrough command per line, optionally followed by a task body, and botmux sends them in order, waiting for the CLI to become idle between items —</p>
+<div class="rp-codeblock language-text"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="text"><code><span class="line"><span>/model opus</span></span>
+<span class="line"><span>/clear</span></span>
+<span class="line"><span>Now go through the review comments on PR #1361</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>Rules: only a leading run of passthrough lines forms a cascade (a botmux command such as <code>/cd</code> or an unknown <code>/xxx</code> inside that run makes the whole message ordinary text, as today); the body starts at the first line not beginning with <code>/</code>, and any later <code>/xxx</code> is part of the body; a single line such as <code>/model opus then continue</code> is still sent verbatim as one line. The idle wait is capped at 120 s, after which the remaining items are sent immediately with a notice. Remote sandbox backends (riff / mojo) and adopted external sessions do not support cascades and reply &quot;send them one by one&quot;; messages with attachments are not split either.</p>
+<h2 class="rp-toc-include" id="-view-available-commands"><a href="#-view-available-commands" class="rp-header-anchor rp-link" aria-hidden="true">#</a>🧩 View Available Commands</h2>
+<p><code>/list-slash-command</code> (alias <code>/slash</code>): lists the currently available slash commands in a card, in four sections —</p>
+<ol>
+<li>botmux&#x27;s fixed passthrough allowlist;</li>
+<li>commands default-allowed by the current CLI adapter;</li>
+<li>commands this bot custom-allows via <code>customPassthroughCommands</code> in bots.json;</li>
+<li>custom commands / skills / plugins auto-discovered from the <code>.claude</code> directory (project-level + <code>~/.claude</code> + plugin cache), shown in a paginated &quot;command ｜ description&quot; table, with a note of any detected MCP server names.</li>
+</ol>
+<p>Permissions are the same as <code>/help</code>, and it doesn&#x27;t occupy a session slot.</p>
+<p>Dashboard&#x27;s <strong>Bot Defaults → Security → Slash Commands</strong> section also has an optional <strong>native Lark command panel</strong>. It lists botmux&#x27;s own commands (including aliases, derived directly from the command registry) as candidates and marks each entry as synced, missing, or outdated on Lark; users decide what to register with each row&#x27;s <strong>Sync</strong> action. Commands that only exist remotely are shown too and can be deleted one at a time. <strong>Sync all to Lark</strong> is an explicit additive operation: it creates missing entries and updates descriptions, but never deletes implicitly. CLI passthrough commands (<code>/compact</code>, <code>/model</code>, …) are not candidates yet, because support differs across CLIs and input backends.</p>
+<p>The panel needs the optional scopes <code>application:app_slash_command:read</code> / <code>application:app_slash_command:write</code>. They are <strong>not</strong> part of the default scope manifest and the startup self-check never tops them up automatically; when they are missing, or the tenant is not in Lark&#x27;s gated rollout (desktop 7.70+ and the FG allowlist), the panel only shows &quot;unavailable&quot; plus grant links, and every other bot feature keeps working. The native <code>/</code> panel may take about five minutes to refresh in Lark clients. Working-directory <code>.claude</code> discoveries, skills, plugins, and MCP prompts are not stable app-wide capabilities, so they remain visible only in botmux&#x27;s <code>/slash</code> card and are not registered remotely.</p>
+<h2 class="rp-toc-include" id="-session-onboarding"><a href="#-session-onboarding" class="rp-header-anchor rp-link" aria-hidden="true">#</a>📡 Session Onboarding</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody><tr><td><code>/adopt</code></td><td>Scan the local tmux and pop up a card to select a running session to adopt</td></tr><tr><td><code>/adopt &lt;tmux_pane&gt;</code></td><td>Directly adopt the specified pane (e.g. <code>/adopt 0:2.0</code>)</td></tr><tr><td><code>/detach</code></td><td>Disconnect this topic from the adopted session (the original CLI is untouched; <code>/disconnect</code> is an alias)</td></tr></tbody></table></div>
+<h2 class="rp-toc-include" id="-user-authorization"><a href="#-user-authorization" class="rp-header-anchor rp-link" aria-hidden="true">#</a>🔐 User Authorization</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody><tr><td><code>/login</code></td><td>Basic Lark user authorization: read messages, access resources, and renew authorization; does not request docs, contacts, or calendar permissions by default</td></tr><tr><td><code>/login --scope &lt;scope&gt;... [--force]</code></td><td>Add requested permissions to basic scopes, e.g. <code>/login --scope docx:document:readonly</code>; add <code>--force</code> to bypass local catalog validation for uncataloged new scopes</td></tr><tr><td><code>/login status</code></td><td>View authorization status</td></tr><tr><td><code>/login tags</code></td><td>Session-group tag authorization (feed-group scopes); once granted, new session groups auto-join your sidebar feed group (for p2pMode=group with the feed-group tag mode — the default)</td></tr><tr><td><code>/pair &lt;pairing code&gt;</code></td><td>Pair a Web/Dashboard-side session with your Lark identity (get the pairing code on the web side, then send <code>/pair &lt;code&gt;</code> in the topic to claim it)</td></tr></tbody></table></div>
+<p>Basic authorization requires the app to enable <code>im:message:readonly</code>, <code>im:resource</code>, and <code>offline_access</code>. If another operation returns <code>missing_scope</code>, request the names reported by the error with <code>/login --scope ...</code>; the app administrator must first enable those user permissions in the developer console. Resource visibility/access errors require access to that resource, not another <code>/login</code>.</p>
+<h2 class="rp-toc-include" id="-roles-personas"><a href="#-roles-personas" class="rp-header-anchor rp-link" aria-hidden="true">#</a>🎭 Roles (Personas)</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody><tr><td><code>/role</code></td><td>View the currently effective Role (this-group override &gt; default role &gt; none)</td></tr><tr><td><code>/role set &lt;Markdown&gt;</code></td><td>Set <strong>this group&#x27;s</strong> Role (overrides the default role)</td></tr><tr><td><code>/role delete</code></td><td>Delete this group&#x27;s Role</td></tr><tr><td><code>/role team set &lt;Markdown&gt;</code></td><td>Set the <strong>default role</strong> (the cross-group default persona; the command name keeps <code>team</code>, = dashboard &quot;Bot Config → Default Role&quot;)</td></tr><tr><td><code>/role cap set &lt;one-liner&gt;</code> / <code>/role cap clear</code></td><td>Set/clear the capability tag in the roster</td></tr><tr><td><code>/role profile list</code></td><td>List local role profiles</td></tr><tr><td><code>/role profile show &lt;profile&gt; [--all]</code></td><td>Show this bot&#x27;s profile entry, or all local entries known to this daemon</td></tr><tr><td><code>/role profile set &lt;profile&gt; &lt;Markdown&gt;</code></td><td>Set this bot&#x27;s entry in a reusable role profile</td></tr><tr><td><code>/role profile save &lt;profile&gt;</code></td><td>Save this bot&#x27;s current effective role into the profile</td></tr><tr><td><code>/role profile apply &lt;profile&gt; [--preview] [--force] [--quiet]</code></td><td>Write this bot&#x27;s profile entry as this group&#x27;s Role</td></tr></tbody></table></div>
+<p>See <a href="/botmux/en/roles.html" class="rp-link">Roles &amp; Teams</a> for details.</p>
+<h2 class="rp-toc-include" id="-session-relay-regular-groups"><a href="#-session-relay-regular-groups" class="rp-header-anchor rp-link" aria-hidden="true">#</a>🔀 Session Relay (Regular Groups)</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody><tr><td><code>/relay</code></td><td>Pop up a card in the target group to <strong>pull</strong> an active session of yours from another group and continue it</td></tr><tr><td><code>@botA @botB /relay --create</code></td><td><strong>Move</strong> the current session (with its collaborators) into a newly created group</td></tr></tbody></table></div>
+<p>See <a href="/botmux/en/relay.html" class="rp-link">Session Relay</a> for details.</p>
+<h2 class="rp-toc-include" id="️-on-call-group-chats"><a href="#️-on-call-group-chats" class="rp-header-anchor rp-link" aria-hidden="true">#</a>🛎️ On-Call (Group Chats)</h2>
+<p><code>/oncall bind &lt;path&gt;</code> · <code>/oncall unbind</code> · <code>/oncall status</code></p>
+<h2 class="rp-toc-include" id="-usage-authorization-owner--admins"><a href="#-usage-authorization-owner--admins" class="rp-header-anchor rp-link" aria-hidden="true">#</a>🔑 Usage Authorization (owner / admins)</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody><tr><td><code>@bot /grant</code> (or <code>/grant all</code>)</td><td>Authorize <strong>all members of this group</strong> to talk (writes <code>allowedChatGroups</code>; no quota, no expiry; in a topic group keyed by the <code>oc_</code> group and covers all topics); bare <code>/revoke</code> removes it</td></tr><tr><td><code>@bot /grant @someone [N]</code></td><td>Open a grant card authorizing <strong>talk in this group</strong> for specific members, defaulting to 3 messages / 1 hour each; the card offers 1 hour / 8 hours / 1 day / 7 days / permanent and a quota field (blank = unlimited). The owner-initiated card also offers <strong>global talk</strong>. <code>@bot /revoke @someone</code> removes the per-group and global guest grants together, and also removes the person from <code>allowedUsers</code> if listed there (revoking the owner themselves, or a revoke that would leave no admin, is refused; the reply names the affected scopes)</td></tr><tr><td><code>/vc-auth @someone</code></td><td>While meeting-listening is on, temporarily trust an in-meeting instruction source; <code>/vc-auth revoke @someone</code> revokes; <code>/vc-auth list</code> shows current grants</td></tr></tbody></table></div>
+<p>Layers, quotas, grant request cards, and the block list are documented in <a href="/botmux/en/permissions.html" class="rp-link">Permissions &amp; Access</a>. Note: <strong>being added to a group is not authorization</strong> — a restricted bot still accepts only listed members.</p>
+<h2 class="rp-toc-include" id="️-remote-config--skills-owner-only"><a href="#️-remote-config--skills-owner-only" class="rp-header-anchor rp-link" aria-hidden="true">#</a>⚙️ Remote Config &amp; Skills (owner-only)</h2>
+<p>Written and hot-applied — no restart needed.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody><tr><td><code>/botconfig get</code></td><td>Show this bot&#x27;s current operational config</td></tr><tr><td><code>/botconfig set &lt;field&gt; &lt;value&gt;</code></td><td>Change model/cli/lang/toggles; <code>/botconfig help</code> lists all fields</td></tr><tr><td><code>/skills ...</code></td><td>View/manage this bot&#x27;s skill policy (<code>attach</code>/<code>detach</code> require owner)</td></tr></tbody></table></div>
+<h2 class="rp-toc-include" id="-one-click-new-session-group"><a href="#-one-click-new-session-group" class="rp-header-anchor rp-link" aria-hidden="true">#</a>🆕 One-Click New Session Group</h2>
+<p><code>/group &lt;group name&gt;</code> (alias <code>/g</code>): automatically creates a new Lark group, invites you in, transfers ownership to you, and runs the entire group as a standalone CLI session. <code>@botA @botB /g &lt;group name&gt;</code> can add multiple bots into the new group at once.</p>
+<p>Add <code>--role-profile &lt;profile&gt;</code> to bootstrap the new group with reusable per-bot roles:</p>
+<div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-function)">@botA</span><span style="color:var(--shiki-token-string)"> @botB</span><span style="color:var(--shiki-token-string)"> /g</span><span style="color:var(--shiki-token-string)"> --role-profile</span><span style="color:var(--shiki-token-string)"> collab-main</span><span style="color:var(--shiki-token-string)"> War</span><span style="color:var(--shiki-token-string)"> Room</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>See <a href="/botmux/en/group.html" class="rp-link">One-Click Session Group</a> for details.</p>
+<h2 class="rp-toc-include" id="-upgrade-an-ordinary-group-to-project-mode"><a href="#-upgrade-an-ordinary-group-to-project-mode" class="rp-header-anchor rp-link" aria-hidden="true">#</a>📌 Upgrade an Ordinary Group to Project Mode</h2>
+<p>In the top-level ordinary-group chat, mention the Bot that should coordinate the project:</p>
+<div class="rp-codeblock language-text"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="text"><code><span class="line"><span>@bot /project enable</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>The addressed Bot becomes coordinator and the other bots in this group that are managed by the same Botmux host become workers. The command writes the same source of truth as Dashboard and immediately sends and pins the getting-started card. A settled project goal is not required; discussion can begin first in the top-level chat. Command-based enablement turns on “automatically enroll new bots” by default, so newly joined bots managed by the same host enter the worker allowlist independently of the auto-start-on-join setting.</p>
+<p>On every project turn, the coordinator receives Botmux&#x27;s fixed project-state protocol: read durable state first, then persist material changes to the goal, phase, current work, remaining plan, blockers, or milestones. This protocol is injected separately from custom Roles, so Role wording and once-only Role injection cannot disable it. On first initialization, Botmux sends and pins a fresh formal project card at the current point in the timeline, then unpins the getting-started guide; later progress updates patch the formal card in place.</p>
+<ul>
+<li><code>@bot /project status</code>: show the coordinator, workers, and whether a project has started.</li>
+<li><code>@bot /project roles</code>: Reply in the current group with a focused role card for this project’s coordinator and workers; only the admin who opened the card can operate it. Saving reuses the per-chat <code>/role</code> files and follows the bot’s existing injection policy: every-turn mode applies on the next message, while once mode applies after a new or rebuilt session.</li>
+<li><code>@bot /project disable</code>: leave project-group mode; an unused guide is unpinned, while existing project state is retained for a later re-enable.</li>
+</ul>
+<p>The command works only in ordinary groups and only for the Bot&#x27;s owner/allowedUsers. Repeating <code>enable</code> preserves any worker subset and auto-enrollment policy already curated in Dashboard. Dashboard can disable “automatically enroll new bots”; when disabled, the explicit worker list remains unchanged. Dashboard also lists the same project agents and deep-links to their group-role editors; both entry points share one role source of truth.</p>
+<h2 class="rp-toc-include" id="-group-context-sharing"><a href="#-group-context-sharing" class="rp-header-anchor rp-link" aria-hidden="true">#</a>🧠 Group Context Sharing</h2>
+<p>In a real Lark group, mention any bot managed by this deployment:</p>
+<div class="rp-codeblock language-text"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="text"><code><span class="line"><span>@bot /context-sharing on</span></span>
+<span class="line"><span>@bot /context-sharing status</span></span>
+<span class="line"><span>@bot /context-sharing off</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>The switch is group-wide and off by default. Once enabled, bots managed by this deployment passively retain published messages from the group. A bot that was not mentioned stays asleep. On its next activation under the existing mention policy, it receives attributed background it missed. The switch does not change mention routing or create a model turn or session merely to deliver background.</p>
+<p>Only a human owner/member of that bot&#x27;s <code>allowedUsers</code> can inspect or change the switch; ordinary talk grants and other bots do not qualify. DMs and API virtual sessions are unsupported. Sessions configured with <code>promptInjection=none</code> explicitly do not receive automatic background.</p>
+<p>By default, injected background is bounded to 24,000 characters per turn, while stored group observations are retained for 30 days or 10,000 messages. Injected background counts toward the activated model&#x27;s input tokens, but passive observation does not call a model. Scope is limited to published group messages and resource references; it excludes DMs, hidden reasoning, unpublished tool results, and private files. If platform backfill is incomplete because of history limits, permissions, or retention, the background carries an incomplete-range marker instead of presenting the gap as complete history.</p>
+<p><code>status</code> and successful enable responses also show a recall-event subscription diagnostic. Only a <code>subscribed</code> reason means the app configuration was verified to include <code>im.message.recalled_v1</code>; this does not promise 100% push delivery. <code>update_submitted</code> means an update was submitted but still requires publishing a new app version in Lark Developer Console. Unknown, unavailable-login, or stale results mean historical background may temporarily retain recalled messages; inspect that event subscription and retry. Disabling performs no subscription check or setup action.</p>
+<h2 class="rp-toc-include" id="-feishu-doc-comment-entry"><a href="#-feishu-doc-comment-entry" class="rp-header-anchor rp-link" aria-hidden="true">#</a>📄 Feishu Doc Comment Entry</h2>
+<p><code>/watch-comment</code>: watch Feishu doc comments, bind them to an AI session, and post replies back into their threads; supports <code>&lt;doc link&gt; [--dir &lt;path&gt;] [--all|--mentions-only]</code> and <code>list/off</code>. <code>/subscribe-lark-doc</code> keeps the original per-file Feishu API subscription flow. See <a href="/botmux/en/doc-comment.html" class="rp-link">Feishu Doc Comment Entry</a> for details.</p>
+<h2 class="rp-toc-include" id="-workflow-orchestration-experimental"><a href="#-workflow-orchestration-experimental" class="rp-header-anchor rp-link" aria-hidden="true">#</a>🔧 Workflow (orchestration, experimental)</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody><tr><td><code>/workflow &lt;goal&gt;</code> (= <code>/workflow new &lt;goal&gt;</code>)</td><td>Start an <strong>ad-hoc workflow</strong>: the bot interrogates the requirement → auto-orchestrates a DAG → runs it concurrently after you confirm, with approval cards on risk nodes at execution time</td></tr><tr><td><code>/workflow run &lt;name&gt; [key=value ...]</code></td><td>Run a Saved Workflow</td></tr><tr><td><code>/workflow save last [name]</code> · <code>/workflow list|show|cancel</code></td><td>Save / list / inspect / cancel workflows (legacy v2 assets only support offline <code>migrate-v3</code> / <code>archive-runs</code>)</td></tr></tbody></table></div>
+<blockquote>
+<p>The old <code>/template run|cancel</code> commands are retired; sending <code>/template</code> now returns a retirement notice.</p>
+</blockquote>
+<p>See <a href="/botmux/en/workflow.html" class="rp-link">Workflow</a> for details.</p>
+<h2 class="rp-toc-include" id="-multi-bot-collaboration"><a href="#-multi-bot-collaboration" class="rp-header-anchor rp-link" aria-hidden="true">#</a>👥 Multi-Bot Collaboration</h2>
+<p><code>@botA @botB /t &lt;prompt&gt;</code> (each opens a new topic) · <code>@botA @botB /introduce</code> (register the bots in this chat with each other by open_id for precise collaboration mentions) · <code>botmux bots list</code> (show bots available in the current group)</p>
+<h2 class="rp-toc-include" id="-scheduling---help"><a href="#-scheduling---help" class="rp-header-anchor rp-link" aria-hidden="true">#</a>⏰ Scheduling &amp; ❓ Help</h2>
+<p><code>/schedule ...</code> (see <a href="/botmux/en/schedule.html" class="rp-link">Scheduled Tasks</a>) · <code>/help</code> (shows the full list inside the topic)</p><!--/$--></div><footer class="rp-doc-footer"><div class="rp-doc-footer__edit"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/en/slash-commands.md" target="_blank" rel="noopener noreferrer" class="rp-edit-link rp-link">Edit this page</a><div class="rp-last-updated"><p>Last Updated<!-- -->: <span>10/17/2026, 3:22:22 PM</span></p></div></div><div class="rp-doc-footer__divider"></div><div class="rp-prev-next-page"><a href="/botmux/en/plugins.html" class="rp-prev-next-page__item rp-prev-next-page__prev rp-link"><span class="rp-prev-next-page__item__desc">Previous page</span><span class="rp-prev-next-page__item__title"><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon rp-prev-next-page__rotate_180"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg><span>Plugin Development &amp; Market</span></span></a><a href="/botmux/en/cli-commands.html" class="rp-prev-next-page__item rp-prev-next-page__next rp-link"><span class="rp-prev-next-page__item__desc">Next page</span><span class="rp-prev-next-page__item__title"><span>CLI Commands</span><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></span></a></div></footer></main></div><aside class="rp-doc-layout__outline rp-scrollbar"><div class="rp-outline"><div class="rp-outline__title">ON THIS PAGE<svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg></div><nav class="rp-outline__toc rp-scrollbar"><a href="#-session-management" class="rp-toc-item rp-link" title="📌 Session Management" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">📌 Session Management</span></a><a href="#-reply-mode-reply-mode" class="rp-toc-item rp-link" title="💬 Reply Mode (/reply-mode)" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">💬 Reply Mode (<code>/reply-mode</code>)</span></a><a href="#-mention-policy-mention-mode-regular-groups-only" class="rp-toc-item rp-link" title="📢 Mention Policy (/mention-mode, regular groups only)" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">📢 Mention Policy (<code>/mention-mode</code>, regular groups only)</span></a><a href="#-chat-tabs" class="rp-toc-item rp-link" title="📑 Chat Tabs" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">📑 Chat Tabs</span></a><a href="#change-reasoning-effort-in-a-codex-app-session" class="rp-toc-item rp-link" title="Change Reasoning Effort in a Codex App Session" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Change Reasoning Effort in a Codex App Session</span></a><a href="#-passthrough-to-the-underlying-cli" class="rp-toc-item rp-link" title="🔀 Passthrough to the Underlying CLI" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">🔀 Passthrough to the Underlying CLI</span></a><a href="#-view-available-commands" class="rp-toc-item rp-link" title="🧩 View Available Commands" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">🧩 View Available Commands</span></a><a href="#-session-onboarding" class="rp-toc-item rp-link" title="📡 Session Onboarding" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">📡 Session Onboarding</span></a><a href="#-user-authorization" class="rp-toc-item rp-link" title="🔐 User Authorization" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">🔐 User Authorization</span></a><a href="#-roles-personas" class="rp-toc-item rp-link" title="🎭 Roles (Personas)" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">🎭 Roles (Personas)</span></a><a href="#-session-relay-regular-groups" class="rp-toc-item rp-link" title="🔀 Session Relay (Regular Groups)" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">🔀 Session Relay (Regular Groups)</span></a><a href="#️-on-call-group-chats" class="rp-toc-item rp-link" title="🛎️ On-Call (Group Chats)" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">🛎️ On-Call (Group Chats)</span></a><a href="#-usage-authorization-owner--admins" class="rp-toc-item rp-link" title="🔑 Usage Authorization (owner / admins)" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">🔑 Usage Authorization (owner / admins)</span></a><a href="#️-remote-config--skills-owner-only" class="rp-toc-item rp-link" title="⚙️ Remote Config &amp; Skills (owner-only)" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">⚙️ Remote Config &amp; Skills (owner-only)</span></a><a href="#-one-click-new-session-group" class="rp-toc-item rp-link" title="🆕 One-Click New Session Group" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">🆕 One-Click New Session Group</span></a><a href="#-upgrade-an-ordinary-group-to-project-mode" class="rp-toc-item rp-link" title="📌 Upgrade an Ordinary Group to Project Mode" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">📌 Upgrade an Ordinary Group to Project Mode</span></a><a href="#-group-context-sharing" class="rp-toc-item rp-link" title="🧠 Group Context Sharing" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">🧠 Group Context Sharing</span></a><a href="#-feishu-doc-comment-entry" class="rp-toc-item rp-link" title="📄 Feishu Doc Comment Entry" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">📄 Feishu Doc Comment Entry</span></a><a href="#-workflow-orchestration-experimental" class="rp-toc-item rp-link" title="🔧 Workflow (orchestration, experimental)" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">🔧 Workflow (orchestration, experimental)</span></a><a href="#-multi-bot-collaboration" class="rp-toc-item rp-link" title="👥 Multi-Bot Collaboration" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">👥 Multi-Bot Collaboration</span></a><a href="#-scheduling---help" class="rp-toc-item rp-link" title="⏰ Scheduling &amp; ❓ Help" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">⏰ Scheduling &amp; ❓ Help</span></a></nav><div class="rp-outline__divider"></div><div class="rp-outline__bottom"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/en/slash-commands.md" target="_blank" rel="noopener noreferrer" class="rp-outline__action-row rp-edit-link rp-link"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"></path></svg><span>Edit this page</span></a></div></div></aside></div></div>
+    <div id="__rspress_modal_container"></div>
+  </body>
+</html>

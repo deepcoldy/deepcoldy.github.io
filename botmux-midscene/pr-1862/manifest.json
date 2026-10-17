@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "caseId": "9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88",
+      "name": "Navigate the core read-only Dashboard pages",
+      "project": "dashboard-smoke",
+      "status": "success",
+      "durationMs": 43019,
+      "attempts": 1,
+      "stepId": "5f25bc94-786d-4287-94ed-2bfe454dae1e:steps:6",
+      "reportPath": "dashboard/index.html",
+      "previewPath": "previews/case-preview-dashboard-smoke-9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88.jpg"
+    },
+    {
+      "caseId": "73dbd99e26ee2aa7b84f2a220451e7ccf3e2a3f5ff5ee012671c5141ac19dd08",
+      "name": "Claude basic bot flow",
+      "project": "feishu-browser",
+      "status": "success",
+      "durationMs": 219993,
+      "attempts": 1,
+      "stepId": "00f2f5ad-349f-4213-a6f0-948922e15482:steps:3",
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-browser-73dbd99e26ee2aa7b84f2a220451e7ccf3e2a3f5ff5ee012671c5141ac19dd08.jpg"
+    },
+    {
+      "caseId": "8ec257ffd8f73327e9e99aba017f571d2e6f38ceecb5570577f9bef1e4e4c398",
+      "name": "Codex basic bot flow",
+      "project": "feishu-browser",
+      "status": "failed",
+      "durationMs": 302204,
+      "attempts": 2,
+      "stepId": "1e712dbf-99b7-4f62-a56d-89574d4c8b66:steps:1",
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-browser-8ec257ffd8f73327e9e99aba017f571d2e6f38ceecb5570577f9bef1e4e4c398.jpg"
+    },
+    {
+      "caseId": "a8ae208dde87c90466a9a14e09b2104d6dcc74dd8431cd95e1fdddf89621b987",
+      "name": "Codex prompt submission",
+      "project": "feishu-browser",
+      "status": "success",
+      "durationMs": 119311,
+      "attempts": 1,
+      "stepId": "0be293bc-b95f-4dcb-8a50-736b99dd9d48:steps:1",
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-browser-a8ae208dde87c90466a9a14e09b2104d6dcc74dd8431cd95e1fdddf89621b987.jpg"
+    },
+    {
+      "name": "Aiden basic bot flow",
+      "project": "feishu-browser",
+      "status": "not-run",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "CoCo basic bot flow",
+      "project": "feishu-browser",
+      "status": "not-run",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "OpenCode basic bot flow",
+      "project": "feishu-browser",
+      "status": "not-run",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Bot reply smoke test",
+      "project": "feishu-browser",
+      "status": "not-run",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Aiden and CoCo collaboration",
+      "project": "feishu-browser",
+      "status": "not-run",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Streaming card lifecycle",
+      "project": "feishu-browser",
+      "status": "not-run",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Consecutive message queue",
+      "project": "feishu-browser",
+      "status": "not-run",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Group message without a mention",
+      "project": "feishu-browser",
+      "status": "not-run",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Group message with one bot mention",
+      "project": "feishu-browser",
+      "status": "not-run",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Group chat topic reply",
+      "project": "feishu-browser",
+      "status": "not-run",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Private chat topic reply",
+      "project": "feishu-browser",
+      "status": "not-run",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Mixed image and text card",
+      "project": "feishu-browser",
+      "status": "not-run",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Scheduled task remains in its source thread",
+      "project": "feishu-browser",
+      "status": "not-run",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Web terminal opens from the streaming card",
+      "project": "feishu-browser",
+      "status": "not-run",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    }
+  ]
+}
