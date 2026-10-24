@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Botmux Midscene report</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    body { margin: 0; background: #0b0d13; color: #e8eaf2; }
+    main { width: min(1280px, calc(100% - 40px)); margin: 48px auto; }
+    .summary, .unavailable { color: #aeb4c6; }
+    .failure { margin-top: 6px; max-width: 420px; color: #ff9b9b; font-size: 13px; }
+    a { color: #a99bff; }
+    table { width: 100%; border-collapse: collapse; background: #131722; border: 1px solid #2b3142; }
+    th, td { padding: 12px 14px; border-bottom: 1px solid #2b3142; text-align: left; vertical-align: top; }
+    th { color: #aeb4c6; font-size: 13px; text-transform: uppercase; }
+    img, video { width: 260px; max-height: 160px; object-fit: cover; border-radius: 8px; border: 1px solid #343b50; background: #000; }
+  </style>
+</head>
+<body><main>
+  <h1>Botmux × Midscene</h1>
+  <p class="summary"><strong>7/7 cases passed</strong> · 0 failed · 0 skipped · 0 not run</p>
+  <table>
+    <thead><tr><th></th><th>Case</th><th>Project</th><th>Status</th><th>Duration</th><th>Node screenshot</th><th>Replay</th></tr></thead>
+    <tbody><tr><td>✅</td><td><a href="dashboard/index.html#runner-step=5a20aca1-a6cc-4523-bad2-24e1d91d6359%3Asteps%3A6">Navigate the core read-only Dashboard pages</a></td><td>dashboard-smoke</td><td>success</td><td>41.1 s</td><td><a href="dashboard/index.html#runner-step=5a20aca1-a6cc-4523-bad2-24e1d91d6359%3Asteps%3A6"><img src="previews/case-preview-dashboard-smoke-9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88.jpg" alt="Navigate the core read-only Dashboard pages screenshot" loading="lazy"></a></td><td><span class="unavailable">Not available</span></td></tr>
+<tr><td>✅</td><td><a href="feishu/index.html#runner-step=02fa4e42-bcf8-4e96-9a7a-f0e8d63c70d5%3Asteps%3A3">Claude basic bot flow</a></td><td>feishu-core-claude</td><td>success</td><td>527.1 s</td><td><a href="feishu/index.html#runner-step=02fa4e42-bcf8-4e96-9a7a-f0e8d63c70d5%3Asteps%3A3"><img src="previews/case-preview-feishu-core-claude-a8862f167dc5dc0202317bcf6c3c66a9e80fa713ca4bcbee307b208a56e6e66d.jpg" alt="Claude basic bot flow screenshot" loading="lazy"></a></td><td><span class="unavailable">Passed — recording kept in the run artifact</span></td></tr>
+<tr><td>✅</td><td><a href="feishu/index.html#runner-step=82e5474e-6e2d-4691-a296-ec9408fd84f1%3Asteps%3A0">Follow-up in the same topic keeps context</a></td><td>feishu-core-conversation</td><td>success</td><td>560.8 s</td><td><a href="feishu/index.html#runner-step=82e5474e-6e2d-4691-a296-ec9408fd84f1%3Asteps%3A0"><img src="previews/case-preview-feishu-core-conversation-28ae5c0a53c89362cfa00f6908d116ad2d502aa4881aaabd96d8c2493f21a68d.jpg" alt="Follow-up in the same topic keeps context screenshot" loading="lazy"></a></td><td><span class="unavailable">Passed — recording kept in the run artifact</span></td></tr>
+<tr><td>✅</td><td><a href="feishu/index.html#runner-step=2303db8c-d0d7-42fe-be99-58ee1791511e%3Asteps%3A0">Thread /status and /close commands</a></td><td>feishu-core-conversation</td><td>success</td><td>391.4 s</td><td><a href="feishu/index.html#runner-step=2303db8c-d0d7-42fe-be99-58ee1791511e%3Asteps%3A0"><img src="previews/case-preview-feishu-core-conversation-d181e921054b989a3c38fc1a48de562bd882abe7b322c60314d56bc625dfc2d6.jpg" alt="Thread /status and /close commands screenshot" loading="lazy"></a></td><td><span class="unavailable">Passed — recording kept in the run artifact</span></td></tr>
+<tr><td>✅</td><td><a href="feishu/index.html#runner-step=f03b89dc-f790-4393-aa06-6eb9a4357785%3Asteps%3A0">Claude DM chat mode replies inline and keeps one session</a></td><td>feishu-core-dm-modes-claude</td><td>success</td><td>379.1 s</td><td><a href="feishu/index.html#runner-step=f03b89dc-f790-4393-aa06-6eb9a4357785%3Asteps%3A0"><img src="previews/case-preview-feishu-core-dm-modes-claude-18c47a4b6da55b10f07520e9c855bf24995300e904c29e95cb5df834e0d2138b.jpg" alt="Claude DM chat mode replies inline and keeps one session screenshot" loading="lazy"></a></td><td><span class="unavailable">Passed — recording kept in the run artifact</span></td></tr>
+<tr><td>✅</td><td><a href="feishu/index.html#runner-step=85b1bda4-7ace-400d-83e1-a0f0fa677acb%3Asteps%3A0">Claude DM thread mode gives each message its own topic and session</a></td><td>feishu-core-dm-modes-claude</td><td>success</td><td>403.1 s</td><td><a href="feishu/index.html#runner-step=85b1bda4-7ace-400d-83e1-a0f0fa677acb%3Asteps%3A0"><img src="previews/case-preview-feishu-core-dm-modes-claude-c26e9de6363cfad6d2cc331b83ca6de2388e0d45debe242b9c4f8ea920c11457.jpg" alt="Claude DM thread mode gives each message its own topic and session screenshot" loading="lazy"></a></td><td><span class="unavailable">Passed — recording kept in the run artifact</span></td></tr>
+<tr><td>✅</td><td><a href="feishu/index.html#runner-step=9508e0c2-28d5-4172-87ac-589263dcd470%3Asteps%3A0">Claude DM group mode moves the conversation into a new session group</a></td><td>feishu-core-dm-modes-claude</td><td>success</td><td>371.0 s</td><td><a href="feishu/index.html#runner-step=9508e0c2-28d5-4172-87ac-589263dcd470%3Asteps%3A0"><img src="previews/case-preview-feishu-core-dm-modes-claude-2d415c86a0b46d5700cca58dee6afdeac1b7f48d9e287f8b132b91999adbb4ac.jpg" alt="Claude DM group mode moves the conversation into a new session group screenshot" loading="lazy"></a></td><td><span class="unavailable">Passed — recording kept in the run artifact</span></td></tr></tbody>
+  </table>
+</main></body>
+</html>

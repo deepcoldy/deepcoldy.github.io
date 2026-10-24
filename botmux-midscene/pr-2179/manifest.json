@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "caseId": "9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88",
+      "name": "Navigate the core read-only Dashboard pages",
+      "project": "dashboard-smoke",
+      "status": "success",
+      "durationMs": 41088,
+      "attempts": 1,
+      "stepId": "5a20aca1-a6cc-4523-bad2-24e1d91d6359:steps:6",
+      "failure": null,
+      "reportPath": "dashboard/index.html",
+      "previewPath": "previews/case-preview-dashboard-smoke-9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88.jpg"
+    },
+    {
+      "caseId": "a8862f167dc5dc0202317bcf6c3c66a9e80fa713ca4bcbee307b208a56e6e66d",
+      "name": "Claude basic bot flow",
+      "project": "feishu-core-claude",
+      "status": "success",
+      "durationMs": 527077,
+      "attempts": 1,
+      "stepId": "02fa4e42-bcf8-4e96-9a7a-f0e8d63c70d5:steps:3",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-claude-a8862f167dc5dc0202317bcf6c3c66a9e80fa713ca4bcbee307b208a56e6e66d.jpg"
+    },
+    {
+      "caseId": "28ae5c0a53c89362cfa00f6908d116ad2d502aa4881aaabd96d8c2493f21a68d",
+      "name": "Follow-up in the same topic keeps context",
+      "project": "feishu-core-conversation",
+      "status": "success",
+      "durationMs": 560760,
+      "attempts": 1,
+      "stepId": "82e5474e-6e2d-4691-a296-ec9408fd84f1:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-conversation-28ae5c0a53c89362cfa00f6908d116ad2d502aa4881aaabd96d8c2493f21a68d.jpg"
+    },
+    {
+      "caseId": "d181e921054b989a3c38fc1a48de562bd882abe7b322c60314d56bc625dfc2d6",
+      "name": "Thread /status and /close commands",
+      "project": "feishu-core-conversation",
+      "status": "success",
+      "durationMs": 391374,
+      "attempts": 1,
+      "stepId": "2303db8c-d0d7-42fe-be99-58ee1791511e:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-conversation-d181e921054b989a3c38fc1a48de562bd882abe7b322c60314d56bc625dfc2d6.jpg"
+    },
+    {
+      "caseId": "18c47a4b6da55b10f07520e9c855bf24995300e904c29e95cb5df834e0d2138b",
+      "name": "Claude DM chat mode replies inline and keeps one session",
+      "project": "feishu-core-dm-modes-claude",
+      "status": "success",
+      "durationMs": 379058,
+      "attempts": 1,
+      "stepId": "f03b89dc-f790-4393-aa06-6eb9a4357785:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-dm-modes-claude-18c47a4b6da55b10f07520e9c855bf24995300e904c29e95cb5df834e0d2138b.jpg"
+    },
+    {
+      "caseId": "c26e9de6363cfad6d2cc331b83ca6de2388e0d45debe242b9c4f8ea920c11457",
+      "name": "Claude DM thread mode gives each message its own topic and session",
+      "project": "feishu-core-dm-modes-claude",
+      "status": "success",
+      "durationMs": 403113,
+      "attempts": 1,
+      "stepId": "85b1bda4-7ace-400d-83e1-a0f0fa677acb:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-dm-modes-claude-c26e9de6363cfad6d2cc331b83ca6de2388e0d45debe242b9c4f8ea920c11457.jpg"
+    },
+    {
+      "caseId": "2d415c86a0b46d5700cca58dee6afdeac1b7f48d9e287f8b132b91999adbb4ac",
+      "name": "Claude DM group mode moves the conversation into a new session group",
+      "project": "feishu-core-dm-modes-claude",
+      "status": "success",
+      "durationMs": 371039,
+      "attempts": 1,
+      "stepId": "9508e0c2-28d5-4172-87ac-589263dcd470:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-dm-modes-claude-2d415c86a0b46d5700cca58dee6afdeac1b7f48d9e287f8b132b91999adbb4ac.jpg"
+    }
+  ]
+}
