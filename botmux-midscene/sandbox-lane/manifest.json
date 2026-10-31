@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "caseId": "9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88",
+      "name": "Navigate the core read-only Dashboard pages",
+      "project": "dashboard-smoke",
+      "status": "success",
+      "durationMs": 42724,
+      "attempts": 1,
+      "stepId": "efb3c38a-0461-43d3-a9b3-883b04a91e25:steps:6",
+      "failure": null,
+      "reportPath": "dashboard/index.html",
+      "previewPath": "previews/case-preview-dashboard-smoke-9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88.jpg"
+    },
+    {
+      "caseId": "259cf48d4b8d326d934097576a5c74c4809acc23a22603840f5cf176af1992ce",
+      "name": "OpenCode basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "success",
+      "durationMs": 138623,
+      "attempts": 1,
+      "stepId": "4ab98dda-19d6-4c87-bea2-12e165c36a84:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-clis-259cf48d4b8d326d934097576a5c74c4809acc23a22603840f5cf176af1992ce.jpg"
+    },
+    {
+      "caseId": "ba2706458b3f20b4bbec552f5220fc0ae53a7124d9eaf5d36fa3fe1008bc70fa",
+      "name": "Pi basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "success",
+      "durationMs": 98446,
+      "attempts": 1,
+      "stepId": "94fadf23-5a05-45eb-b313-ff44b2ba568d:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-clis-ba2706458b3f20b4bbec552f5220fc0ae53a7124d9eaf5d36fa3fe1008bc70fa.jpg"
+    },
+    {
+      "caseId": "6f9ccd74502ccc7811ff1123df2082d01af6e11036e52e2b58321add45d4ee02",
+      "name": "OhMyPi basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "success",
+      "durationMs": 99815,
+      "attempts": 1,
+      "stepId": "2bb21a2b-0837-4ea3-a003-0d61bc0801cc:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-clis-6f9ccd74502ccc7811ff1123df2082d01af6e11036e52e2b58321add45d4ee02.jpg"
+    },
+    {
+      "caseId": "6b4282851fa7274ac10b7bc12201c8805cc7831a4bf307b0a940c44848951fea",
+      "name": "Kimi basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "success",
+      "durationMs": 97581,
+      "attempts": 1,
+      "stepId": "ed15f4d4-f2d2-4432-a74b-d441e11c8ea0:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-clis-6b4282851fa7274ac10b7bc12201c8805cc7831a4bf307b0a940c44848951fea.jpg"
+    },
+    {
+      "caseId": "ab4d024c40e24b2b2fac75d40d6d8edf36bfd0e4815b64a42ae39e3dcc6c2228",
+      "name": "Gemini basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "failed",
+      "durationMs": 261076,
+      "attempts": 2,
+      "stepId": "99bbb241-5cb3-4666-97d0-c27e1bdc7e8b:steps:0",
+      "failure": "waitFor timeout: Based on the screenshot, the main content area displays a conversation topic titled \"申晗和Gemini的会话\". Within this topic, there are several messages from \"Gemini\".",
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-clis-ab4d024c40e24b2b2fac75d40d6d8edf36bfd0e4815b64a42ae39e3dcc6c2228.jpg"
+    },
+    {
+      "caseId": "b85c9130921c0dd701cd7ebf6e9c9f8bcc138b969749cac10e7d7a5ea66a3699",
+      "name": "Grok basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "success",
+      "durationMs": 89255,
+      "attempts": 2,
+      "stepId": "d493459a-74ca-4170-8cdb-e17fe2647bb9:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-clis-b85c9130921c0dd701cd7ebf6e9c9f8bcc138b969749cac10e7d7a5ea66a3699.jpg"
+    },
+    {
+      "caseId": "db4e25fe86c63620f4b1024f32c05804770729ab55234cc9483d2cc12873d60d",
+      "name": "Sandbox hides home and harness secrets",
+      "project": "feishu-core-sandbox",
+      "status": "success",
+      "durationMs": 74304,
+      "attempts": 1,
+      "stepId": "5c6bd064-2cc7-446f-85e0-8090a956602b:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-sandbox-db4e25fe86c63620f4b1024f32c05804770729ab55234cc9483d2cc12873d60d.jpg"
+    }
+  ]
+}
