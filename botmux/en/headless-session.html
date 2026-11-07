@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Headless Automation Sessions - botmux 文档</title>
+<script>{;const saved = localStorage.getItem('rspress-theme-appearance');const preferDark = window.matchMedia('(prefers-color-scheme: dark)').matches;const isDark = !saved || saved === 'auto' ? preferDark : saved === 'dark';document.documentElement.classList.toggle('dark', isDark);document.documentElement.classList.toggle('rp-dark', isDark);document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';}</script>
+<link href="/botmux/static/css/styles.788f7d0799.css" rel="stylesheet">
+<script defer src="/botmux/static/js/styles.b78d054ff9.js"></script>
+<script defer src="/botmux/static/js/lib-react.9b7f575772.js"></script>
+<script defer src="/botmux/static/js/lib-router.00d9fd057a.js"></script>
+<script defer src="/botmux/static/js/2390.10879bb0bb.js"></script>
+<script defer src="/botmux/static/js/index.c910afd182.js"></script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Rspress v2.0.13">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://deepcoldy.github.io/botmux/">
+<meta property="og:image" content="https://deepcoldy.github.io/botmux/botmux-logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://deepcoldy.github.io/botmux/botmux-logo.png">
+<meta name="theme-color" content="#646CEA">
+<link rel="icon" href="/botmux/botmux-logo.png">
+<meta property="og:title" content="Headless Automation Sessions - botmux 文档">
+<meta name="description" content="botmux session lets scripts, CI jobs, or scheduled jobs start an AI session without a Feishu group: send a prompt, wait for it to finish, and read the result. When people need to see it, one command publishes the session to a new group or binds it to an existing group / topic, and the conversation continues in Feishu. Good fits: In CI, let the AI review code first, and only open a group to notify people when something is wrong;Run batch analysis from a script when you only want the text result and no chat noise;Do the investigation in the background, then hand the team &quot;the existing context + a summary&quot; in one go. How the two command sets relate: botmux session is the stable, automation-facing entry point; botmux headless is the layer underneath. Prefer session in scripts. Use headless when you need finer control (for example, post one turn's result without moving the session).">
+<meta property="og:description" content="botmux session lets scripts, CI jobs, or scheduled jobs start an AI session without a Feishu group: send a prompt, wait for it to finish, and read the result. When people need to see it, one command publishes the session to a new group or binds it to an existing group / topic, and the conversation continues in Feishu. Good fits: In CI, let the AI review code first, and only open a group to notify people when something is wrong;Run batch analysis from a script when you only want the text result and no chat noise;Do the investigation in the background, then hand the team &quot;the existing context + a summary&quot; in one go. How the two command sets relate: botmux session is the stable, automation-facing entry point; botmux headless is the layer underneath. Prefer session in scripts. Use headless when you need finer control (for example, post one turn's result without moving the session)."></head>
+
+  <body>
+    <div id="__rspress_root"><link rel="preload" as="image" href="/botmux/botmux-logo.png"/><header class="rp-nav"><div class="rp-nav__left"><div class="rp-nav__title"><a href="/botmux/en/" class="rp-nav__title__link rp-link"><div class="rp-nav__title__logo"><img src="/botmux/botmux-logo.png" alt="logo" id="logo" class="rspress-logo rp-nav__title__logo-image"/></div><span>botmux 文档</span></a></div></div><div class="rp-nav__right"><button class="rp-search-button"><div class="rp-search-button__content"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21" class="rp-search-button__icon"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg><span class="rp-search-button__word">Search</span></div><div class="rp-search-button__hotkey" style="opacity:0"><span></span><span>K</span></div></button><div class="rp-search-button--mobile"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg></div><div class="rp-nav__others"><div class="rp-nav-menu__divider"></div><li class="rp-nav-menu__item"><div class="rp-nav-menu__item__container">English<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-menu__item__icon"><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--center"><li class="rp-hover-group__item" style="padding-left:8px" data-depth="0"><a href="/botmux/headless-session.html" class="rp-hover-group__item__link rp-link" aria-label="简体中文" lang="zh" hrefLang="zh" rel="alternate">简体中文</a></li><li class="rp-hover-group__item rp-hover-group__item--active" style="padding-left:8px" data-depth="0"><a href="/botmux/en/headless-session.html" class="rp-hover-group__item__link rp-link" aria-label="English" lang="en" hrefLang="en" rel="alternate">English</a></li></ul></li><div class="rp-switch-appearance"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" class="rp-switch-appearance__icon rp-switch-appearance__icon--sun"><path fill="currentColor" d="m7.001 15.848-1.226 1.226a.58.58 0 0 0 0 .818.58.58 0 0 0 .818 0l1.226-1.226a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0m-.352-8.735a.584.584 0 0 0 .825-.825L6.237 5.051a.584.584 0 0 0-.825.825zM5.011 11.07h-1.75a.584.584 0 0 0 0 1.167h1.75c.324 0 .584-.26.584-.583a.585.585 0 0 0-.584-.584m7.003-5.835c.324 0 .584-.26.584-.584V2.9a.58.58 0 0 0-.584-.584.58.58 0 0 0-.583.583V4.65c0 .323.262.584.583.584m5.616 1.621 1.226-1.225a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0l-1.226 1.225a.58.58 0 0 0 0 .818.576.576 0 0 0 .818 0m3.138 4.214h-1.75a.58.58 0 0 0-.584.584c0 .324.26.584.583.584h1.751a.584.584 0 1 0 0-1.167m-3.389 5.124a.584.584 0 0 0-.825.825l1.238 1.238a.584.584 0 0 0 .825-.826zm-5.365-9.795a5.256 5.256 0 0 0-5.257 5.258 5.256 5.256 0 0 0 5.257 5.257 5.256 5.256 0 0 0 5.257-5.257 5.256 5.256 0 0 0-5.257-5.258m0 11.675a.58.58 0 0 0-.583.583v1.751a.582.582 0 1 0 1.167 0v-1.75a.584.584 0 0 0-.584-.584"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" viewBox="0 0 19 19" class="rp-switch-appearance__icon rp-switch-appearance__icon--moon"><path fill="currentColor" d="M9.166 0a9.2 9.2 0 0 1 1.857.188.834.834 0 0 1 .042 1.623 4.47 4.47 0 1 0 5.457 5.457l.048-.135a.834.834 0 0 1 1.575.177q.186.902.188 1.856A9.168 9.168 0 1 1 9.166 0"></path></svg></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__sm"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg></button><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__md"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"><div class="rp-nav-menu__others-mobile__container"><div class="rp-nav-hamburger__md__hover-group"><div class="rp-nav-screen-appearance"><div class="rp-nav-screen-appearance__left">Theme</div><div class="rp-nav-screen-appearance__right"></div></div><div class="rp-nav-screen-langs"><div class="rp-nav-screen-langs__left">Languages</div><div class="rp-nav-screen-langs__right">English<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-screen-langs__icon "><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div></div><div class="rp-nav-screen-langs-group" style="display:grid;grid-template-rows:0fr;transition:grid-template-rows 0.2s ease-out"><div class="rp-nav-screen-langs-group__inner"><a href="/botmux/headless-session.html" class="rp-nav-screen-langs-group__item rp-link" hrefLang="zh" lang="zh" rel="alternate">简体中文</a><span class="rp-nav-screen-langs-group__item rp-nav-screen-langs-group__item--active" aria-current="page" aria-disabled="true">English</span></div></div><div class="rp-nav-screen-divider"></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div></div></ul></button></div></header><div class="rp-doc-layout__menu"><div class="rp-sidebar-menu"><button type="button" class="rp-sidebar-menu__left"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M4 6h24v2H4zm0 18h24v2H4zm0-12h24v2H4zm0 6h24v2H4z"></path></svg><span>Menu</span></button><button type="button" class="rp-sidebar-menu__right"><span class="rp-sidebar-menu__right__text">ON THIS PAGE</span><svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-sidebar-menu__right__icon" style="transform:rotate(0deg);transition:transform 0.2s ease-out"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></button></div></div><div class="rp-doc-layout__container"><aside class="rp-doc-layout__sidebar rp-scrollbar"><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Getting Started</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/index.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Introduction</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/quickstart.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">5-Minute Quickstart</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/prerequisites.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Prerequisites</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/desktop.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">macOS Desktop App</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Core Concepts</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/architecture.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Architecture</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/session-model.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Session &amp; Topic Model</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Features</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/cards.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Streaming Cards</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/topic-unavailable-policy.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Unavailable Topic Policy</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/web-terminal.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Web Terminal</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/multi-bot.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Multi-Bot Collaboration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/multi-topic.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Multi-Topic Orchestration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/project-card.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Project Progress Card</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/mention-mode.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Mention Policy</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/whiteboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Local Whiteboard</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/decision-board.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Decision Board &amp; Steward</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/roles.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Roles &amp; Teams</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/tmux.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">tmux Session Persistence</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/zmx.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">ZMX Session Backend</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/adopt.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Adopt a Session</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/relay.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Relay a Session</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/group.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">One-Click Session Groups</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/doc-comment.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Feishu Doc Comment Entry</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/schedule.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Scheduled Tasks</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/oncall.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">On-Call Mode</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/permissions.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Permissions &amp; Access</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/sandbox.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">File Sandbox</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/voice.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Voice Summary</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/dashboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Dashboard</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/workbench.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Agent Workbench</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/webhook.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Webhook Ingress</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/api-task-trigger.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Programmatic Task Trigger API</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/headless-session.html" class="rp-sidebar-item rp-sidebar-item--active rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Headless Automation Sessions</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/turn-results.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Turn Results</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/api-core-only.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Core-only API Control</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/workflow.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Workflow (Experimental)</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/hooks.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Lifecycle Hooks</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/skill-cli.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Skill + CLI Interaction</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Development &amp; Extensions</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/plugins.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Plugin Development &amp; Market</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Command Reference</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/slash-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Slash Commands</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/cli-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">CLI Commands</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Configuration</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/bots-json.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">bots.json</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/feedback-storage.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Feedback Storage &amp; Migration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/env.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Environment &amp; File Locations</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/global-settings.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Global Settings (config.json)</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/companion-api.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Local Companion API</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/model-proxy.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Model Proxy (Experimental)</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/adapters.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">CLI Adapters</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Practices &amp; Troubleshooting</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/best-practices.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Best Practices</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/pitfalls.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Common Pitfalls</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/faq.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">FAQ / Troubleshooting</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/about.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">About &amp; Resources</span></div><div class="rp-sidebar-item__right"></div></a></div></div></aside><div class="rp-doc-layout__doc"><main class="rp-doc-layout__doc-container"><div class="rp-doc rspress-doc"><!--$--><h1 class="rp-toc-include" id="headless-automation-sessions"><a href="#headless-automation-sessions" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Headless Automation Sessions<!-- --> </h1>
+<p><code>botmux session</code> lets scripts, CI jobs, or scheduled jobs start an AI session <strong>without a Feishu group</strong>: send a prompt, wait for it to finish, and read the result. When people need to see it, one command publishes the session to a new group or binds it to an existing group / topic, and the conversation continues in Feishu.</p>
+<p>Good fits:</p>
+<ul>
+<li>In CI, let the AI review code first, and only open a group to notify people when something is wrong;</li>
+<li>Run batch analysis from a script when you only want the text result and no chat noise;</li>
+<li>Do the investigation in the background, then hand the team &quot;the existing context + a summary&quot; in one go.</li>
+</ul>
+<blockquote>
+<p>How the two command sets relate: <code>botmux session</code> is the <strong>stable, automation-facing entry point</strong>; <code>botmux headless</code> is the layer underneath. Prefer <code>session</code> in scripts. Use <code>headless</code> when you need finer control (for example, post one turn&#x27;s result without moving the session).</p>
+</blockquote>
+<h2 class="rp-toc-include" id="three-steps"><a href="#three-steps" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Three steps</h2>
+<p>Prerequisite: the botmux daemon is running on this machine (<code>botmux start</code>).</p>
+<div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-comment)"># 1. Start a session, run the first turn, and wait for it</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">botmux</span><span style="color:var(--shiki-token-string)"> session</span><span style="color:var(--shiki-token-string)"> start</span><span style="color:var(--shiki-token-string)"> --headless</span><span style="color:var(--shiki-token-string)"> --bot</span><span style="color:var(--shiki-token-keyword)"> &lt;</span><span style="color:var(--shiki-token-string)">bot-nam</span><span style="color:var(--shiki-foreground)">e</span><span style="color:var(--shiki-token-keyword)">&gt;</span><span style="color:var(--shiki-token-string)"> --working-dir</span><span style="color:var(--shiki-token-string)"> ~/repo</span><span style="color:var(--shiki-foreground)"> \</span></span>
+<span class="line"><span style="color:var(--shiki-token-string)">  --prompt-file</span><span style="color:var(--shiki-token-string)"> task.md</span><span style="color:var(--shiki-token-string)"> --json</span><span style="color:var(--shiki-token-keyword)"> &gt;</span><span style="color:var(--shiki-token-string)"> start.json</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">SID</span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)">$(</span><span style="color:var(--shiki-token-function)">jq</span><span style="color:var(--shiki-token-string)"> -r</span><span style="color:var(--shiki-token-string)"> .sessionId</span><span style="color:var(--shiki-token-string)"> start.json</span><span style="color:var(--shiki-foreground)">)       </span><span style="color:var(--shiki-token-comment)"># session ID, starts with hl_</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">jq</span><span style="color:var(--shiki-token-string)"> -r</span><span style="color:var(--shiki-token-string-expression)"> &#x27;.output.content&#x27;</span><span style="color:var(--shiki-token-string)"> start.json</span><span style="color:var(--shiki-token-comment)">       # reply to the first turn</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-comment)"># 2. Optionally ask follow-ups, or fetch the result again</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">botmux</span><span style="color:var(--shiki-token-string)"> session</span><span style="color:var(--shiki-token-string)"> send</span><span style="color:var(--shiki-token-string-expression)"> &quot;$SID&quot;</span><span style="color:var(--shiki-token-string)"> --prompt-file</span><span style="color:var(--shiki-token-string)"> followup.md</span><span style="color:var(--shiki-token-string)"> --wait</span><span style="color:var(--shiki-token-string)"> --json</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">botmux</span><span style="color:var(--shiki-token-string)"> session</span><span style="color:var(--shiki-token-string)"> result</span><span style="color:var(--shiki-token-string-expression)"> &quot;$SID&quot;</span><span style="color:var(--shiki-token-string)"> --json</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-comment)"># 3. Hand it to people: create a group and publish the session there</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">botmux</span><span style="color:var(--shiki-token-string)"> session</span><span style="color:var(--shiki-token-string)"> publish</span><span style="color:var(--shiki-token-string-expression)"> &quot;$SID&quot;</span><span style="color:var(--shiki-token-string)"> --create-group</span><span style="color:var(--shiki-token-string)"> --name</span><span style="color:var(--shiki-token-string-expression)"> &quot;Dependency upgrade check&quot;</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>Step 3 does three things:</p>
+<ol>
+<li>Creates a new Feishu group with this bot (with <code>--chat-id</code> it uses an existing group instead);</li>
+<li>Opens a topic in the group and <strong>moves</strong> the session into it;</li>
+<li>Asks the AI to <strong>summarize the context so far</strong> (what was done, key findings and evidence, open questions, suggested next steps), then posts the summary in the topic.</li>
+</ol>
+<p>From then on, replying in that topic talks to <strong>the same session with the same memory</strong>.</p>
+<h2 class="rp-toc-include" id="session-ids"><a href="#session-ids" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Session IDs</h2>
+<p>Starting a session gives you two IDs; commands accept either:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>ID</th><th>Looks like</th><th>Notes</th></tr></thead><tbody><tr><td>Session ID (<code>sessionId</code> / <code>headlessId</code>)</td><td>starts with <code>hl_</code></td><td>Save this one in scripts</td></tr><tr><td>botmux session ID (<code>botmuxSessionId</code>)</td><td>UUID</td><td>Same ID you see in <code>botmux ls</code> and other commands</td></tr></tbody></table></div>
+<p><code>botmux headless</code> subcommands also accept an ID prefix (it must match uniquely); <code>session publish</code> needs the full ID.</p>
+<h2 class="rp-toc-include" id="session-commands-at-a-glance"><a href="#session-commands-at-a-glance" class="rp-header-anchor rp-link" aria-hidden="true">#</a><code>session</code> commands at a glance</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>I want to…</th><th>Command</th></tr></thead><tbody><tr><td>Start a session and run the first turn</td><td><code>botmux session start --headless --bot &lt;bot&gt; [--working-dir &lt;dir&gt;] --prompt-file &lt;path&gt;</code></td></tr><tr><td>Send another turn to a session</td><td><code>botmux session send &lt;id&gt; --prompt-file &lt;path&gt; [--wait]</code></td></tr><tr><td>Wait for the current turn to finish</td><td><code>botmux session wait &lt;id&gt; [--trigger-id &lt;triggerId&gt;]</code></td></tr><tr><td>Check the result now (no waiting)</td><td><code>botmux session result &lt;id&gt; [--trigger-id &lt;triggerId&gt;]</code></td></tr><tr><td>List headless sessions on this machine</td><td><code>botmux session list [--bot &lt;larkAppId&gt;]</code></td></tr><tr><td>Bind to an existing group / topic</td><td><code>botmux session bind &lt;id&gt; --chat-id &lt;oc_xxx&gt; [--into &lt;om_xxx&gt;]</code></td></tr><tr><td>Summarize and publish to a new group</td><td><code>botmux session publish &lt;id&gt; --create-group --name &quot;Task name&quot;</code></td></tr><tr><td>Summarize and publish to an existing group</td><td><code>botmux session publish &lt;id&gt; --chat-id &lt;oc_xxx&gt; [--name &quot;Topic title&quot;]</code></td></tr><tr><td>Model-only structured call</td><td><code>botmux session invoke &lt;start|result|cancel|capabilities&gt; --bot &lt;larkAppId&gt;</code>, see below</td></tr></tbody></table></div>
+<p>Every command supports <code>--json</code>, which prints JSON that is easy to parse with <code>jq</code>. Without it you get compact text:</p>
+<ul>
+<li><code>start</code>: the first line is the session ID, followed by the reply;</li>
+<li><code>send --wait</code> / <code>wait</code> / <code>result</code>: the reply when finished, otherwise the state (such as <code>running</code>);</li>
+<li><code>publish</code>: the first line is the group ID, the second is the <code>triggerId</code> of the summary turn.</li>
+</ul>
+<p><code>send</code> / <code>wait</code> / <code>result</code> / <code>list</code> / <code>bind</code> (and <code>create</code> / <code>run</code>) are passed straight through to the matching <code>botmux headless</code> subcommand with the same arguments.</p>
+<h2 class="rp-toc-include" id="common-options"><a href="#common-options" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Common options</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Option</th><th>Used by</th><th>Notes</th></tr></thead><tbody><tr><td><code>--bot</code></td><td><code>start</code></td><td>Bot name or larkAppId. Optional when only one daemon is online on this machine; required when there are several</td></tr><tr><td><code>--working-dir</code></td><td><code>start</code></td><td>Working directory for the session. Defaults to the bot&#x27;s default directory, then the daemon&#x27;s current directory</td></tr><tr><td><code>--prompt-file</code> / <code>--prompt</code></td><td><code>start</code> / <code>send</code></td><td>Where the prompt comes from, pick one; with neither, it is read from stdin. <code>--prompt-file -</code> also means stdin</td></tr><tr><td><code>--model</code></td><td><code>start</code></td><td>Model for this session</td></tr><tr><td><code>--reasoning-effort</code></td><td><code>start</code></td><td>Reasoning effort: <code>low</code> / <code>medium</code> / <code>high</code> / <code>xhigh</code> / <code>max</code> / <code>ultra</code></td></tr><tr><td><code>--timeout</code></td><td><code>start</code> / <code>send</code> / <code>wait</code></td><td><strong>Maximum seconds the command waits</strong>, 1–86400, default 300</td></tr><tr><td><code>--name</code></td><td><code>start</code> / <code>publish</code></td><td>In <code>start</code>, the session title; in <code>publish --create-group</code>, the group name (required), also used as the topic title</td></tr><tr><td><code>--trigger-id</code></td><td><code>wait</code> / <code>result</code></td><td>A specific turn; defaults to the latest one</td></tr><tr><td><code>--json</code></td><td>all</td><td>Print JSON</td></tr></tbody></table></div>
+<blockquote>
+<p><code>--timeout</code> only controls how long the command waits. When it runs out, the command exits normally while the AI <strong>keeps working</strong>; fetch the result later with <code>session wait</code> or <code>session result</code>. With <code>--json</code>, a timed-out result includes <code>&quot;timedOut&quot;: true</code> and the state is still <code>running</code>.</p>
+</blockquote>
+<p>Result states (<code>state</code>):</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>State</th><th>Meaning</th></tr></thead><tbody><tr><td><code>running</code></td><td>Still running</td></tr><tr><td><code>completed</code></td><td>Done; the reply is in <code>output.content</code></td></tr><tr><td><code>failed</code></td><td>Failed</td></tr><tr><td><code>interrupted</code></td><td>Interrupted</td></tr><tr><td><code>not_found</code></td><td>No such session or turn</td></tr></tbody></table></div>
+<p>Exit codes: non-zero when the state is <code>failed</code> or <code>not_found</code>; 2 for invalid arguments.</p>
+<blockquote>
+<p>When <code>session start</code> fails (non-zero exit), it prints the raw JSON from the underlying <code>headless run</code>, not the compact format above; the session ID is in <code>created.headlessId</code>.</p>
+</blockquote>
+<h2 class="rp-toc-include" id="publish-and-bind-hand-it-to-people"><a href="#publish-and-bind-hand-it-to-people" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Publish and bind: hand it to people</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>I want to…</th><th>Use</th><th>Where the session goes</th><th>What the group sees</th></tr></thead><tbody><tr><td>Hand it to the team with a summary first</td><td><code>session publish</code></td><td>Moved into a new topic</td><td>Topic title + a fresh summary from the AI</td></tr><tr><td>Move it into an existing topic</td><td><code>session bind --into &lt;om_xxx&gt;</code></td><td>Moved into that topic</td><td>The latest reply</td></tr><tr><td>Move it into an existing group as a new topic</td><td><code>session bind --chat-id &lt;oc_xxx&gt;</code></td><td>Moved into a new topic (titled with the session title)</td><td>The latest reply</td></tr><tr><td>Post one turn&#x27;s result without moving the session</td><td><code>headless publish</code></td><td>Stays in the background</td><td>That turn&#x27;s reply</td></tr></tbody></table></div>
+<p>Notes:</p>
+<ul>
+<li><strong>The bot must be in the target group</strong>, or the post fails. With <code>--create-group</code>, the bot creates the group itself and invites the first user in that bot&#x27;s <code>allowedUsers</code>.</li>
+<li>A group made by <code>--create-group</code> is bound to the session&#x27;s working directory, so new topics in that group start there too.</li>
+<li>To change what the summary asks for, <code>publish</code> accepts <code>--summary-prompt &quot;&lt;text&gt;&quot;</code> or <code>--summary-prompt-file &lt;path&gt;</code> to replace the default summary prompt.</li>
+<li>The session must be <strong>idle</strong> to be moved. If the AI is in the middle of a turn, the move is refused; try again after the turn ends.</li>
+<li>What moves is the same CLI process and the same memory — the same mechanism as <a href="/botmux/en/relay.html" class="rp-link">Session Relay</a>.</li>
+<li><code>bind</code> re-posts the latest reply into the group by default. In that case the latest turn must be finished and have a reply, or the bind is refused; add <code>--replay none</code> to skip the re-post.</li>
+</ul>
+<h2 class="rp-toc-include" id="botmux-headless-the-lower-layer"><a href="#botmux-headless-the-lower-layer" class="rp-header-anchor rp-link" aria-hidden="true">#</a><code>botmux headless</code>: the lower layer</h2>
+<p>Use it directly when you need finer control.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Subcommand</th><th>What it does</th></tr></thead><tbody><tr><td><code>create</code></td><td>Create a session without sending a prompt. Accepts <code>--bot</code> <code>--title</code> <code>--working-dir</code> <code>--model</code> <code>--reasoning-effort</code></td></tr><tr><td><code>run</code></td><td>Send one turn. Without <code>--session</code> it creates a session first; it only waits with <code>--wait</code></td></tr><tr><td><code>send --session &lt;id&gt;</code></td><td>Send a turn to an existing session (the ID can also be the first argument)</td></tr><tr><td><code>wait &lt;id&gt;</code></td><td>Wait for a turn to finish, 300 seconds max by default</td></tr><tr><td><code>result &lt;id&gt;</code></td><td>Check a turn&#x27;s result now</td></tr><tr><td><code>list</code> / <code>ls</code></td><td>List sessions; filter with <code>--bot &lt;larkAppId&gt;</code></td></tr><tr><td><code>publish &lt;id&gt;</code></td><td>Post one turn&#x27;s result as text to a group: <code>--chat-id</code> picks the group (defaults to the bound group), <code>--into &lt;om_xxx&gt;</code> replies in a topic</td></tr><tr><td><code>bind &lt;id&gt; --chat-id &lt;oc_xxx&gt;</code></td><td>Move the session into a group, see below</td></tr></tbody></table></div>
+<p><code>bind</code> options:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Option</th><th>Default</th><th>Notes</th></tr></thead><tbody><tr><td><code>--scope thread|chat</code></td><td><code>thread</code></td><td><code>thread</code>: a topic session; <code>chat</code>: the whole group is the session</td></tr><tr><td><code>--into &lt;om_xxx&gt;</code></td><td>none</td><td>Bind to the topic this message belongs to. Without it, a title message is posted to start a new topic. Required with <code>--scope chat</code> (as an anchor message)</td></tr><tr><td><code>--title</code></td><td>session title</td><td>Title of the new topic</td></tr><tr><td><code>--replay latest|none</code></td><td><code>latest</code></td><td>Whether to post the latest reply (or the turn given by <code>--trigger-id</code>) into the group</td></tr></tbody></table></div>
+<p><code>session start</code> is equivalent to <code>headless run --wait --json</code>, with the output reshaped into a shorter JSON (<code>sessionId</code>, <code>triggerId</code>, <code>state</code>, <code>output</code>; the full raw response is in <code>raw</code>).</p>
+<h2 class="rp-toc-include" id="session-invoke-model-only-structured-calls"><a href="#session-invoke-model-only-structured-calls" class="rp-header-anchor rp-link" aria-hidden="true">#</a><code>session invoke</code>: model-only structured calls</h2>
+<p>This is a different mode: <strong>no agent loop, no tools at all</strong> — the model just returns a structured result that matches your JSON Schema. Good for &quot;ask once, get JSON&quot; tasks such as classification or extraction.</p>
+<div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-function)">botmux</span><span style="color:var(--shiki-token-string)"> session</span><span style="color:var(--shiki-token-string)"> invoke</span><span style="color:var(--shiki-token-string)"> capabilities</span><span style="color:var(--shiki-token-string)"> --bot</span><span style="color:var(--shiki-token-keyword)"> &lt;</span><span style="color:var(--shiki-token-string)">larkAppI</span><span style="color:var(--shiki-foreground)">d</span><span style="color:var(--shiki-token-keyword)">&gt;</span><span style="color:var(--shiki-token-comment)">      # check whether this bot supports it</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">botmux</span><span style="color:var(--shiki-token-string)"> session</span><span style="color:var(--shiki-token-string)"> invoke</span><span style="color:var(--shiki-token-string)"> start</span><span style="color:var(--shiki-token-string)">  --bot</span><span style="color:var(--shiki-token-keyword)"> &lt;</span><span style="color:var(--shiki-token-string)">larkAppI</span><span style="color:var(--shiki-foreground)">d</span><span style="color:var(--shiki-token-keyword)">&gt;</span><span style="color:var(--shiki-token-string)"> --request-file</span><span style="color:var(--shiki-token-string)"> req.json</span><span style="color:var(--shiki-token-string)"> --wait-ms</span><span style="color:var(--shiki-token-constant)"> 60000</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">botmux</span><span style="color:var(--shiki-token-string)"> session</span><span style="color:var(--shiki-token-string)"> invoke</span><span style="color:var(--shiki-token-string)"> result</span><span style="color:var(--shiki-token-string)"> --bot</span><span style="color:var(--shiki-token-keyword)"> &lt;</span><span style="color:var(--shiki-token-string)">larkAppI</span><span style="color:var(--shiki-foreground)">d</span><span style="color:var(--shiki-token-keyword)">&gt;</span><span style="color:var(--shiki-token-string)"> --request-id</span><span style="color:var(--shiki-token-string)"> job-001</span><span style="color:var(--shiki-token-string)"> --wait-ms</span><span style="color:var(--shiki-token-constant)"> 30000</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">botmux</span><span style="color:var(--shiki-token-string)"> session</span><span style="color:var(--shiki-token-string)"> invoke</span><span style="color:var(--shiki-token-string)"> cancel</span><span style="color:var(--shiki-token-string)"> --bot</span><span style="color:var(--shiki-token-keyword)"> &lt;</span><span style="color:var(--shiki-token-string)">larkAppI</span><span style="color:var(--shiki-foreground)">d</span><span style="color:var(--shiki-token-keyword)">&gt;</span><span style="color:var(--shiki-token-string)"> --request-id</span><span style="color:var(--shiki-token-string)"> job-001</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>Example <code>req.json</code>:</p>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;requestId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;job-001&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;prompt&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;Is this log a network timeout? ...&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;model&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;&lt;model-name&gt;&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;deadlineMs&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 60000</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;outputSchema&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;type&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;object&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;properties&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> { </span><span style="color:var(--shiki-token-keyword)">&quot;timeout&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> { </span><span style="color:var(--shiki-token-keyword)">&quot;type&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;boolean&quot;</span><span style="color:var(--shiki-foreground)"> }</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-keyword)"> &quot;reason&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> { </span><span style="color:var(--shiki-token-keyword)">&quot;type&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;string&quot;</span><span style="color:var(--shiki-foreground)"> } }</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;required&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> [</span><span style="color:var(--shiki-token-string-expression)">&quot;timeout&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-string-expression)"> &quot;reason&quot;</span><span style="color:var(--shiki-foreground)">]</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;additionalProperties&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> false</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>Key points:</p>
+<ul>
+<li><code>--bot</code> must be the <strong>larkAppId</strong> here.</li>
+<li>The requirements are strict: the bot must be a dedicated <a href="/botmux/en/api-core-only.html" class="rp-link">Core-only</a> bot without sandbox, extra env vars, and so on; only some CLIs support it so far (Claude Code, Codex, OpenCode, Pi, and a few others). The <code>supported</code> field from <code>capabilities</code> is the source of truth.</li>
+<li><code>deadlineMs</code> (100–300000) actually stops inference when reached; <code>--wait-ms</code> (up to 300000) only controls how long the command waits.</li>
+<li>The schema supports a small set of keywords (<code>type</code> <code>properties</code> <code>required</code> <code>additionalProperties</code> <code>items</code> <code>enum</code> <code>description</code>); objects must list every property in <code>required</code> and set <code>additionalProperties: false</code>.</li>
+<li>Output is always one line of JSON. Exit code is 0 when the state is <code>running</code> or <code>completed</code>, otherwise 1.</li>
+</ul>
+<h2 class="rp-toc-include" id="faq"><a href="#faq" class="rp-header-anchor rp-link" aria-hidden="true">#</a>FAQ</h2>
+<p><strong>I get <code>no online botmux daemon</code> or <code>daemon not online for bot ...</code>.</strong>
+The daemon for that bot isn&#x27;t running. Run <code>botmux start</code>, then check with <code>botmux status</code>.</p>
+<p><strong>I get <code>multiple daemons online; pass --bot</code>.</strong>
+Several bots run on this machine; pick one with <code>--bot</code> on <code>start</code>.</p>
+<p><strong>Does the session post anything in Feishu?</strong>
+No. Until it is published or bound, the session has no group: no cards, no messages, results are only available through the commands. These turns are also outside what the <a href="/botmux/en/turn-results.html" class="rp-link">Turn Results</a> API collects.</p>
+<p><strong>How does this relate to HTTP triggers?</strong>
+Under the hood, <code>botmux headless</code> sends the local daemon a task request with <code>source.type</code> set to <code>headless</code>. To call the HTTP API directly, see <a href="/botmux/en/api-task-trigger.html" class="rp-link">Trigger botmux Tasks via API</a>.</p>
+<p><strong><code>publish</code> failed. Is the session still there?</strong>
+Yes. <code>publish</code> runs &quot;create group → bind → summarize → post the summary&quot; in order and stops with an error at the step that fails. If binding already succeeded, the session is already in the group&#x27;s topic; just continue there.</p>
+<h2 class="rp-toc-include" id="related"><a href="#related" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Related</h2>
+<ul>
+<li><a href="/botmux/en/relay.html" class="rp-link">Session Relay</a>: move sessions between groups, topics, and DMs</li>
+<li><a href="/botmux/en/api-task-trigger.html" class="rp-link">Trigger botmux Tasks via API</a>: start tasks and fetch results over HTTP</li>
+<li><a href="/botmux/en/api-core-only.html" class="rp-link">Core-only (apiOnly) API Control</a>: botmux with only the HTTP API, no Feishu</li>
+<li><a href="/botmux/en/cli-commands.html" class="rp-link">CLI Commands</a></li>
+</ul><!--/$--></div><footer class="rp-doc-footer"><div class="rp-doc-footer__edit"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/en/headless-session.md" target="_blank" rel="noopener noreferrer" class="rp-edit-link rp-link">Edit this page</a><div class="rp-last-updated"><p>Last Updated<!-- -->: <span>11/7/2026, 1:25:39 AM</span></p></div></div><div class="rp-doc-footer__divider"></div><div class="rp-prev-next-page"><a href="/botmux/en/api-task-trigger.html" class="rp-prev-next-page__item rp-prev-next-page__prev rp-link"><span class="rp-prev-next-page__item__desc">Previous page</span><span class="rp-prev-next-page__item__title"><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon rp-prev-next-page__rotate_180"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg><span>Programmatic Task Trigger API</span></span></a><a href="/botmux/en/turn-results.html" class="rp-prev-next-page__item rp-prev-next-page__next rp-link"><span class="rp-prev-next-page__item__desc">Next page</span><span class="rp-prev-next-page__item__title"><span>Turn Results</span><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></span></a></div></footer></main></div><aside class="rp-doc-layout__outline rp-scrollbar"><div class="rp-outline"><div class="rp-outline__title">ON THIS PAGE<svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg></div><nav class="rp-outline__toc rp-scrollbar"><a href="#three-steps" class="rp-toc-item rp-link" title="Three steps" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Three steps</span></a><a href="#session-ids" class="rp-toc-item rp-link" title="Session IDs" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Session IDs</span></a><a href="#session-commands-at-a-glance" class="rp-toc-item rp-link" title="session commands at a glance" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc"><code>session</code> commands at a glance</span></a><a href="#common-options" class="rp-toc-item rp-link" title="Common options" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Common options</span></a><a href="#publish-and-bind-hand-it-to-people" class="rp-toc-item rp-link" title="Publish and bind: hand it to people" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Publish and bind: hand it to people</span></a><a href="#botmux-headless-the-lower-layer" class="rp-toc-item rp-link" title="botmux headless: the lower layer" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc"><code>botmux headless</code>: the lower layer</span></a><a href="#session-invoke-model-only-structured-calls" class="rp-toc-item rp-link" title="session invoke: model-only structured calls" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc"><code>session invoke</code>: model-only structured calls</span></a><a href="#faq" class="rp-toc-item rp-link" title="FAQ" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">FAQ</span></a><a href="#related" class="rp-toc-item rp-link" title="Related" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Related</span></a></nav><div class="rp-outline__divider"></div><div class="rp-outline__bottom"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/en/headless-session.md" target="_blank" rel="noopener noreferrer" class="rp-outline__action-row rp-edit-link rp-link"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"></path></svg><span>Edit this page</span></a></div></div></aside></div></div>
+    <div id="__rspress_modal_container"></div>
+  </body>
+</html>

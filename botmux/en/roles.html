@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roles and Teams - botmux 文档</title>
+<script>{;const saved = localStorage.getItem('rspress-theme-appearance');const preferDark = window.matchMedia('(prefers-color-scheme: dark)').matches;const isDark = !saved || saved === 'auto' ? preferDark : saved === 'dark';document.documentElement.classList.toggle('dark', isDark);document.documentElement.classList.toggle('rp-dark', isDark);document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';}</script>
+<link href="/botmux/static/css/styles.788f7d0799.css" rel="stylesheet">
+<script defer src="/botmux/static/js/styles.b78d054ff9.js"></script>
+<script defer src="/botmux/static/js/lib-react.9b7f575772.js"></script>
+<script defer src="/botmux/static/js/lib-router.00d9fd057a.js"></script>
+<script defer src="/botmux/static/js/2390.10879bb0bb.js"></script>
+<script defer src="/botmux/static/js/index.c910afd182.js"></script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Rspress v2.0.13">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://deepcoldy.github.io/botmux/">
+<meta property="og:image" content="https://deepcoldy.github.io/botmux/botmux-logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://deepcoldy.github.io/botmux/botmux-logo.png">
+<meta name="theme-color" content="#646CEA">
+<link rel="icon" href="/botmux/botmux-logo.png">
+<meta property="og:title" content="Roles and Teams - botmux 文档">
+<meta name="description" content="Give a bot a &quot;persona&quot; (Role): who it is in the group, what it's responsible for, and how it talks. The same bot can play different roles in different groups. The command is /role. What's on this page:">
+<meta property="og:description" content="Give a bot a &quot;persona&quot; (Role): who it is in the group, what it's responsible for, and how it talks. The same bot can play different roles in different groups. The command is /role. What's on this page:"></head>
+
+  <body>
+    <div id="__rspress_root"><link rel="preload" as="image" href="/botmux/botmux-logo.png"/><link rel="preload" as="image" href="https://magic-builder.tos-cn-beijing.volces.com/uploads/1780051089378_default-role-shot.png"/><header class="rp-nav"><div class="rp-nav__left"><div class="rp-nav__title"><a href="/botmux/en/" class="rp-nav__title__link rp-link"><div class="rp-nav__title__logo"><img src="/botmux/botmux-logo.png" alt="logo" id="logo" class="rspress-logo rp-nav__title__logo-image"/></div><span>botmux 文档</span></a></div></div><div class="rp-nav__right"><button class="rp-search-button"><div class="rp-search-button__content"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21" class="rp-search-button__icon"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg><span class="rp-search-button__word">Search</span></div><div class="rp-search-button__hotkey" style="opacity:0"><span></span><span>K</span></div></button><div class="rp-search-button--mobile"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg></div><div class="rp-nav__others"><div class="rp-nav-menu__divider"></div><li class="rp-nav-menu__item"><div class="rp-nav-menu__item__container">English<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-menu__item__icon"><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--center"><li class="rp-hover-group__item" style="padding-left:8px" data-depth="0"><a href="/botmux/roles.html" class="rp-hover-group__item__link rp-link" aria-label="简体中文" lang="zh" hrefLang="zh" rel="alternate">简体中文</a></li><li class="rp-hover-group__item rp-hover-group__item--active" style="padding-left:8px" data-depth="0"><a href="/botmux/en/roles.html" class="rp-hover-group__item__link rp-link" aria-label="English" lang="en" hrefLang="en" rel="alternate">English</a></li></ul></li><div class="rp-switch-appearance"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" class="rp-switch-appearance__icon rp-switch-appearance__icon--sun"><path fill="currentColor" d="m7.001 15.848-1.226 1.226a.58.58 0 0 0 0 .818.58.58 0 0 0 .818 0l1.226-1.226a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0m-.352-8.735a.584.584 0 0 0 .825-.825L6.237 5.051a.584.584 0 0 0-.825.825zM5.011 11.07h-1.75a.584.584 0 0 0 0 1.167h1.75c.324 0 .584-.26.584-.583a.585.585 0 0 0-.584-.584m7.003-5.835c.324 0 .584-.26.584-.584V2.9a.58.58 0 0 0-.584-.584.58.58 0 0 0-.583.583V4.65c0 .323.262.584.583.584m5.616 1.621 1.226-1.225a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0l-1.226 1.225a.58.58 0 0 0 0 .818.576.576 0 0 0 .818 0m3.138 4.214h-1.75a.58.58 0 0 0-.584.584c0 .324.26.584.583.584h1.751a.584.584 0 1 0 0-1.167m-3.389 5.124a.584.584 0 0 0-.825.825l1.238 1.238a.584.584 0 0 0 .825-.826zm-5.365-9.795a5.256 5.256 0 0 0-5.257 5.258 5.256 5.256 0 0 0 5.257 5.257 5.256 5.256 0 0 0 5.257-5.257 5.256 5.256 0 0 0-5.257-5.258m0 11.675a.58.58 0 0 0-.583.583v1.751a.582.582 0 1 0 1.167 0v-1.75a.584.584 0 0 0-.584-.584"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" viewBox="0 0 19 19" class="rp-switch-appearance__icon rp-switch-appearance__icon--moon"><path fill="currentColor" d="M9.166 0a9.2 9.2 0 0 1 1.857.188.834.834 0 0 1 .042 1.623 4.47 4.47 0 1 0 5.457 5.457l.048-.135a.834.834 0 0 1 1.575.177q.186.902.188 1.856A9.168 9.168 0 1 1 9.166 0"></path></svg></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__sm"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg></button><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__md"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"><div class="rp-nav-menu__others-mobile__container"><div class="rp-nav-hamburger__md__hover-group"><div class="rp-nav-screen-appearance"><div class="rp-nav-screen-appearance__left">Theme</div><div class="rp-nav-screen-appearance__right"></div></div><div class="rp-nav-screen-langs"><div class="rp-nav-screen-langs__left">Languages</div><div class="rp-nav-screen-langs__right">English<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-screen-langs__icon "><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div></div><div class="rp-nav-screen-langs-group" style="display:grid;grid-template-rows:0fr;transition:grid-template-rows 0.2s ease-out"><div class="rp-nav-screen-langs-group__inner"><a href="/botmux/roles.html" class="rp-nav-screen-langs-group__item rp-link" hrefLang="zh" lang="zh" rel="alternate">简体中文</a><span class="rp-nav-screen-langs-group__item rp-nav-screen-langs-group__item--active" aria-current="page" aria-disabled="true">English</span></div></div><div class="rp-nav-screen-divider"></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div></div></ul></button></div></header><div class="rp-doc-layout__menu"><div class="rp-sidebar-menu"><button type="button" class="rp-sidebar-menu__left"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M4 6h24v2H4zm0 18h24v2H4zm0-12h24v2H4zm0 6h24v2H4z"></path></svg><span>Menu</span></button><button type="button" class="rp-sidebar-menu__right"><span class="rp-sidebar-menu__right__text">ON THIS PAGE</span><svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-sidebar-menu__right__icon" style="transform:rotate(0deg);transition:transform 0.2s ease-out"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></button></div></div><div class="rp-doc-layout__container"><aside class="rp-doc-layout__sidebar rp-scrollbar"><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Getting Started</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/index.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Introduction</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/quickstart.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">5-Minute Quickstart</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/prerequisites.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Prerequisites</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/desktop.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">macOS Desktop App</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Core Concepts</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/architecture.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Architecture</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/session-model.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Session &amp; Topic Model</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Features</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/cards.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Streaming Cards</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/topic-unavailable-policy.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Unavailable Topic Policy</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/web-terminal.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Web Terminal</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/multi-bot.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Multi-Bot Collaboration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/multi-topic.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Multi-Topic Orchestration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/project-card.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Project Progress Card</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/mention-mode.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Mention Policy</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/whiteboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Local Whiteboard</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/decision-board.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Decision Board &amp; Steward</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/roles.html" class="rp-sidebar-item rp-sidebar-item--active rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Roles &amp; Teams</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/tmux.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">tmux Session Persistence</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/zmx.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">ZMX Session Backend</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/adopt.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Adopt a Session</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/relay.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Relay a Session</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/group.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">One-Click Session Groups</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/doc-comment.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Feishu Doc Comment Entry</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/schedule.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Scheduled Tasks</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/oncall.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">On-Call Mode</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/permissions.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Permissions &amp; Access</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/sandbox.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">File Sandbox</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/voice.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Voice Summary</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/dashboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Dashboard</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/workbench.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Agent Workbench</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/webhook.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Webhook Ingress</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/api-task-trigger.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Programmatic Task Trigger API</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/headless-session.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Headless Automation Sessions</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/turn-results.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Turn Results</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/api-core-only.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Core-only API Control</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/workflow.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Workflow (Experimental)</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/hooks.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Lifecycle Hooks</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/skill-cli.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Skill + CLI Interaction</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Development &amp; Extensions</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/plugins.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Plugin Development &amp; Market</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Command Reference</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/slash-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Slash Commands</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/cli-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">CLI Commands</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Configuration</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/bots-json.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">bots.json</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/feedback-storage.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Feedback Storage &amp; Migration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/env.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Environment &amp; File Locations</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/global-settings.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Global Settings (config.json)</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/companion-api.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Local Companion API</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/model-proxy.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Model Proxy (Experimental)</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/adapters.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">CLI Adapters</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Practices &amp; Troubleshooting</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/best-practices.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Best Practices</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/pitfalls.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Common Pitfalls</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/faq.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">FAQ / Troubleshooting</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/about.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">About &amp; Resources</span></div><div class="rp-sidebar-item__right"></div></a></div></div></aside><div class="rp-doc-layout__doc"><main class="rp-doc-layout__doc-container"><div class="rp-doc rspress-doc"><!--$--><h1 class="rp-toc-include" id="roles-and-teams"><a href="#roles-and-teams" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Roles and Teams<!-- --> </h1>
+<p>Give a bot a &quot;persona&quot; (Role): who it is in the group, what it&#x27;s responsible for, and how it talks. The same bot can play different roles in different groups. The command is <code>/role</code>.</p>
+<p>What&#x27;s on this page:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>I want to</th><th>Section</th></tr></thead><tbody><tr><td>Give a bot a persona (global default / just for one group)</td><td><a href="#set-a-persona" class="rp-link">Set a persona</a></td></tr><tr><td>Control how often the persona is injected, reply privately to the asker, and other per-group switches</td><td><a href="#per-group-switches" class="rp-link">Per-group switches</a></td></tr><tr><td>Apply a set of personas to a new group in one go</td><td><a href="#role-profiles" class="rp-link">Role profiles</a></td></tr><tr><td>Let other bots know &quot;who&#x27;s good at what&quot;</td><td><a href="#capability-tags" class="rp-link">Capability tags</a></td></tr><tr><td>One bot with several roles, each with its own memory (advanced)</td><td><a href="#role-switch-advanced" class="rp-link">Role switch</a></td></tr></tbody></table></div>
+<h2 class="rp-toc-include" id="set-a-persona"><a href="#set-a-persona" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Set a persona</h2>
+<p>There are two levels:</p>
+<ul>
+<li><strong>Default role</strong>: the bot&#x27;s persona in <strong>every group</strong>.</li>
+<li><strong>Group role</strong>: applies only to the <strong>current group</strong> and overrides the default role.</li>
+</ul>
+<p>The order is always: <strong>group role &gt; default role &gt; none</strong>. For example, the same bot can be a &quot;strict code reviewer&quot; in group A, a &quot;patient Q&amp;A helper&quot; in group B, and use its default role everywhere else.</p>
+<h3 class="rp-toc-include" id="with-commands-in-the-group"><a href="#with-commands-in-the-group" class="rp-header-anchor rp-link" aria-hidden="true">#</a>With commands in the group</h3>
+<p>@-mention the bot in the group and send:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Command</th><th>Effect</th></tr></thead><tbody><tr><td><code>/role</code></td><td>Show the persona in effect and where it comes from (group / default)</td></tr><tr><td><code>/role set &lt;Markdown&gt;</code></td><td>Set the group role; multi-line is fine</td></tr><tr><td><code>/role delete</code></td><td>Delete the group role and fall back to the default role</td></tr><tr><td><code>/role team</code></td><td>Show the default role</td></tr><tr><td><code>/role team set &lt;Markdown&gt;</code></td><td>Set the default role (the command keeps the old name <code>team</code>; it means &quot;default role&quot;)</td></tr><tr><td><code>/role team delete</code></td><td>Delete the default role</td></tr></tbody></table></div>
+<p>Example:</p>
+<div class="rp-codeblock language-text"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="text"><code><span class="line"><span>/role set You are this group&#x27;s technical advisor.</span></span>
+<span class="line"><span>- Give the conclusion first, then the reasoning</span></span>
+<span class="line"><span>- Flag risks before any production change</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<ul>
+<li>Personas are written in Markdown and injected into the CLI as a <code>&lt;role&gt;</code> block.</li>
+<li>Each persona can be up to 32 KB (about 10,000 CJK characters); anything beyond that is truncated.</li>
+<li>After a change, &quot;every turn&quot; mode picks it up from the next message; &quot;only once&quot; mode picks it up on a new or rebuilt session (see <a href="#per-group-switches" class="rp-link">Per-group switches</a>).</li>
+</ul>
+<h3 class="rp-toc-include" id="in-the-dashboard"><a href="#in-the-dashboard" class="rp-header-anchor rp-link" aria-hidden="true">#</a>In the Dashboard</h3>
+<p>If you&#x27;d rather not type commands, open <code>botmux dashboard</code>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>What to change</th><th>Where</th></tr></thead><tbody><tr><td>Default role</td><td><strong>Bot Config</strong> page, each bot&#x27;s &quot;<strong>Default Role</strong>&quot; section (same config as <code>/role team set</code>; saving it empty deletes it)</td></tr><tr><td>Group role</td><td><strong>Role Management</strong> page → &quot;By Group&quot;: expand a group, pick a bot, edit</td></tr><tr><td>Jump there from a group</td><td><strong>Group Management</strong> page: in a bot&#x27;s settings for that group, click &quot;Edit chat role&quot;</td></tr></tbody></table></div>
+<p><img src="https://magic-builder.tos-cn-beijing.volces.com/uploads/1780051089378_default-role-shot.png" alt="Dashboard Bot Config — Default Role editor"/></p>
+<p>When you use &quot;Duplicate&quot; on the Group Management page to copy a group, you can tick &quot;Also copy chat roles&quot; to carry the source group&#x27;s group roles (plus the per-group switches below) into the new group. Default roles are inherited automatically, so they don&#x27;t need copying.</p>
+<h2 class="rp-toc-include" id="per-group-switches"><a href="#per-group-switches" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Per-group switches</h2>
+<p>On the <strong>Role Management</strong> page, select a bot in a group. Besides editing the persona, you can set the options below. Each is saved per &quot;group + bot&quot; and takes effect immediately.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Switch</th><th>Default</th><th>What it does</th></tr></thead><tbody><tr><td><strong>Injection</strong></td><td>Every turn</td><td>&quot;Every turn&quot; sends the persona with every message; &quot;Only once (first turn)&quot; injects it only when a session starts or is rebuilt, which suits long personas and saves tokens. You can change the default per bot in the &quot;Default Role&quot; section of the Bot Config page, then override it for individual groups</td></tr><tr><td><strong>Prefer private replies to the requester</strong></td><td>Off</td><td>When on, the answer is sent to the asker in a private chat first; if that fails, it&#x27;s posted publicly in the original topic. You can also set a &quot;Group notice&quot; (e.g. &quot;Sent to you privately to avoid noise&quot;) shown in the original topic after a successful private reply; leave it empty for no notice</td></tr><tr><td><strong>Topic task reporting mode</strong></td><td>Off</td><td>See below</td></tr></tbody></table></div>
+<p><strong>Topic task reporting mode</strong>: when this bot uses <code>botmux dispatch</code> in this group to hand a task to another bot, the assignee still uses <code>botmux report</code> to hand the result back to the dispatcher&#x27;s session. With this switch on, the assignee also posts &quot;completion + output location/summary&quot; with <code>botmux send --no-mention</code> in the topic where it received the task, so people can see the result right in the group. It doesn&#x27;t mention the dispatcher or open a new topic. <code>--standby</code> (reserve a bot without sending a task) doesn&#x27;t involve this step.</p>
+<blockquote>
+<p>In project groups, the coordinator bot also receives Botmux&#x27;s fixed project-state protocol (for tracking progress and the pinned project card). It applies alongside the Role and is not affected by the Role&#x27;s injection mode. For project groups, see <code>/project</code> in <a href="/botmux/en/slash-commands.html" class="rp-link">Slash Commands</a>.</p>
+</blockquote>
+<h2 class="rp-toc-include" id="role-profiles"><a href="#role-profiles" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Role profiles</h2>
+<p>A profile is a <strong>reusable bundle of group roles</strong>: write a persona for each of several bots, save them under a name (e.g. <code>collab-main</code>), and apply them to a new group in one step later.</p>
+<p>It&#x27;s only a shortcut for writing: once applied, it becomes an ordinary group role. It doesn&#x27;t add another persona layer and doesn&#x27;t support template inheritance.</p>
+<h3 class="rp-toc-include" id="commands"><a href="#commands" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Commands</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Command</th><th>Effect</th></tr></thead><tbody><tr><td><code>/role profile list</code></td><td>List all profiles and show whether the current bot has its own entry</td></tr><tr><td><code>/role profile show &lt;name&gt;</code></td><td>Show the current bot&#x27;s persona in that profile; add <code>--all</code> to see every bot&#x27;s</td></tr><tr><td><code>/role profile set &lt;name&gt; &lt;Markdown&gt;</code></td><td>Write the current bot&#x27;s entry directly</td></tr><tr><td><code>/role profile save &lt;name&gt;</code></td><td>Save the current bot&#x27;s effective persona (group role, or the default role if there&#x27;s none) into the profile</td></tr><tr><td><code>/role profile delete &lt;name&gt;</code></td><td>Delete the current bot&#x27;s entry</td></tr><tr><td><code>/role profile apply &lt;name&gt;</code></td><td>Write the current bot&#x27;s entry as the group role</td></tr></tbody></table></div>
+<p>Flags for <code>apply</code>:</p>
+<ul>
+<li><code>--preview</code>: preview only, write nothing.</li>
+<li><code>--force</code>: if the group already has a role, apply refuses by default; add this to overwrite.</li>
+<li><code>--quiet</code>: no reply on success (less noise when applying in bulk).</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>Each bot only manages its own entry and never changes another bot&#x27;s persona.</li>
+<li>If the profile has no entry for the current bot, <code>apply</code> writes nothing and the bot keeps using its default role.</li>
+<li>Profile names may only use letters, digits, <code>.</code>, <code>_</code> and <code>-</code>, up to 64 characters.</li>
+</ul>
+<h3 class="rp-toc-include" id="in-the-dashboard-1"><a href="#in-the-dashboard-1" class="rp-header-anchor rp-link" aria-hidden="true">#</a>In the Dashboard</h3>
+<p><strong>Role Management</strong> page → &quot;Profiles&quot; tab:</p>
+<ol>
+<li>Open or create a profile on the left.</li>
+<li>In the middle, see which bots have entries; select a bot to edit its persona.</li>
+<li>Under &quot;Apply To Group&quot;, choose the target group and the bots to apply. Click <strong>Preview Apply</strong> first to check whether existing roles would be overwritten, then <strong>Apply Profile</strong>. Tick &quot;Overwrite existing group roles&quot; when you do want to overwrite.</li>
+</ol>
+<h3 class="rp-toc-include" id="apply-while-creating-a-group"><a href="#apply-while-creating-a-group" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Apply while creating a group</h3>
+<div class="rp-codeblock language-text"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="text"><code><span class="line"><span>@botA @botB @botC /g --role-profile collab-main War Room</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>Once the new group exists, the bot that created it applies its own entry, then posts <code>@botB @botC /role profile apply collab-main --quiet</code> in the new group so the other bots apply their own entries.</p>
+<h2 class="rp-toc-include" id="capability-tags"><a href="#capability-tags" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Capability tags</h2>
+<p>A capability tag is a one-line self-introduction, such as &quot;Good at frontend and UI review&quot;. It helps you and other bots pick the right one when collaborating.</p>
+<div class="rp-codeblock language-text"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="text"><code><span class="line"><span>/role cap set Good at frontend and UI review   # set</span></span>
+<span class="line"><span>/role cap                                      # show</span></span>
+<span class="line"><span>/role cap clear                                # clear</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<ul>
+<li>Tags are capped at 120 characters. One sentence is enough; use <code>/role set</code> for a full persona.</li>
+<li>When other bots run <code>botmux bots list</code> to see who&#x27;s in the group, they see each bot&#x27;s tag.</li>
+<li>Tip: put <code>workspace: required</code> / <code>optional</code> / <code>none</code> in the tag so dispatching bots know whether they must specify a repo or working directory when giving you a task.</li>
+</ul>
+<p>Personas plus capability tags are the foundation of <a href="/botmux/en/multi-bot.html" class="rp-link">multi-bot collaboration</a>: with clear identities and responsibilities, bots are less likely to get mixed up when @-mentioned in a group.</p>
+<h2 class="rp-toc-include" id="teams-collaborating-across-machines"><a href="#teams-collaborating-across-machines" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Teams: collaborating across machines</h2>
+<p>The Dashboard used to have a &quot;Team&quot; page; it has been removed. To work with bots on <strong>other people&#x27;s machines</strong>, your machine needs to be connected to the central platform and be in the same team. Then use the command line:</p>
+<ul>
+<li><code>botmux bots list --scope team</code>: list bots that have joined your team.</li>
+<li><code>botmux create-group --team &lt;team&gt; --agent &lt;appId&gt;</code>: pull them and their owners into a new group.</li>
+</ul>
+<p>Full steps are in the &quot;Team scope&quot; section of <a href="/botmux/en/multi-bot.html" class="rp-link">Multi-Bot Collaboration</a>.</p>
+<h2 class="rp-toc-include" id="role-switch-advanced"><a href="#role-switch-advanced" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Role switch (advanced)</h2>
+<blockquote>
+<p>⚠️ Advanced feature: you need to deploy a &quot;role library&quot; first, and it currently supports Claude Code only. Deployment steps are in the repo&#x27;s <a href="https://github.com/deepcoldy/botmux/blob/master/docs/roles/deploy-runbook.md" target="_blank" rel="noopener noreferrer" class="rp-link">role-system deploy runbook</a>. Below is how to use it once deployed.</p>
+</blockquote>
+<p><code>/role</code> above means &quot;one persona per bot&quot;. <strong>Role switch</strong> gives one bot <strong>several full roles</strong>, each with its own persona and <strong>its own memory</strong>. Switch to &quot;After-sales&quot; and it carries the after-sales persona and experience that belongs only to after-sales; switch to &quot;Product manager&quot; and it&#x27;s a different set.</p>
+<p>Roles apply <strong>per topic</strong>; a new topic starts from the default role.</p>
+<h3 class="rp-toc-include" id="how-to-use-it-just-talk"><a href="#how-to-use-it-just-talk" class="rp-header-anchor rp-link" aria-hidden="true">#</a>How to use it: just talk</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>You say</th><th>What the bot does</th></tr></thead><tbody><tr><td>&quot;switch role&quot; / &quot;what roles are there&quot;</td><td>Lists the roles you can use (shared ones + ones you created), numbered for you to pick</td></tr><tr><td>&quot;switch to After-sales&quot; or reply with a number</td><td>Confirms and switches; from then on this topic is answered by that role, and the card footer shows the role name</td></tr><tr><td>&quot;new role: Xiaohongshu ops, familiar with our brand voice&quot;</td><td>Drafts a persona for you to confirm, then creates it and switches to it</td></tr><tr><td>&quot;distill knowledge&quot;</td><td>Turns the role&#x27;s recent memory into structured knowledge stored back in the role (optionally as a Lark doc for human review)</td></tr></tbody></table></div>
+<p>Behind the scenes the model runs <code>botmux role switch &lt;role-dir&gt;</code>; you don&#x27;t need to type it yourself.</p>
+<h3 class="rp-toc-include" id="good-to-know"><a href="#good-to-know" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Good to know</h3>
+<ul>
+<li><strong>Separate memory</strong>: each role has one memory, shared across groups and topics, so it gets better at its domain the more it&#x27;s used.</li>
+<li><strong>Context is kept</strong>: switching restarts the CLI and resumes the previous conversation; the new role&#x27;s persona and memory load automatically when the new session starts.</li>
+<li><strong>Private roles are not a security boundary</strong>: &quot;you only see shared roles and your own&quot; is a convention in the role protocol file (<code>_role-protocol.md</code>) that the model follows. The daemon enforces only one thing: the target directory must be inside the role library <code>~/botmux-roles</code>. It does not isolate roles per sender. If you need real isolation, add OS-level permissions yourself.</li>
+<li><strong>Not the same as <code>/cd</code></strong>: <code>/cd &lt;path&gt;</code> (see <a href="/botmux/en/slash-commands.html" class="rp-link">Slash Commands</a>) is the general &quot;change working directory and restart&quot;, works with any directory, and needs operate permission. Role switch only moves within the role library.</li>
+</ul>
+<blockquote>
+<p>The old command <code>botmux cd</code> has been renamed to <code>botmux role switch</code>. The old name now only prints an error and does not switch. When maintaining an older deployment, update <code>_role-protocol.md</code> in the role library to the new command.</p>
+</blockquote><!--/$--></div><footer class="rp-doc-footer"><div class="rp-doc-footer__edit"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/en/roles.md" target="_blank" rel="noopener noreferrer" class="rp-edit-link rp-link">Edit this page</a><div class="rp-last-updated"><p>Last Updated<!-- -->: <span>11/7/2026, 1:25:39 AM</span></p></div></div><div class="rp-doc-footer__divider"></div><div class="rp-prev-next-page"><a href="/botmux/en/decision-board.html" class="rp-prev-next-page__item rp-prev-next-page__prev rp-link"><span class="rp-prev-next-page__item__desc">Previous page</span><span class="rp-prev-next-page__item__title"><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon rp-prev-next-page__rotate_180"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg><span>Decision Board &amp; Steward</span></span></a><a href="/botmux/en/tmux.html" class="rp-prev-next-page__item rp-prev-next-page__next rp-link"><span class="rp-prev-next-page__item__desc">Next page</span><span class="rp-prev-next-page__item__title"><span>tmux Session Persistence</span><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></span></a></div></footer></main></div><aside class="rp-doc-layout__outline rp-scrollbar"><div class="rp-outline"><div class="rp-outline__title">ON THIS PAGE<svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg></div><nav class="rp-outline__toc rp-scrollbar"><a href="#set-a-persona" class="rp-toc-item rp-link" title="Set a persona" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Set a persona</span></a><a href="#with-commands-in-the-group" class="rp-toc-item rp-link" title="With commands in the group" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">With commands in the group</span></a><a href="#in-the-dashboard" class="rp-toc-item rp-link" title="In the Dashboard" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">In the Dashboard</span></a><a href="#per-group-switches" class="rp-toc-item rp-link" title="Per-group switches" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Per-group switches</span></a><a href="#role-profiles" class="rp-toc-item rp-link" title="Role profiles" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Role profiles</span></a><a href="#commands" class="rp-toc-item rp-link" title="Commands" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Commands</span></a><a href="#in-the-dashboard-1" class="rp-toc-item rp-link" title="In the Dashboard" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">In the Dashboard</span></a><a href="#apply-while-creating-a-group" class="rp-toc-item rp-link" title="Apply while creating a group" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Apply while creating a group</span></a><a href="#capability-tags" class="rp-toc-item rp-link" title="Capability tags" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Capability tags</span></a><a href="#teams-collaborating-across-machines" class="rp-toc-item rp-link" title="Teams: collaborating across machines" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Teams: collaborating across machines</span></a><a href="#role-switch-advanced" class="rp-toc-item rp-link" title="Role switch (advanced)" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Role switch (advanced)</span></a><a href="#how-to-use-it-just-talk" class="rp-toc-item rp-link" title="How to use it: just talk" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">How to use it: just talk</span></a><a href="#good-to-know" class="rp-toc-item rp-link" title="Good to know" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Good to know</span></a></nav><div class="rp-outline__divider"></div><div class="rp-outline__bottom"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/en/roles.md" target="_blank" rel="noopener noreferrer" class="rp-outline__action-row rp-edit-link rp-link"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"></path></svg><span>Edit this page</span></a></div></div></aside></div></div>
+    <div id="__rspress_modal_container"></div>
+  </body>
+</html>

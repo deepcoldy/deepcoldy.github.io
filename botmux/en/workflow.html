@@ -1,0 +1,686 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workflow (experimental) - botmux 文档</title>
+<script>{;const saved = localStorage.getItem('rspress-theme-appearance');const preferDark = window.matchMedia('(prefers-color-scheme: dark)').matches;const isDark = !saved || saved === 'auto' ? preferDark : saved === 'dark';document.documentElement.classList.toggle('dark', isDark);document.documentElement.classList.toggle('rp-dark', isDark);document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';}</script>
+<link href="/botmux/static/css/styles.788f7d0799.css" rel="stylesheet">
+<script defer src="/botmux/static/js/styles.b78d054ff9.js"></script>
+<script defer src="/botmux/static/js/lib-react.9b7f575772.js"></script>
+<script defer src="/botmux/static/js/lib-router.00d9fd057a.js"></script>
+<script defer src="/botmux/static/js/2390.10879bb0bb.js"></script>
+<script defer src="/botmux/static/js/index.c910afd182.js"></script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Rspress v2.0.13">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://deepcoldy.github.io/botmux/">
+<meta property="og:image" content="https://deepcoldy.github.io/botmux/botmux-logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://deepcoldy.github.io/botmux/botmux-logo.png">
+<meta name="theme-color" content="#646CEA">
+<link rel="icon" href="/botmux/botmux-logo.png">
+<meta property="og:title" content="Workflow (experimental) - botmux 文档">
+<meta name="description" content="Workflow turns a goal that takes several steps into a flow that runs on its own: the bot first asks you questions, one at a time, until the requirement is clear;it then compiles the requirement into a DAG (a step graph with dependencies; each step is a &quot;node&quot;);once you confirm, it runs automatically, with independent steps in parallel;a flow that worked can be saved as a Saved Workflow and rerun with one command. It fits tasks with a clear end and one deliverable, like &quot;research three competitors and produce a comparison report&quot; or &quot;pull the logs, analyze them, and make charts&quot;. You don't need it for single-step questions or ordinary code changes, and it is not meant for long-running projects where several bots keep splitting and coordinating work.">
+<meta property="og:description" content="Workflow turns a goal that takes several steps into a flow that runs on its own: the bot first asks you questions, one at a time, until the requirement is clear;it then compiles the requirement into a DAG (a step graph with dependencies; each step is a &quot;node&quot;);once you confirm, it runs automatically, with independent steps in parallel;a flow that worked can be saved as a Saved Workflow and rerun with one command. It fits tasks with a clear end and one deliverable, like &quot;research three competitors and produce a comparison report&quot; or &quot;pull the logs, analyze them, and make charts&quot;. You don't need it for single-step questions or ordinary code changes, and it is not meant for long-running projects where several bots keep splitting and coordinating work."></head>
+
+  <body>
+    <div id="__rspress_root"><link rel="preload" as="image" href="/botmux/botmux-logo.png"/><header class="rp-nav"><div class="rp-nav__left"><div class="rp-nav__title"><a href="/botmux/en/" class="rp-nav__title__link rp-link"><div class="rp-nav__title__logo"><img src="/botmux/botmux-logo.png" alt="logo" id="logo" class="rspress-logo rp-nav__title__logo-image"/></div><span>botmux 文档</span></a></div></div><div class="rp-nav__right"><button class="rp-search-button"><div class="rp-search-button__content"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21" class="rp-search-button__icon"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg><span class="rp-search-button__word">Search</span></div><div class="rp-search-button__hotkey" style="opacity:0"><span></span><span>K</span></div></button><div class="rp-search-button--mobile"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg></div><div class="rp-nav__others"><div class="rp-nav-menu__divider"></div><li class="rp-nav-menu__item"><div class="rp-nav-menu__item__container">English<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-menu__item__icon"><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--center"><li class="rp-hover-group__item" style="padding-left:8px" data-depth="0"><a href="/botmux/workflow.html" class="rp-hover-group__item__link rp-link" aria-label="简体中文" lang="zh" hrefLang="zh" rel="alternate">简体中文</a></li><li class="rp-hover-group__item rp-hover-group__item--active" style="padding-left:8px" data-depth="0"><a href="/botmux/en/workflow.html" class="rp-hover-group__item__link rp-link" aria-label="English" lang="en" hrefLang="en" rel="alternate">English</a></li></ul></li><div class="rp-switch-appearance"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" class="rp-switch-appearance__icon rp-switch-appearance__icon--sun"><path fill="currentColor" d="m7.001 15.848-1.226 1.226a.58.58 0 0 0 0 .818.58.58 0 0 0 .818 0l1.226-1.226a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0m-.352-8.735a.584.584 0 0 0 .825-.825L6.237 5.051a.584.584 0 0 0-.825.825zM5.011 11.07h-1.75a.584.584 0 0 0 0 1.167h1.75c.324 0 .584-.26.584-.583a.585.585 0 0 0-.584-.584m7.003-5.835c.324 0 .584-.26.584-.584V2.9a.58.58 0 0 0-.584-.584.58.58 0 0 0-.583.583V4.65c0 .323.262.584.583.584m5.616 1.621 1.226-1.225a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0l-1.226 1.225a.58.58 0 0 0 0 .818.576.576 0 0 0 .818 0m3.138 4.214h-1.75a.58.58 0 0 0-.584.584c0 .324.26.584.583.584h1.751a.584.584 0 1 0 0-1.167m-3.389 5.124a.584.584 0 0 0-.825.825l1.238 1.238a.584.584 0 0 0 .825-.826zm-5.365-9.795a5.256 5.256 0 0 0-5.257 5.258 5.256 5.256 0 0 0 5.257 5.257 5.256 5.256 0 0 0 5.257-5.257 5.256 5.256 0 0 0-5.257-5.258m0 11.675a.58.58 0 0 0-.583.583v1.751a.582.582 0 1 0 1.167 0v-1.75a.584.584 0 0 0-.584-.584"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" viewBox="0 0 19 19" class="rp-switch-appearance__icon rp-switch-appearance__icon--moon"><path fill="currentColor" d="M9.166 0a9.2 9.2 0 0 1 1.857.188.834.834 0 0 1 .042 1.623 4.47 4.47 0 1 0 5.457 5.457l.048-.135a.834.834 0 0 1 1.575.177q.186.902.188 1.856A9.168 9.168 0 1 1 9.166 0"></path></svg></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__sm"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg></button><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__md"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"><div class="rp-nav-menu__others-mobile__container"><div class="rp-nav-hamburger__md__hover-group"><div class="rp-nav-screen-appearance"><div class="rp-nav-screen-appearance__left">Theme</div><div class="rp-nav-screen-appearance__right"></div></div><div class="rp-nav-screen-langs"><div class="rp-nav-screen-langs__left">Languages</div><div class="rp-nav-screen-langs__right">English<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-screen-langs__icon "><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div></div><div class="rp-nav-screen-langs-group" style="display:grid;grid-template-rows:0fr;transition:grid-template-rows 0.2s ease-out"><div class="rp-nav-screen-langs-group__inner"><a href="/botmux/workflow.html" class="rp-nav-screen-langs-group__item rp-link" hrefLang="zh" lang="zh" rel="alternate">简体中文</a><span class="rp-nav-screen-langs-group__item rp-nav-screen-langs-group__item--active" aria-current="page" aria-disabled="true">English</span></div></div><div class="rp-nav-screen-divider"></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div></div></ul></button></div></header><div class="rp-doc-layout__menu"><div class="rp-sidebar-menu"><button type="button" class="rp-sidebar-menu__left"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M4 6h24v2H4zm0 18h24v2H4zm0-12h24v2H4zm0 6h24v2H4z"></path></svg><span>Menu</span></button><button type="button" class="rp-sidebar-menu__right"><span class="rp-sidebar-menu__right__text">ON THIS PAGE</span><svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-sidebar-menu__right__icon" style="transform:rotate(0deg);transition:transform 0.2s ease-out"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></button></div></div><div class="rp-doc-layout__container"><aside class="rp-doc-layout__sidebar rp-scrollbar"><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Getting Started</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/index.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Introduction</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/quickstart.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">5-Minute Quickstart</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/prerequisites.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Prerequisites</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/desktop.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">macOS Desktop App</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Core Concepts</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/architecture.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Architecture</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/session-model.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Session &amp; Topic Model</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Features</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/cards.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Streaming Cards</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/topic-unavailable-policy.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Unavailable Topic Policy</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/web-terminal.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Web Terminal</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/multi-bot.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Multi-Bot Collaboration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/multi-topic.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Multi-Topic Orchestration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/project-card.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Project Progress Card</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/mention-mode.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Mention Policy</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/whiteboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Local Whiteboard</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/decision-board.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Decision Board &amp; Steward</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/roles.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Roles &amp; Teams</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/tmux.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">tmux Session Persistence</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/zmx.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">ZMX Session Backend</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/adopt.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Adopt a Session</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/relay.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Relay a Session</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/group.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">One-Click Session Groups</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/doc-comment.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Feishu Doc Comment Entry</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/schedule.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Scheduled Tasks</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/oncall.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">On-Call Mode</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/permissions.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Permissions &amp; Access</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/sandbox.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">File Sandbox</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/voice.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Voice Summary</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/dashboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Dashboard</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/workbench.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Agent Workbench</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/webhook.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Webhook Ingress</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/api-task-trigger.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Programmatic Task Trigger API</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/headless-session.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Headless Automation Sessions</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/turn-results.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Turn Results</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/api-core-only.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Core-only API Control</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/workflow.html" class="rp-sidebar-item rp-sidebar-item--active rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Workflow (Experimental)</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/hooks.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Lifecycle Hooks</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/skill-cli.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Skill + CLI Interaction</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Development &amp; Extensions</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/plugins.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Plugin Development &amp; Market</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Command Reference</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/slash-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Slash Commands</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/cli-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">CLI Commands</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Configuration</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/bots-json.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">bots.json</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/feedback-storage.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Feedback Storage &amp; Migration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/env.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Environment &amp; File Locations</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/global-settings.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Global Settings (config.json)</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/companion-api.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Local Companion API</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/model-proxy.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Model Proxy (Experimental)</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/adapters.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">CLI Adapters</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Practices &amp; Troubleshooting</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/best-practices.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Best Practices</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/pitfalls.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Common Pitfalls</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/faq.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">FAQ / Troubleshooting</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/about.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">About &amp; Resources</span></div><div class="rp-sidebar-item__right"></div></a></div></div></aside><div class="rp-doc-layout__doc"><main class="rp-doc-layout__doc-container"><div class="rp-doc rspress-doc"><!--$--><h1 class="rp-toc-include" id="workflow-experimental"><a href="#workflow-experimental" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Workflow (experimental)<!-- --> </h1>
+<p>Workflow turns a goal that <strong>takes several steps</strong> into a flow that runs on its own:</p>
+<ul>
+<li>the bot first asks you questions, one at a time, until the requirement is clear;</li>
+<li>it then compiles the requirement into a <strong>DAG</strong> (a step graph with dependencies; each step is a &quot;node&quot;);</li>
+<li>once you confirm, it runs automatically, with independent steps in parallel;</li>
+<li>a flow that worked can be saved as a <strong>Saved Workflow</strong> and rerun with one command.</li>
+</ul>
+<p>It fits tasks with <strong>a clear end and one deliverable</strong>, like &quot;research three competitors and produce a comparison report&quot; or &quot;pull the logs, analyze them, and make charts&quot;. You don&#x27;t need it for single-step questions or ordinary code changes, and it is not meant for long-running projects where several bots keep splitting and coordinating work.</p>
+<h2 class="rp-toc-include" id="turn-it-on-first"><a href="#turn-it-on-first" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Turn it on first</h2>
+<p>Workflow is <strong>off by default</strong>. Turn it on either way:</p>
+<ul>
+<li>Dashboard → &quot;Global settings → Workflow&quot; → enable <strong>&quot;Enable the workflow feature&quot;</strong>;</li>
+<li>or set the environment variable <code>BOTMUX_WORKFLOW_ENABLED=true</code>.</li>
+</ul>
+<p>The switch takes effect on the next session, no restart needed. If the environment variable is set, it wins and the Dashboard switch has no effect. While it is off, starting an ad-hoc flow, running or saving Saved Workflows, and <code>botmux goal run</code> are refused; runs already in flight can still be wound down with <code>botmux workflow cancel / retry / grant</code>.</p>
+<h2 class="rp-toc-include" id="quick-start-an-ad-hoc-workflow"><a href="#quick-start-an-ad-hoc-workflow" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Quick start: an ad-hoc workflow</h2>
+<p>Send this in a Feishu topic:</p>
+<div class="rp-codeblock language-txt"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="txt"><code><span class="line"><span>/workflow Research pricing of three competitors and put it in a comparison table</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p><code>/workflow &lt;goal&gt;</code> is the same as <code>/workflow new &lt;goal&gt;</code>. You can also just describe a multi-step task in plain words: the bot will first ask &quot;should I run this as a workflow?&quot; and only starts after you agree. Sending <code>/workflow</code> skips that question.</p>
+<p>Everything then happens in the current topic. You only answer questions and click confirm:</p>
+<div class="rp-codeblock language-txt"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="txt"><code><span class="line"><span> ① Grill ──▶ ② Confirm spec ──▶ ③ Compile ──▶ ④ Confirm flow ──▶ ⑤ Run</span></span>
+<span class="line"><span>  (Q&amp;A)       (Gate-1)           (DAG)         (Gate-2)          (nodes in parallel)</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Step</th><th>What happens</th><th>What you do</th></tr></thead><tbody><tr><td>① Grill</td><td>The bot asks one question at a time, each with a recommended answer</td><td>Answer; say &quot;use defaults / stop asking&quot; when it&#x27;s enough</td></tr><tr><td>② Gate-1: confirm spec</td><td>The bot summarizes: the steps, what each produces, acceptance criteria, what is out of scope</td><td>Confirm, or point out what to change</td></tr><tr><td>③ Compile</td><td>The system turns the spec into a flow graph</td><td>Wait</td></tr><tr><td>④ Gate-2: confirm flow</td><td>The bot explains the nodes, their order, and which nodes will stop for your approval</td><td>Confirm to start</td></tr><tr><td>⑤ Run</td><td>Nodes run in dependency order; independent ones run at the same time</td><td>Handle cards as they pop up (next section)</td></tr></tbody></table></div>
+<p>Changed your mind?</p>
+<ul>
+<li>The requirement changes → <code>botmux workflow revise-spec &lt;runId&gt;</code> goes back to clarification and discards the current flow;</li>
+<li>Only the flow changes → <code>botmux workflow revise-dag &lt;runId&gt;</code> recompiles just the flow.</li>
+</ul>
+<p>You can follow runs on the Dashboard <strong>&quot;Workflows&quot;</strong> page; the &quot;Web 详情（需登录）&quot; (Web details, login required) button on Feishu cards jumps straight to the run.</p>
+<h2 class="rp-toc-include" id="cards-you-may-see-while-it-runs"><a href="#cards-you-may-see-while-it-runs" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Cards you may see while it runs</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Card</th><th>When</th><th>Buttons</th></tr></thead><tbody><tr><td>Approval card</td><td><strong>Before</strong> a node marked for approval acts (e.g. sending a message out)</td><td>&quot;✅ 通过 / ❌ 拒绝&quot; (approve / reject), or custom options; who may approve can be restricted</td></tr><tr><td>Mid-run question</td><td>A node needs your decision or more information halfway</td><td>Click an option, or type into the input box; the step reruns with your answer</td></tr><tr><td>Extend a loop</td><td>A rework loop used up its rounds without passing</td><td>&quot;➕ 追加 1 轮&quot; (add 1 round); if you don&#x27;t click, it stays blocked</td></tr><tr><td>Allow a revisit</td><td>The downstream has used up its &quot;send upstream back for rework&quot; budget</td><td>&quot;➕ 准许回溯 +1&quot; (allow +1 revisit); if you don&#x27;t click, it stays blocked</td></tr><tr><td>Blocked card</td><td>A node is blocked, e.g. its output doesn&#x27;t meet the contract or a permission is missing</td><td>&quot;🔄 重试&quot; (retry) reruns the node as a new attempt</td></tr><tr><td>Progress card</td><td>Progress summary of the whole run</td><td>&quot;Web 详情（需登录）&quot;</td></tr></tbody></table></div>
+<p>All of these cards are persisted to disk and survive a daemon restart (or are re-sent), so approvals are never lost.</p>
+<h2 class="rp-toc-include" id="what-a-flow-can-contain"><a href="#what-a-flow-can-contain" class="rp-header-anchor rp-link" aria-hidden="true">#</a>What a flow can contain</h2>
+<p>The compiled flow isn&#x27;t always a straight line. It can include:</p>
+<ul>
+<li><strong>Parallelism</strong>: nodes that don&#x27;t depend on each other run at the same time.</li>
+<li><strong>Conditional branches</strong>: after a node produces a structured result, only the matching branch runs; the others are skipped at no cost. When several upstreams join, you can require &quot;all done / any done / a quorum&quot;.</li>
+<li><strong>Rework loops (loop)</strong>: &quot;keep fixing until it passes&quot; becomes one loop node, e.g. <code>write code → run tests</code> repeated until tests pass. When it hits the round limit it stops and asks whether to add rounds.</li>
+<li><strong>Automatic rework (revisit)</strong>: a downstream node that finds the upstream output wrong can send the upstream (and its downstream) back for rework with &quot;what&#x27;s wrong and why&quot;. There is a limit to prevent endless loops: 1 per node pair and 8 per run by default.</li>
+<li><strong>External action nodes (host nodes)</strong>: no model involved, they do one deterministic thing. There are three kinds today: send a message to the chat (<code>feishu-send</code>), reply in the topic (<code>feishu-reply</code>), and create a scheduled task (<code>botmux-schedule</code>). These nodes <strong>always go through an approval card first</strong>, and the card shows the exact content about to be executed; they are never placed inside a loop or a revisit range, so they can&#x27;t fire twice.</li>
+</ul>
+<h2 class="rp-toc-include" id="save-and-reuse-saved-workflow"><a href="#save-and-reuse-saved-workflow" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Save and reuse (Saved Workflow)</h2>
+<p>Once an ad-hoc workflow finishes, you can save it as a Saved Workflow and run it again later:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>To do this</th><th>In Feishu</th><th>On the command line</th></tr></thead><tbody><tr><td>Save the latest run</td><td><code>/workflow save last [name]</code></td><td><code>botmux workflow save last [name]</code></td></tr><tr><td>Save a specific run</td><td><code>/workflow save &lt;runId&gt; [name]</code></td><td><code>botmux workflow save &lt;runId&gt; [name]</code></td></tr><tr><td>Run</td><td><code>/workflow run &lt;name&gt; [key=value ...]</code></td><td><code>botmux workflow run &lt;name|workflowId&gt; [--param key=value ...]</code></td></tr><tr><td>List saved ones</td><td><code>/workflow list</code></td><td><code>botmux workflow list [--json]</code></td></tr><tr><td>Show a definition</td><td><code>/workflow show &lt;name&gt;</code></td><td><code>botmux workflow show &lt;name|workflowId&gt;</code></td></tr><tr><td>Cancel a running run</td><td><code>/workflow cancel &lt;runId&gt;</code></td><td><code>botmux workflow cancel &lt;runId&gt; [--reason &lt;text&gt;]</code></td></tr></tbody></table></div>
+<p>Things to know:</p>
+<ul>
+<li><strong>Only runs that have stopped can be saved</strong> (succeeded, failed or blocked). If it is still running (or waiting for approval), you&#x27;ll be told to save after it finishes.</li>
+<li><strong>The final effective version is saved</strong>: if the flow was edited mid-run, what&#x27;s saved is the version that actually ran, and the confirmation says how many times it was edited.</li>
+<li><strong>Where it&#x27;s saved</strong>: by default it is visible <strong>in this chat only</strong>. To use it in the bot&#x27;s other chats too, send <code>/workflow save last &lt;name&gt; --global</code> yourself in Feishu (you need operate permission on the bot).</li>
+<li><strong>Parameters</strong>: saving an ad-hoc run directly makes an exact replica with no parameters. To turn concrete values (a region, a date) into parameters, send <code>/workflow save last &lt;name&gt; --distill</code> yourself in Feishu: you first get a parameter summary card and the workflow is saved to this chat only after you confirm the whole set. This is still experimental: it currently supports only Claude Code bots on Linux without a launch wrapper, and can&#x27;t be combined with <code>--global</code> or <code>--ack-unsafe</code>.</li>
+<li><strong>Passing values</strong>: in Feishu write <code>key=value</code>, and quote values with spaces: <code>key=&quot;multi word&quot;</code>. On the command line, use <code>--param key=value</code> for plain values and <code>--param-json key=&lt;json&gt;</code> for objects or arrays, e.g. <code>--param-json tags=&#x27;[&quot;urgent&quot;,&quot;cn&quot;]&#x27;</code>. Parameters are for <strong>business variables</strong> (chats, switches, thresholds); the task itself belongs in the flow, not in a parameter.</li>
+<li><strong>Possibly sensitive content</strong>: if saving detects something that looks like a secret or a local absolute path, it refuses and lists the warnings. Once you&#x27;ve checked it&#x27;s safe, resend the original command with <code>--ack-unsafe</code> at the end. <code>--global</code>, <code>--distill</code> and <code>--ack-unsafe</code> can only be sent by you in Feishu; the bot never adds them for you.</li>
+<li>To start an ad-hoc goal that begins with the word <code>run</code>, write <code>/workflow new run ...</code>; otherwise it is treated as running a Saved Workflow.</li>
+<li>A run started from a Saved Workflow can also be edited mid-run; that only affects this run. To update the saved definition, save again.</li>
+</ul>
+<h2 class="rp-toc-include" id="intervening-from-the-command-line"><a href="#intervening-from-the-command-line" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Intervening from the command line</h2>
+<p>Besides clicking cards, you can use commands. The <code>runId</code> identifies a run throughout and is shown on cards and in the Dashboard. The main bot usually calls these for you in the conversation; you can also use them by hand when troubleshooting:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Command</th><th>What it does</th></tr></thead><tbody><tr><td><code>botmux workflow start &lt;runId&gt;</code></td><td>Hand the run to the daemon after Gate-2 approval (with Feishu approval cards)</td></tr><tr><td><code>botmux workflow retry &lt;runId&gt; [--node &lt;id&gt;] [--reason &lt;text&gt;]</code></td><td>Rerun a blocked node</td></tr><tr><td><code>botmux workflow grant &lt;runId&gt; [--loop &lt;id&gt;]</code></td><td>Add one round to a loop that ran out</td></tr><tr><td><code>botmux workflow cancel &lt;runId&gt; [--reason &lt;text&gt;]</code></td><td>Cancel an in-flight run</td></tr><tr><td><code>botmux workflow status &lt;runId&gt; [--json]</code></td><td>Show the current version, node states and pending edits</td></tr><tr><td><code>botmux workflow edit &lt;runId&gt; --patch-file &lt;file|-&gt; --base &lt;version&gt; [--reason &lt;text&gt;]</code></td><td>Edit the flow mid-run (next section); <code>--base</code> is the version read from <code>status</code></td></tr><tr><td><code>botmux workflow ask-human &lt;runId&gt; --node &lt;id&gt; --reason &lt;text&gt;</code></td><td>Hand a node to a human: stop its current attempt, mark it blocked and post a blocked card</td></tr></tbody></table></div>
+<p>Don&#x27;t mix up the three &quot;continue&quot; paths: a blocked node uses <code>retry</code>, an exhausted loop uses <code>grant</code>; <strong>an exhausted revisit budget can only be released from the Feishu card</strong>, there is no command for it.</p>
+<h2 class="rp-toc-include" id="editing-the-flow-mid-run"><a href="#editing-the-flow-mid-run" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Editing the flow mid-run</h2>
+<p>After a run starts, the flow can still change: add or remove nodes; change a node&#x27;s goal, completion criteria, outputs, timeout, approval or dependencies; reassign the executing bot; or redo a finished node.</p>
+<p><strong>How</strong>: tell the main bot in the main topic what to change. It reads the current version and submits the edit.</p>
+<ul>
+<li>Every edit creates a new version (v2, v3, …);</li>
+<li>the items in one edit apply all together or not at all;</li>
+<li>when two people edit at once, the first wins; the main bot reads the latest version and resubmits the later one.</li>
+</ul>
+<h3 class="rp-toc-include" id="whose-edits-need-confirmation"><a href="#whose-edits-need-confirmation" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Whose edits need confirmation</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Who proposed it</th><th>Result</th></tr></thead><tbody><tr><td><strong>The initiator</strong> (asking the main bot in the main topic)</td><td>Applies directly. One exception: adding or changing an external action node (send a message, create a scheduled task) needs the initiator to click &quot;Agree&quot; on a &quot;flow edit confirmation&quot; card</td></tr><tr><td><strong>Other chat members</strong></td><td>Always becomes a &quot;flow edit confirmation&quot; card; applies only after the initiator clicks &quot;Agree&quot;</td></tr><tr><td><strong>The main bot on its own</strong> (including a turn triggered by a scheduled task)</td><td>Needs the initiator&#x27;s confirmation if any rule below matches; otherwise applies directly</td></tr></tbody></table></div>
+<p>For the main bot&#x27;s own edits, confirmation is needed when it:</p>
+<ul>
+<li>uses a bot this run hasn&#x27;t approved yet (a new node or a reassignment);</li>
+<li>adds or changes an external action node;</li>
+<li>removes or loosens a human approval (removes an approval, changes approve options, changes approvers; <strong>adding</strong> an approval needs no confirmation);</li>
+<li>raises limits: a higher loop maximum, a longer timeout, or more than twice the node count approved at the start.</li>
+</ul>
+<p>When the initiator makes these changes they apply directly, and any new bot used joins the run&#x27;s approved set, so it can be picked when reassigning from a blocked card later.</p>
+<details>
+<summary>Fine print: interjections, concurrent edits, waiting for confirmation</summary>
+<ul>
+<li>Whether an edit &quot;came from the initiator&quot; depends on <strong>who sent the message that triggered this turn</strong>. In a turn the main bot started on its own (run event or scheduled task), an interjection by the initiator still counts as the main bot&#x27;s edit (it may not have seen that message yet); an interjection by another member counts as that member&#x27;s edit. Automatic turns queued after it (sub-task reports, another event wake-up, a scheduled task) are not interjections.</li>
+<li>The confirmation card lists added, removed and changed nodes, any new bots, and why confirmation is needed.</li>
+<li>While waiting, the affected nodes pause dispatch and the rest keep running; question cards on those nodes can&#x27;t be answered and blocked cards can&#x27;t reassign until the confirmation card is handled.</li>
+<li>If another edit applies before confirmation: when both touch the same nodes, or the pending content would change on the new version, the pending card is voided and the main bot explains why; if they&#x27;re unrelated, the pending edit rolls forward to the new version and keeps waiting, the card updates in place, and clicking the old card still counts.</li>
+</ul>
+</details>
+<h3 class="rp-toc-include" id="what-happens-to-a-node-you-edit"><a href="#what-happens-to-a-node-you-edit" class="rp-header-anchor rp-link" aria-hidden="true">#</a>What happens to a node you edit</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Node state</th><th>After the edit</th></tr></thead><tbody><tr><td>Running</td><td>The current attempt is voided (its process or bot turn is stopped and anything it submits later is ignored), and it restarts with the new definition</td></tr><tr><td>Waiting for approval</td><td>The approval card is voided, showing &quot;the flow changed, this approval is void&quot;, and approval starts over with the new definition</td></tr><tr><td>Blocked</td><td>A definition-only change keeps it blocked until retried; a reassignment reruns it on the new bot right away. If it had been approved before, it needs approval again; its earlier question card is voided and only shows &quot;🔄 按新定义重跑（需重新审批）&quot; (rerun with the new definition, needs re-approval), which you must click</td></tr><tr><td>Not started</td><td>Scheduled with the new definition</td></tr><tr><td>Skipped / cancelled</td><td>Can&#x27;t be edited; add a new node if needed</td></tr><tr><td>Loop running</td><td>Its body can&#x27;t be edited; its downstream can</td></tr></tbody></table></div>
+<h3 class="rp-toc-include" id="finished-nodes-can-only-be-redone"><a href="#finished-nodes-can-only-be-redone" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Finished nodes can only be redone</h3>
+<p>A finished node can&#x27;t be deleted or redefined (its output may already be used downstream). You can only <strong>redo</strong> it, or add nodes after it. A redo reruns the downstream nodes that used its old output, and consumes the revisit budget (shared with automatic rework: 1 per node pair and 8 per run by default). When the budget runs out:</p>
+<ul>
+<li>a redo asked for by the initiator tops the budget up automatically and applies, no card needed;</li>
+<li>otherwise an &quot;add redo budget&quot; card appears in the main topic; after the initiator clicks &quot;➕ 追加 1 次&quot; (add 1), ask the main bot to resubmit the edit. Old cards say they&#x27;ve expired when clicked.</li>
+</ul>
+<h3 class="rp-toc-include" id="where-to-see-versions"><a href="#where-to-see-versions" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Where to see versions</h3>
+<ul>
+<li><strong>Progress card</strong>: shows &quot;第 N 版 · 最近修改：…&quot; (version N · last edit: …), and notes when an edit is waiting for confirmation.</li>
+<li><strong>Dashboard Workflows page</strong>: draws the currently effective version and marks new, changed and pending nodes; the &quot;flow versions&quot; panel lists each version&#x27;s time, actor, summary and whether it was confirmed.</li>
+</ul>
+<blockquote>
+<p>⚠️ <strong>Don&#x27;t downgrade the daemon while edited runs exist.</strong> An older daemon doesn&#x27;t understand version records: it ignores the edits and continues on version 1, which can run deleted nodes, run edited nodes with their old definitions, and bypass pending edits. If you must downgrade, cancel those runs or wait for them to finish first. Runs showing a version above 1 on the board are the edited ones.</p>
+</blockquote>
+<h2 class="rp-toc-include" id="hand-nodes-to-bots-in-the-chat-experimental-off-by-default"><a href="#hand-nodes-to-bots-in-the-chat-experimental-off-by-default" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Hand nodes to bots in the chat (experimental, off by default)</h2>
+<p>By default each node runs in a temporary CLI process started by the daemon and destroyed when done; the chat doesn&#x27;t see the work.</p>
+<p>Turn on <strong>&quot;Hand workflow nodes to bots in the chat&quot;</strong> under Dashboard &quot;Global settings → Workflow&quot;, and nodes are executed by bots in the chat, in their own sessions, visible to everyone:</p>
+<div class="rp-codeblock language-txt"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="txt"><code><span class="line"><span>Main topic (where the run started)</span></span>
+<span class="line"><span> ├─ Node topic A: node card + handoff card @DocBot ──▶ DocBot works ──▶ botmux report submits outputs</span></span>
+<span class="line"><span> ├─ Node topic B: node card + handoff card @CodeBot ──▶ ...</span></span>
+<span class="line"><span> └─ Small jobs in the main topic: handoff card replies in the main topic @SomeBot</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<ul>
+<li><strong>Only runs approved afterwards are affected</strong>: the execution mode is fixed at approval (Gate-2, or when a Saved Workflow starts); runs already in flight finish the old way.</li>
+<li><strong>Temporary processes are still used</strong> for runs started in a private chat, runs without a topic root, or when <a href="/botmux/en/multi-topic.html" class="rp-link">multi-topic collaboration</a> is off on this machine; the approval result says why.</li>
+<li>If unsure, or if the chat shouldn&#x27;t get extra node topics and bot conversations, leave it off.</li>
+</ul>
+<h3 class="rp-toc-include" id="who-runs-which-node"><a href="#who-runs-which-node" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Who runs which node</h3>
+<ul>
+<li>Say &quot;let DocBot do this step&quot; while clarifying, and that node is assigned to it.</li>
+<li>Unassigned nodes get a bot picked from those currently available in the chat (in the chat, online, CLI supported), with a one-line reason; when unsure, the main bot takes it.</li>
+<li>The Gate-2 summary lists &quot;node → executing bot (CLI): reason&quot;; an assigned bot that can&#x27;t be used (not in the chat, offline, not found) is marked ⚠️. Go back to the draft to change it.</li>
+</ul>
+<h3 class="rp-toc-include" id="two-placements-node-topic--main-topic"><a href="#two-placements-node-topic--main-topic" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Two placements: node topic / main topic</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Placement</th><th>Good for</th><th>What it looks like</th></tr></thead><tbody><tr><td><strong>Node topic</strong> (default)</td><td>Most nodes</td><td>The main bot posts a node card as a new topic, then a handoff card in it @-mentioning the executing bot. The handoff card states the task, completion criteria, inputs (upstream outputs attached), outputs to deliver, deadline and the submit command; the node card updates in place as status changes</td></tr><tr><td><strong>Main topic</strong></td><td>Small one-step jobs: summarize, rewrite, format, look up a number</td><td>The handoff card replies in the main topic @-mentioning the executing bot, with a status line on top that updates in place; no extra topic</td></tr></tbody></table></div>
+<p>Compilation assigns each node a placement with a reason, and every line of the Gate-2 summary says &quot;main topic&quot; or &quot;node topic&quot;. Before approval you can rearrange with <code>revise-dag</code>; after the run starts, only nodes that haven&#x27;t started can change.</p>
+<details>
+<summary>Main-topic placement rules and limits</summary>
+<ul>
+<li>If the executing bot already has a session in the main topic it is reused, otherwise a new one is opened; the main bot&#x27;s own nodes run in the main session.</li>
+<li>If that session is busy, the handoff queues; being queued counts as accepted, and the deadline starts when the turn actually begins. It waits at most one more node timeout (at least 1 hour); if it never starts it becomes blocked with the reason, and a node topic is suggested instead.</li>
+<li>A bot has only one session in the main topic, so two main-topic nodes of the same bot must depend on each other; the same applies to the main bot&#x27;s own main-topic nodes. If another run hands a main-topic node to that busy bot, the node becomes blocked with the reason.</li>
+<li>If the main bot uses &quot;one session for the whole chat&quot; mode in this chat, main-topic placement can&#x27;t be used. If the executing bot&#x27;s daemon is too old to support main-topic handoff, the node becomes blocked with the reason.</li>
+<li>While the node runs, whatever you say to that bot in the main topic is part of the node, and stops with it when the node is stopped (timeout, cancel, reassign); a message merged into that turn needs resending. To chat about something else, wait for the node to finish or use a node topic.</li>
+<li>That session doesn&#x27;t turn into a node session: its skills don&#x27;t change, and submissions are only accepted during this execution — not while queued and not after it ends.</li>
+<li>The Dashboard node details show the handoff time and handoff card title for main-topic nodes, so you can find them in the main topic.</li>
+</ul>
+</details>
+<h3 class="rp-toc-include" id="how-the-executing-bot-delivers"><a href="#how-the-executing-bot-delivers" class="rp-header-anchor rp-link" aria-hidden="true">#</a>How the executing bot delivers</h3>
+<p>When done, the executing bot runs:</p>
+<div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-function)">botmux</span><span style="color:var(--shiki-token-string)"> report</span><span style="color:var(--shiki-token-string)"> --dispatch-root</span><span style="color:var(--shiki-token-keyword)"> &lt;</span><span style="color:var(--shiki-token-string)">handoff</span><span style="color:var(--shiki-token-string)"> message</span><span style="color:var(--shiki-token-string)"> i</span><span style="color:var(--shiki-foreground)">d</span><span style="color:var(--shiki-token-keyword)">&gt;</span><span style="color:var(--shiki-token-string)"> --status</span><span style="color:var(--shiki-token-string)"> completed</span><span style="color:var(--shiki-foreground)"> \</span></span>
+<span class="line"><span style="color:var(--shiki-token-string)">  --output</span><span style="color:var(--shiki-token-keyword)"> &lt;</span><span style="color:var(--shiki-token-string)">ke</span><span style="color:var(--shiki-foreground)">y</span><span style="color:var(--shiki-token-keyword)">&gt;</span><span style="color:var(--shiki-token-string)">=</span><span style="color:var(--shiki-token-keyword)">&lt;</span><span style="color:var(--shiki-token-string)">pat</span><span style="color:var(--shiki-foreground)">h</span><span style="color:var(--shiki-token-keyword)">&gt;</span><span style="color:var(--shiki-token-string)"> --result-file</span><span style="color:var(--shiki-token-string)"> result.json</span><span style="color:var(--shiki-token-string)"> --content-file</span><span style="color:var(--shiki-token-string)"> summary.md</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<ul>
+<li>The node completes only when the submission passes its contract; otherwise the missing items are listed, and it can resubmit in the same attempt after fixing them.</li>
+<li>If it can&#x27;t do the job, <code>botmux report ... --status blocked &quot;reason&quot;</code> marks the node blocked and posts a retry card in the main topic.</li>
+<li>Each file ≤4 MiB, ≤8 MiB per submission; for bigger outputs, put a branch name or link in <code>result.json</code>.</li>
+<li>If the main bot is offline, submissions still go through: results are held and recorded once the main bot is back.</li>
+<li>A node session only does that node: it can&#x27;t see workflow skills or the skills for handing work on (<code>botmux-orchestrate</code>, <code>botmux-handoff</code>). Exceptions: an existing session reused in the main topic, and CLIs whose skill injection mode is &quot;global directory&quot;.</li>
+</ul>
+<h3 class="rp-toc-include" id="timeouts-blocks-and-reassignment"><a href="#timeouts-blocks-and-reassignment" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Timeouts, blocks and reassignment</h3>
+<ul>
+<li><strong>Timeout</strong>: 30 minutes by default, counted from acceptance. On timeout the node becomes blocked and the executing bot&#x27;s current turn is stopped.</li>
+<li><strong>Cancel</strong>: cancelling the workflow stops each node&#x27;s current turn but doesn&#x27;t close their sessions.</li>
+<li><strong>Reassign</strong>: blocked cards get a &quot;选择接手的 Bot&quot; (pick a bot to take over) dropdown listing bots approved for this run that are still available (chosen at approval, plus those added by mid-run edits). Only the initiator can click &quot;🔀 确认改派&quot; (confirm reassign); the node then reruns on the new bot. For a bot outside that set, have the main bot submit a flow edit for the initiator to confirm.</li>
+</ul>
+<h3 class="rp-toc-include" id="when-the-main-bot-is-woken"><a href="#when-the-main-bot-is-woken" class="rp-header-anchor rp-link" aria-hidden="true">#</a>When the main bot is woken</h3>
+<p>The main bot doesn&#x27;t watch every node. It is woken only when:</p>
+<ol>
+<li>a node is blocked or fails;</li>
+<li>an executing bot reports it can&#x27;t do the job;</li>
+<li>a node marked as a <strong>checkpoint</strong> (<code>checkpoint: true</code>) finishes.</li>
+</ol>
+<p>The main bot then decides to retry, reassign (within the run&#x27;s approved bots), edit the flow, or hand it to a human with <code>botmux workflow ask-human</code>, and says what it did in the topic. Automatic retries, reassignments and redos must give a reason; the node card shows the latest &quot;main bot auto retry / reassign / redo: reason&quot; or &quot;handed to a human: reason&quot;, and the Dashboard node details list every record.</p>
+<ul>
+<li>If the main session is busy, the wake-up waits for that turn to end and then starts its own turn, never mixing into someone else&#x27;s; if there&#x27;s no active session in the main topic, a new one is opened.</li>
+<li>Each event wakes it once, even across daemon restarts.</li>
+<li>A node handed to a human stops and shows &quot;waiting for a human&quot;; a blocked card (retry / reassign / cancel) appears in the main topic with no timeout. After that, a submission from the executing bot no longer counts.</li>
+</ul>
+<p><strong>Checkpoints</strong> suit nodes where &quot;we need to see the result before deciding what&#x27;s next&quot;. Compilation marks them automatically, and you can ask to add or remove one before Gate-2; changing it mid-run applies directly. When a checkpoint finishes, nodes that depend on it pause until the main bot has looked and its turn ends. If the wake-up can&#x27;t be delivered, the main bot&#x27;s session is closed, or it doesn&#x27;t finish within an hour, the flow continues as planned and the node card and board say so. Checkpoints only work in runs whose nodes are handed to bots in the chat. A checkpoint needs at least one node depending on it: if it is the last node to finish, the run simply ends and the main bot is never called, so compilation, approval and mid-run edits all refuse a checkpoint with nothing after it (drop the mark, or add a summary node after it).</p>
+<h3 class="rp-toc-include" id="whats-checked-before-approval"><a href="#whats-checked-before-approval" class="rp-header-anchor rp-link" aria-hidden="true">#</a>What&#x27;s checked before approval</h3>
+<p>Every node&#x27;s executing bot must be configured on this machine, already in this chat, with its daemon online, and able to set up in-chat collaboration with the main bot; in an ordinary group its reply mode can&#x27;t be &quot;one session for the whole chat&quot;; and nodes can&#x27;t declare directory outputs. Otherwise approval is refused with a per-node reason list. botmux <strong>never adds bots to chats automatically</strong>.</p>
+<details>
+<summary>Set a working directory: approve-dag --working-dir</summary>
+<p><code>botmux workflow approve-dag &lt;runId&gt; --working-dir &lt;dir&gt;</code> makes every node run in the same directory. Nodes run in each executing bot&#x27;s own session, so <strong>every</strong> executing bot (including the main bot) is checked on its own:</p>
+<ul>
+<li><strong>The initiator can operate that bot</strong>: they could use <code>/cd</code> in its topics right now (e.g. they are its admin) <strong>and are still in the group</strong>. Then the directory only has to exist, as with <code>/cd</code> and <code>/repo &lt;path&gt;</code>.</li>
+<li><strong>The initiator can&#x27;t operate that bot</strong> (e.g. a colleague&#x27;s bot, or they have left the group): the directory must be in its allowed range — its default working directory (or Oncall directory), or its repo directories (<code>workingDir</code> / <code>workingDirs</code>) themselves or anything under them.</li>
+<li>The executing bot decides &quot;can operate&quot; itself, from its own configuration, grants and group members, after the initiator&#x27;s identity is converted into that bot&#x27;s Feishu app.</li>
+<li><strong>Can&#x27;t be confirmed right now</strong> (the identity conversion or member lookup fails or times out, a daemon is offline or too old): it decides like &quot;can&#x27;t operate&quot; — directories inside the range still work; one outside is refused with &quot;couldn&#x27;t confirm&quot; and the reason, so retrying later may help.</li>
+</ul>
+<p>Other rules:</p>
+<ul>
+<li>The directory must already exist; it isn&#x27;t created. Before comparing, <code>~</code> is expanded, a trailing <code>/</code> removed and symlinks resolved, so a symlink inside the allowed range pointing outside doesn&#x27;t count.</li>
+<li>If not allowed, approval is refused with &quot;node → bot: reason&quot; for each one. Without the flag, each bot uses its own default directory.</li>
+<li>The directory is fixed at approval. Before an executing bot opens a node session it checks again against its configuration and grants <strong>at that time</strong>: if the directory is gone, or the initiator can no longer operate it and the directory is outside its range, the node becomes blocked (it never silently falls back to the default directory). Add the directory to its configuration and click &quot;Retry&quot;, or reassign.</li>
+<li>New bots brought in by mid-run edits are checked the same way when they open a session.</li>
+<li>The main bot&#x27;s own main-topic nodes run in the main session itself, which was already started in its own directory when <code>/workflow</code> was sent, so such nodes can only use that directory. Approval with any other directory is refused, suggesting a node topic, no directory, or the main session&#x27;s directory; a mid-run edit that turns a node into one of these (moving it to the main topic, reassigning it to the main bot, adding one) and a blocked-card reassignment to the main bot are refused the same way. A main session that never pinned a directory counts as running in the main bot&#x27;s default directory. If the main session&#x27;s directory can&#x27;t be read, approval isn&#x27;t blocked; the node is checked when it starts. If the main session moves elsewhere with <code>/cd</code> after approval, the node still becomes blocked at runtime; switch it to a node topic or reassign it from the blocked card.</li>
+<li>If the node topic already has a session of that bot running in another directory (someone @-mentioned it earlier, or ran <code>/cd</code>), the node is blocked too; close that session and retry.</li>
+<li>If the executing bot&#x27;s daemon is older than the main bot&#x27;s and doesn&#x27;t understand the directory, the node is blocked with &quot;version too old&quot;.</li>
+</ul>
+</details>
+<h3 class="rp-toc-include" id="hand-the-initiators-identity-to-node-bots-experimental-off-by-default"><a href="#hand-the-initiators-identity-to-node-bots-experimental-off-by-default" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Hand the initiator&#x27;s identity to node bots (experimental, off by default)</h3>
+<p>The other switch in the same section, <strong>&quot;Hand the initiator&#x27;s identity to node bots&quot;</strong>, only applies to runs whose nodes are handed to bots in the chat.</p>
+<ul>
+<li><strong>Off (default)</strong>: the executing bot works as itself.</li>
+<li><strong>Runs approved after turning it on</strong>: at approval the initiator is recorded (for an ad-hoc run, whoever approved Gate-2; for a Saved Workflow, whoever sent <code>/workflow run</code>, in their own message in the chat), along with the tools that person could use as themselves on the main bot (the main bot&#x27;s &quot;trigger-user auth&quot; tools). On each handoff, an executing bot with &quot;trigger-user auth&quot; enabled calls those tools as the initiator, never with more scope than the initiator had on the main bot.</li>
+</ul>
+<details>
+<summary>Where the delegation is valid, and exceptions</summary>
+<ul>
+<li><strong>Valid only during this handoff</strong>: the run isn&#x27;t over, the handoff hasn&#x27;t been cancelled / timed out / replaced by a retry or reassignment, and the node hasn&#x27;t finished; only in this chat; only for bots in the run&#x27;s approved set. It is revoked as soon as the node submits or the handoff stops, and checked again on every tool call. Removing the initiator from the chat doesn&#x27;t interrupt the current turn; it takes effect from the next handoff.</li>
+<li><strong>Missing identity never blocks the flow</strong>: approval and handoff proceed without the initiator&#x27;s identity, and the approval result and handoff say why. Typical causes: approved in a scheduled task or another automatic turn, the main bot lacks contacts scope, the main bot doesn&#x27;t have &quot;trigger-user auth&quot; on, the initiator left the chat or can&#x27;t talk to the executing bot, or the executing bot isn&#x27;t in the approved set.</li>
+<li>When the executing bot actually needs a tool that requires personal authorization, it is asked to authorize (via <code>botmux auth request</code> as usual), or it can <code>botmux report --status blocked</code> to say what&#x27;s needed; <strong>it never falls back to the bot&#x27;s or owner&#x27;s identity</strong>.</li>
+<li>If a bot in a node hands work on with <code>botmux dispatch</code> or <code>botmux send --mention</code> to a bot in the run&#x27;s approved set in this chat, the identity follows (only narrower) and expires with this handoff; handing to other bots works as usual but without the identity.</li>
+</ul>
+</details>
+<h3 class="rp-toc-include" id="viewing-the-flow-in-the-feishu-sidebar"><a href="#viewing-the-flow-in-the-feishu-sidebar" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Viewing the flow in the Feishu sidebar</h3>
+<p>In this mode, node cards, handoff cards and the executing bot&#x27;s reply and report cards have a <strong>&quot;工作流 ›&quot;</strong> (Workflow) button at the right of the signature line; on the main topic&#x27;s progress card, flow edit confirmation card and &quot;add redo budget&quot; card, the old &quot;Web 详情&quot; button is replaced by it too. Clicking it opens the run&#x27;s live flow graph in the Feishu sidebar (refreshes every 2 seconds; click a node for details). Runs executed by temporary processes don&#x27;t have this button.</p>
+<p>What you see depends on who you are (the link itself carries no credentials):</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Who</th><th>Sees</th></tr></thead><tbody><tr><td>Dashboard admin</td><td>The full view, same as the Dashboard detail page, including terminal and log entries</td></tr><tr><td>Current member of this chat</td><td>A compact view: node name, goal, assigned bot, status, duration, placement link, flow version history; no terminal, logs, output contents, parameter values or error details. Access is lost within a minute of leaving the chat</td></tr><tr><td>Anyone else</td><td>No access</td></tr></tbody></table></div>
+<p>Chat members are identified through &quot;Feishu H5 login&quot;. When H5 login is configured (<code>BOTMUX_DASHBOARD_FEISHU_H5_*</code>), members get a &quot;workflow sidebar only&quot; session and can&#x27;t open other Dashboard pages. <strong>Without H5 login only admins can view it</strong>: the button opens the run&#x27;s Dashboard detail page in the browser instead, using your existing Dashboard login.</p>
+<h2 class="rp-toc-include" id="concurrency-limits"><a href="#concurrency-limits" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Concurrency limits</h2>
+<p>How many nodes of a run run at once is bounded by three limits; the tightest one wins:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Layer</th><th>Meaning</th><th>Default</th></tr></thead><tbody><tr><td><code>global</code></td><td>Nodes running at once across the whole run</td><td>4</td></tr><tr><td><code>perBot</code></td><td>Nodes running at once on the same bot (Feishu app)</td><td>1</td></tr><tr><td><code>perCli</code></td><td>Nodes running at once on the same CLI (claude-code, codex…)</td><td>2</td></tr></tbody></table></div>
+<p>The defaults are conservative: every node starts a full CLI process, and nodes on one CLI usually share a subscription account, which hits rate limits easily. With the defaults, nodes on the same bot run one after another. Limits are per run; two runs at once each get their full limits.</p>
+<p>If your CLI is billed per use and the machine has enough memory, raise them in <code>~/.botmux/config.json</code>:</p>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;workflow&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;enabled&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> true</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;concurrency&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">      &quot;global&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 16</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">      &quot;perBot&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 4</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">      &quot;perCli&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 2</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">      &quot;perCliById&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> { </span><span style="color:var(--shiki-token-keyword)">&quot;claude-code&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 8</span><span style="color:var(--shiki-foreground)"> }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<ul>
+<li>Every field is optional; missing ones keep the default. Values are integers 1–64; invalid values are ignored.</li>
+<li><code>perCliById</code> sets a limit per CLI; CLIs not listed use <code>perCli</code>.</li>
+<li>The config is re-read each time a run is driven, so changes apply to the next start or resume without restarting the daemon.</li>
+<li>When nodes are handed to bots in the chat, only <code>global</code> and <code>perBot</code> apply; <code>perCli</code> doesn&#x27;t.</li>
+<li>⚠️ All nodes on one bot run in that bot&#x27;s working directory. With <code>perBot</code> above 1, several nodes read and write the same directory at once; if nodes change files, make sure they touch different files, or give them different bots.</li>
+</ul>
+<h2 class="rp-toc-include" id="limitations"><a href="#limitations" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Limitations</h2>
+<ul>
+<li>Nodes run in temporary processes currently support bots on these CLIs only: <strong>claude-code, codex, seed, traex, relay, minimax</strong>. A flow that uses a bot on another CLI fails at start.</li>
+<li>External action nodes are limited to <code>feishu-send</code>, <code>feishu-reply</code> and <code>botmux-schedule</code>, and always require approval.</li>
+<li>For real runs use Feishu <code>/workflow</code> or <code>botmux workflow start</code> (with approval cards); <code>botmux v3 run</code> is for development and debugging only, without approval cards.</li>
+</ul>
+<h2 class="rp-toc-include" id="advanced"><a href="#advanced" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Advanced</h2>
+<h3 class="rp-toc-include" id="the-underlying-state-machine"><a href="#the-underlying-state-machine" class="rp-header-anchor rp-link" aria-hidden="true">#</a>The underlying state machine</h3>
+<p>Under the hood, an ad-hoc workflow is a state machine driven by <code>botmux workflow</code> subcommands. The bot normally calls them; you can drive them by hand when troubleshooting:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Command</th><th>Transition</th></tr></thead><tbody><tr><td><code>botmux workflow new &quot;&lt;goal&gt;&quot;</code></td><td>Create a run, returns <code>runId</code> / <code>specPath</code> → <code>grilling</code></td></tr><tr><td><code>botmux workflow spec-finalize &lt;runId&gt;</code></td><td>Validate the spec → <code>spec_ready</code></td></tr><tr><td><code>botmux workflow approve-spec &lt;runId&gt;</code></td><td>Gate-1 passed → <code>spec_approved</code></td></tr><tr><td><code>botmux workflow architect &lt;runId&gt;</code></td><td>Compile and validate the flow → <code>dag_ready</code></td></tr><tr><td><code>botmux workflow approve-dag &lt;runId&gt;</code></td><td>Gate-2 passed → <code>dag_approved</code></td></tr><tr><td><code>botmux workflow start &lt;runId&gt;</code></td><td>Hand to the daemon to run</td></tr></tbody></table></div>
+<p>Run data lives in <code>~/.botmux/v3-runs</code>.</p>
+<h3 class="rp-toc-include" id="run-one-goal-headless-botmux-goal-run"><a href="#run-one-goal-headless-botmux-goal-run" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Run one goal headless: <code>botmux goal run</code></h3>
+<p>Skips Feishu, clarification and planning, and has one bot finish one goal in the background. Handy for scripts or other agents:</p>
+<div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-function)">botmux</span><span style="color:var(--shiki-token-string)"> goal</span><span style="color:var(--shiki-token-string)"> run</span><span style="color:var(--shiki-token-string-expression)"> &quot;Collect the stale links under docs/ into a list&quot;</span><span style="color:var(--shiki-token-string)"> --run-id</span><span style="color:var(--shiki-token-string)"> docs-links-1</span><span style="color:var(--shiki-token-string)"> --json</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Option</th><th>Meaning</th></tr></thead><tbody><tr><td><code>&lt;goal&gt;</code></td><td>The goal text; or use <code>--goal-file &lt;file&gt;</code> or <code>--stdin</code> instead. Pick exactly one</td></tr><tr><td><code>--run-id &lt;id&gt;</code></td><td>Run ID; generated if omitted. Set it yourself if you want to replay or resume</td></tr><tr><td><code>--bot &lt;id|name&gt;</code></td><td>Which bot (App ID or name); defaults to the first bot in <code>bots.json</code></td></tr><tr><td><code>--working-dir &lt;dir&gt;</code></td><td>Where to run; defaults to the bot&#x27;s default working directory</td></tr><tr><td><code>--timeout &lt;seconds&gt;</code></td><td>Overall time limit, at most 14370 seconds; hitting it counts as a cancel. Without it, the default node timeout (30 minutes) applies</td></tr><tr><td><code>--json</code></td><td>On exit, print one line of JSON to stdout (<code>schemaVersion</code> is <code>botmux.goal-run-result/v1</code>) with <code>state</code>, <code>summary</code>, <code>artifacts</code>, <code>error</code></td></tr></tbody></table></div>
+<p>It is a single node with no approval card and no Feishu messages. It runs the same way as temporary-process nodes, so only the CLIs listed under &quot;Limitations&quot; above are supported. Data also lands in <code>~/.botmux/v3-runs/&lt;runId&gt;</code>.</p>
+<p><strong>Read the result from the exit code</strong>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Exit code</th><th><code>state</code></th><th>Meaning</th></tr></thead><tbody><tr><td>0</td><td><code>succeeded</code></td><td>Done</td></tr><tr><td>10</td><td><code>failed</code></td><td>Failed</td></tr><tr><td>11</td><td><code>blocked</code></td><td>Blocked</td></tr><tr><td>12</td><td><code>cancelled</code></td><td>Cancelled: Ctrl-C, SIGTERM or timeout</td></tr><tr><td>13</td><td><code>conflict</code></td><td>Run ID conflict, or another process is driving this run</td></tr><tr><td>14</td><td><code>error</code></td><td>Bad arguments, Workflow off, no bots configured, etc.</td></tr></tbody></table></div>
+<p><strong>Running again with the same <code>--run-id</code></strong> requires exactly the same arguments as the first time (goal, <code>--bot</code>, <code>--working-dir</code>, <code>--timeout</code>):</p>
+<ul>
+<li>Finished run: nothing reruns; you get the original result and exit code back, even if <code>bots.json</code> has since changed or been removed.</li>
+<li>Unfinished run (the process crashed, the machine rebooted): it resumes where it stopped, keeping the bot, directory and settings fixed on the first run rather than re-picking from current config. It still needs that bot&#x27;s credentials in <code>bots.json</code>.</li>
+<li>Another process is driving the same run: you get a conflict (13) and nothing runs twice.</li>
+<li>Arguments differ from the first run: conflict (13). Use a new run ID for a new goal.</li>
+</ul>
+<h3 class="rp-toc-include" id="legacy-v2-templates-retired"><a href="#legacy-v2-templates-retired" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Legacy v2 templates (retired)</h3>
+<p>v2 templates are retired: <code>/template run</code>, <code>botmux workflow resume / tail / validate</code> and similar commands fail right away. If you still have old <code>~/.botmux/workflows/*.workflow.json</code> definitions or historical runs, use the offline tools:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody><tr><td><code>botmux template migrate-v3 [workflowId|path ...] [--all]</code></td><td>Preview only by default; add <code>--commit</code> to save convertible v2 definitions as v3 Saved Workflows</td></tr><tr><td><code>botmux template archive-runs [--commit] [--verify &lt;archiveId|path&gt;]</code></td><td>Scan, archive or verify finished v2 runs; never runs a v2 workflow and never deletes history directly</td></tr></tbody></table></div>
+<h3 class="rp-toc-include" id="development-self-test-botmux-v3-run"><a href="#development-self-test-botmux-v3-run" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Development self-test: <code>botmux v3 run</code></h3>
+<p><code>botmux v3 run &lt;dag.json&gt; [--max-parallel &lt;n&gt;] [--max-per-bot &lt;n&gt;] [--max-per-cli &lt;n&gt;]</code> runs a <strong>hand-written</strong> v3 dag.json on the real local temporary-process pool; approvals are y/N prompts in the terminal, with <strong>no Feishu cards</strong>. The three flags override the concurrency config above for this run only; <code>--max-per-cli</code> applies to every CLI and overrides <code>perCliById</code>.</p><!--/$--></div><footer class="rp-doc-footer"><div class="rp-doc-footer__edit"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/en/workflow.md" target="_blank" rel="noopener noreferrer" class="rp-edit-link rp-link">Edit this page</a><div class="rp-last-updated"><p>Last Updated<!-- -->: <span>11/7/2026, 1:25:39 AM</span></p></div></div><div class="rp-doc-footer__divider"></div><div class="rp-prev-next-page"><a href="/botmux/en/api-core-only.html" class="rp-prev-next-page__item rp-prev-next-page__prev rp-link"><span class="rp-prev-next-page__item__desc">Previous page</span><span class="rp-prev-next-page__item__title"><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon rp-prev-next-page__rotate_180"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg><span>Core-only API Control</span></span></a><a href="/botmux/en/hooks.html" class="rp-prev-next-page__item rp-prev-next-page__next rp-link"><span class="rp-prev-next-page__item__desc">Next page</span><span class="rp-prev-next-page__item__title"><span>Lifecycle Hooks</span><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></span></a></div></footer></main></div><aside class="rp-doc-layout__outline rp-scrollbar"><div class="rp-outline"><div class="rp-outline__title">ON THIS PAGE<svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg></div><nav class="rp-outline__toc rp-scrollbar"><a href="#turn-it-on-first" class="rp-toc-item rp-link" title="Turn it on first" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Turn it on first</span></a><a href="#quick-start-an-ad-hoc-workflow" class="rp-toc-item rp-link" title="Quick start: an ad-hoc workflow" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Quick start: an ad-hoc workflow</span></a><a href="#cards-you-may-see-while-it-runs" class="rp-toc-item rp-link" title="Cards you may see while it runs" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Cards you may see while it runs</span></a><a href="#what-a-flow-can-contain" class="rp-toc-item rp-link" title="What a flow can contain" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">What a flow can contain</span></a><a href="#save-and-reuse-saved-workflow" class="rp-toc-item rp-link" title="Save and reuse (Saved Workflow)" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Save and reuse (Saved Workflow)</span></a><a href="#intervening-from-the-command-line" class="rp-toc-item rp-link" title="Intervening from the command line" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Intervening from the command line</span></a><a href="#editing-the-flow-mid-run" class="rp-toc-item rp-link" title="Editing the flow mid-run" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Editing the flow mid-run</span></a><a href="#whose-edits-need-confirmation" class="rp-toc-item rp-link" title="Whose edits need confirmation" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Whose edits need confirmation</span></a><a href="#what-happens-to-a-node-you-edit" class="rp-toc-item rp-link" title="What happens to a node you edit" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">What happens to a node you edit</span></a><a href="#finished-nodes-can-only-be-redone" class="rp-toc-item rp-link" title="Finished nodes can only be redone" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Finished nodes can only be redone</span></a><a href="#where-to-see-versions" class="rp-toc-item rp-link" title="Where to see versions" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Where to see versions</span></a><a href="#hand-nodes-to-bots-in-the-chat-experimental-off-by-default" class="rp-toc-item rp-link" title="Hand nodes to bots in the chat (experimental, off by default)" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Hand nodes to bots in the chat (experimental, off by default)</span></a><a href="#who-runs-which-node" class="rp-toc-item rp-link" title="Who runs which node" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Who runs which node</span></a><a href="#two-placements-node-topic--main-topic" class="rp-toc-item rp-link" title="Two placements: node topic / main topic" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Two placements: node topic / main topic</span></a><a href="#how-the-executing-bot-delivers" class="rp-toc-item rp-link" title="How the executing bot delivers" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">How the executing bot delivers</span></a><a href="#timeouts-blocks-and-reassignment" class="rp-toc-item rp-link" title="Timeouts, blocks and reassignment" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Timeouts, blocks and reassignment</span></a><a href="#when-the-main-bot-is-woken" class="rp-toc-item rp-link" title="When the main bot is woken" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">When the main bot is woken</span></a><a href="#whats-checked-before-approval" class="rp-toc-item rp-link" title="What&#x27;s checked before approval" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">What&#x27;s checked before approval</span></a><a href="#hand-the-initiators-identity-to-node-bots-experimental-off-by-default" class="rp-toc-item rp-link" title="Hand the initiator&#x27;s identity to node bots (experimental, off by default)" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Hand the initiator&#x27;s identity to node bots (experimental, off by default)</span></a><a href="#viewing-the-flow-in-the-feishu-sidebar" class="rp-toc-item rp-link" title="Viewing the flow in the Feishu sidebar" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Viewing the flow in the Feishu sidebar</span></a><a href="#concurrency-limits" class="rp-toc-item rp-link" title="Concurrency limits" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Concurrency limits</span></a><a href="#limitations" class="rp-toc-item rp-link" title="Limitations" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Limitations</span></a><a href="#advanced" class="rp-toc-item rp-link" title="Advanced" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Advanced</span></a><a href="#the-underlying-state-machine" class="rp-toc-item rp-link" title="The underlying state machine" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">The underlying state machine</span></a><a href="#run-one-goal-headless-botmux-goal-run" class="rp-toc-item rp-link" title="Run one goal headless: botmux goal run" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Run one goal headless: <code>botmux goal run</code></span></a><a href="#legacy-v2-templates-retired" class="rp-toc-item rp-link" title="Legacy v2 templates (retired)" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Legacy v2 templates (retired)</span></a><a href="#development-self-test-botmux-v3-run" class="rp-toc-item rp-link" title="Development self-test: botmux v3 run" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Development self-test: <code>botmux v3 run</code></span></a></nav><div class="rp-outline__divider"></div><div class="rp-outline__bottom"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/en/workflow.md" target="_blank" rel="noopener noreferrer" class="rp-outline__action-row rp-edit-link rp-link"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"></path></svg><span>Edit this page</span></a></div></div></aside></div></div>
+    <div id="__rspress_modal_container"></div>
+  </body>
+</html>

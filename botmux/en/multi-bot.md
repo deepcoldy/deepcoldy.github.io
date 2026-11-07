@@ -1,0 +1,146 @@
+import video_v4_multibot_en from '../../static/img/video-v4-multibot-en.mp4';
+
+# Multi-bot Collaboration
+
+You can run several Lark bots on one machine, each backed by a different CLI (say, one Claude Code and one Codex). Put them in the same group and different models can work together and pick holes in each other's work.
+
+<video src={video_v4_multibot_en} controls preload="metadata" style={{width:'100%',borderRadius:'8px'}} />
+
+## Get started in three steps
+
+1. Each bot is one Lark app. Configure the CLI each one should use (see [bots.json](/botmux/en/bots-json.md)).
+2. Add these bots and yourself to the same group (to create a group in one sentence, see [One-click session group](/botmux/en/group.md)).
+3. @ the bot you want in the group and start talking.
+
+Each bot is a separate process; they don't affect each other.
+
+## Common scenarios
+
+| What you want | How |
+|---|---|
+| Code review | Have Claude Code and Codex review the same MR and challenge each other where they disagree |
+| Design review | Two AIs each propose a design, then look for flaws in the other's |
+| Write/review split | One writes, one reviews, iterate until they converge |
+
+## Who gets the message: routing rules
+
+| Who is in the group | Do you need an @? |
+|---|---|
+| Just you + one bot | No. Just talk and it replies |
+| Several humans, or several bots | Yes, @ the one you want (a single bot with several humans still needs an @) |
+
+* `@botA @botB /t <task>`: **each** mentioned bot opens its own independent session on this message. Both bots share the same thread (anchored on your `/t` message), but the sessions are unrelated.
+* To make one bot the "default responder" in a multi-bot group (replies without an @, but steps aside when someone else is named), set its mention policy to `ambient`. See [Mention policy](/botmux/en/mention-mode.md).
+
+## Letting bots hand off to each other
+
+Bots hand off by **actually @-mentioning** each other in a message.
+
+> One rule to remember: **if you don't `--mention` the other bot, it is never triggered.**
+
+How:
+
+1. See who is in the group: run `botmux bots list` inside a session. It lists the bots in the current group, each with its `openId`, capability tag (`capability`), and `mentionable` (whether it can be reliably @-mentioned). The `<available_bots>` block in incoming messages also hints which bots can take a handoff.
+2. Then @ the other bot: `botmux send --mention <other openId> "..."`. Once it receives the @, it starts working.
+
+If `mentionable` is `false`, there is no reliable @ handle for that bot in this group yet. Send `/introduce` in the group so the bots register each other, and precise @-mentions work from then on.
+
+### How bots find each other
+
+* **Within one deployment**: by default, bots in the current group are discovered from the Lark group bot roster. Bots on the same machine can always talk to each other; bots on the same machine with the same owner can also run admin commands on each other, see [Permissions](/botmux/en/permissions.md#bots-on-this-machine-admin-commands-and-delegated-grants-trustsameownerbots).
+* **Across deployments** (bots on someone else's machine): two paths, both going through the same team-trust gate with no `/grant` needed:
+  * Federation in the Dashboard "Teams" panel: bring another deployment into the same team, then create cross-deployment groups;
+  * Central-platform team sync: the platform pushes down teams and groups (see "Team scope" below).
+
+A plain `/group` or the Dashboard "New group" flow creates an ordinary group inside your deployment. It uses neither path and carries no cross-deployment team trust.
+
+## Letting bots that weren't @-mentioned catch up
+
+By default a bot only sees messages that @ it. With **group context sharing** on, a bot automatically gets the group background it missed when it is woken up.
+
+The owner or a human in `allowedUsers` @-mentions any bot managed by this deployment in the group and sends:
+
+```text
+@bot /context-sharing on       # enable
+@bot /context-sharing status   # check status
+@bot /context-sharing off      # disable
+```
+
+What happens once it's on:
+
+* Bots in this deployment quietly "listen" to the group in the background, but **listening never starts a model**, so listening itself costs no tokens.
+* When a bot is later woken up under the usual @ rules, it automatically receives the group messages it missed (with sources). The @ rules themselves don't change.
+* One switch covers the whole group; no per-bot setup.
+
+Limits and details:
+
+| Item | Details |
+|---|---|
+| How much per turn | Up to 24,000 characters by default, counted toward that turn's model input tokens |
+| Retention | 30 days, or at most 10,000 messages per group |
+| What's included | Only published group messages and resource references; no DMs, hidden reasoning, unpublished tool results, or private files |
+| Incomplete history | Gaps are clearly marked |
+| Not supported | Cannot be enabled in DMs or API virtual sessions; sessions with `promptInjection=none` receive no automatic background |
+
+`status` and the enable reply include a **recall sync** diagnostic, telling you whether recalled messages will be removed from the background in time:
+
+| Result | Meaning |
+|---|---|
+| `subscribed` | The Lark app is verified to subscribe to the `im.message.recalled_v1` event (configuration only; doesn't guarantee every push arrives) |
+| `update_submitted` | The subscription was submitted; you still need to publish a new app version in the Lark Developer Console |
+| unknown / login session unavailable / stale | Historical background may temporarily keep recalled messages; check that event in the Developer Console, then rerun `status` |
+
+Turning the switch off does no subscription check or setup.
+
+## Team scope: finding bots on other people's machines
+
+Once connected to the central platform, you can find bots **in your team on other people's machines** by **specialty** (even if they aren't in your group yet), then bring them into a group. Three commands, one job each:
+
+```bash
+# 1. Discover: list bots that have joined your team (use --team if this machine is in several teams)
+botmux bots list --scope team [--team <teamId>]
+
+# 2. New group: put the bots you found (by appId) and their owners into a new platform-created group
+botmux create-group --team <teamId> --agent <appId> [--agent ...] [--name "Group name"]
+
+# 3. Add to an existing group: add bots and their owners to a group you're already in
+botmux bots invite --chat <chatId> --team <teamId> --agent <appId> [--agent ...]
+```
+
+If this machine belongs to only one team, `--team` can be omitted; with several teams it is required.
+
+Each bot returned by `bots list --scope team` has:
+
+| Field | Meaning |
+|---|---|
+| `appId` | Use it to create groups and invite |
+| `name` | Name |
+| `specialties` | Specialty tags |
+| `mentionable` / `online` | Whether it can be @-mentioned / is online |
+| `owner` | Its owner |
+| `machineId` / `machineName` | Which machine it runs on |
+
+Key points:
+
+* **Only bots that joined the team are listed**: the list only includes bots whose owner explicitly added them to the team in the platform's "Manage bots". If a bot is missing, its owner most likely hasn't added it yet.
+* **Specialties and online status are self-reported**: `specialties` / `mentionable` / `online` are for picking only, not trusted credentials.
+* **appId, not @**: you can't @ someone else's bot before it's in your group, so all three commands go by appId + platform auth. Permissions and team membership are decided entirely by the platform.
+* **Target group for `bots invite`**: **you must already be in it**, and **the platform bot must be in it**. If the platform bot is missing, botmux automatically uses one of your local bots already in the group to add it, then retries; usually you won't notice. You're asked to add it manually only when the group requires owner approval to add bots, or none of your local bots is in that group.
+
+### Three ways to add bots, don't mix them up
+
+| Method | Use it for |
+|---|---|
+| `botmux create-group --team` | Put same-team bots from other machines, plus their owners, into a **new group** |
+| `botmux bots invite` | Add same-team bots and their owners to a **group you're already in** |
+| Lark in-group `/invite` | Add a same-tenant bot to the **current group** |
+
+To create a group with only your local bots, use `botmux create-group --bot <name>` or [One-click session group](/botmux/en/group.md).
+
+## Related
+
+* [Roles & Teams](/botmux/en/roles.md): give each bot a persona and capability tags
+* [One-click session group](/botmux/en/group.md): add several bots to a new group in one sentence
+* [Session Relay](/botmux/en/relay.md): move a session into a collaboration group
+* [Multi-topic collaboration](/botmux/en/multi-topic.md): let one bot open sub-topics and dispatch tasks to other bots
+* [Project Progress Card](/botmux/en/project-card.md): the lead bot pins a card in the group that rolls up every sub-task's progress

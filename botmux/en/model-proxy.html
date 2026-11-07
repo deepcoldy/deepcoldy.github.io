@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Model Proxy (Experimental) - botmux 文档</title>
+<script>{;const saved = localStorage.getItem('rspress-theme-appearance');const preferDark = window.matchMedia('(prefers-color-scheme: dark)').matches;const isDark = !saved || saved === 'auto' ? preferDark : saved === 'dark';document.documentElement.classList.toggle('dark', isDark);document.documentElement.classList.toggle('rp-dark', isDark);document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';}</script>
+<link href="/botmux/static/css/styles.788f7d0799.css" rel="stylesheet">
+<script defer src="/botmux/static/js/styles.b78d054ff9.js"></script>
+<script defer src="/botmux/static/js/lib-react.9b7f575772.js"></script>
+<script defer src="/botmux/static/js/lib-router.00d9fd057a.js"></script>
+<script defer src="/botmux/static/js/2390.10879bb0bb.js"></script>
+<script defer src="/botmux/static/js/index.c910afd182.js"></script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Rspress v2.0.13">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://deepcoldy.github.io/botmux/">
+<meta property="og:image" content="https://deepcoldy.github.io/botmux/botmux-logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://deepcoldy.github.io/botmux/botmux-logo.png">
+<meta name="theme-color" content="#646CEA">
+<link rel="icon" href="/botmux/botmux-logo.png">
+<meta property="og:title" content="Model Proxy (Experimental) - botmux 文档">
+<meta name="description" content="⚠️ Experimental: endpoints, fields and limits may change. It does not affect regular Feishu bots. botmux model-proxy serve starts an authenticated, OpenAI Chat Completions–compatible endpoint on 127.0.0.1. Tools that only speak the OpenAI protocol (scripts built on the OpenAI SDK, code-review tools, and so on) can point their baseURL here and call models through a CLI's own login (Codex, Claude Code, …) — no separate API key needed.">
+<meta property="og:description" content="⚠️ Experimental: endpoints, fields and limits may change. It does not affect regular Feishu bots. botmux model-proxy serve starts an authenticated, OpenAI Chat Completions–compatible endpoint on 127.0.0.1. Tools that only speak the OpenAI protocol (scripts built on the OpenAI SDK, code-review tools, and so on) can point their baseURL here and call models through a CLI's own login (Codex, Claude Code, …) — no separate API key needed."></head>
+
+  <body>
+    <div id="__rspress_root"><link rel="preload" as="image" href="/botmux/botmux-logo.png"/><header class="rp-nav"><div class="rp-nav__left"><div class="rp-nav__title"><a href="/botmux/en/" class="rp-nav__title__link rp-link"><div class="rp-nav__title__logo"><img src="/botmux/botmux-logo.png" alt="logo" id="logo" class="rspress-logo rp-nav__title__logo-image"/></div><span>botmux 文档</span></a></div></div><div class="rp-nav__right"><button class="rp-search-button"><div class="rp-search-button__content"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21" class="rp-search-button__icon"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg><span class="rp-search-button__word">Search</span></div><div class="rp-search-button__hotkey" style="opacity:0"><span></span><span>K</span></div></button><div class="rp-search-button--mobile"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg></div><div class="rp-nav__others"><div class="rp-nav-menu__divider"></div><li class="rp-nav-menu__item"><div class="rp-nav-menu__item__container">English<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-menu__item__icon"><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--center"><li class="rp-hover-group__item" style="padding-left:8px" data-depth="0"><a href="/botmux/model-proxy.html" class="rp-hover-group__item__link rp-link" aria-label="简体中文" lang="zh" hrefLang="zh" rel="alternate">简体中文</a></li><li class="rp-hover-group__item rp-hover-group__item--active" style="padding-left:8px" data-depth="0"><a href="/botmux/en/model-proxy.html" class="rp-hover-group__item__link rp-link" aria-label="English" lang="en" hrefLang="en" rel="alternate">English</a></li></ul></li><div class="rp-switch-appearance"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" class="rp-switch-appearance__icon rp-switch-appearance__icon--sun"><path fill="currentColor" d="m7.001 15.848-1.226 1.226a.58.58 0 0 0 0 .818.58.58 0 0 0 .818 0l1.226-1.226a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0m-.352-8.735a.584.584 0 0 0 .825-.825L6.237 5.051a.584.584 0 0 0-.825.825zM5.011 11.07h-1.75a.584.584 0 0 0 0 1.167h1.75c.324 0 .584-.26.584-.583a.585.585 0 0 0-.584-.584m7.003-5.835c.324 0 .584-.26.584-.584V2.9a.58.58 0 0 0-.584-.584.58.58 0 0 0-.583.583V4.65c0 .323.262.584.583.584m5.616 1.621 1.226-1.225a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0l-1.226 1.225a.58.58 0 0 0 0 .818.576.576 0 0 0 .818 0m3.138 4.214h-1.75a.58.58 0 0 0-.584.584c0 .324.26.584.583.584h1.751a.584.584 0 1 0 0-1.167m-3.389 5.124a.584.584 0 0 0-.825.825l1.238 1.238a.584.584 0 0 0 .825-.826zm-5.365-9.795a5.256 5.256 0 0 0-5.257 5.258 5.256 5.256 0 0 0 5.257 5.257 5.256 5.256 0 0 0 5.257-5.257 5.256 5.256 0 0 0-5.257-5.258m0 11.675a.58.58 0 0 0-.583.583v1.751a.582.582 0 1 0 1.167 0v-1.75a.584.584 0 0 0-.584-.584"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" viewBox="0 0 19 19" class="rp-switch-appearance__icon rp-switch-appearance__icon--moon"><path fill="currentColor" d="M9.166 0a9.2 9.2 0 0 1 1.857.188.834.834 0 0 1 .042 1.623 4.47 4.47 0 1 0 5.457 5.457l.048-.135a.834.834 0 0 1 1.575.177q.186.902.188 1.856A9.168 9.168 0 1 1 9.166 0"></path></svg></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__sm"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg></button><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__md"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"><div class="rp-nav-menu__others-mobile__container"><div class="rp-nav-hamburger__md__hover-group"><div class="rp-nav-screen-appearance"><div class="rp-nav-screen-appearance__left">Theme</div><div class="rp-nav-screen-appearance__right"></div></div><div class="rp-nav-screen-langs"><div class="rp-nav-screen-langs__left">Languages</div><div class="rp-nav-screen-langs__right">English<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-screen-langs__icon "><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div></div><div class="rp-nav-screen-langs-group" style="display:grid;grid-template-rows:0fr;transition:grid-template-rows 0.2s ease-out"><div class="rp-nav-screen-langs-group__inner"><a href="/botmux/model-proxy.html" class="rp-nav-screen-langs-group__item rp-link" hrefLang="zh" lang="zh" rel="alternate">简体中文</a><span class="rp-nav-screen-langs-group__item rp-nav-screen-langs-group__item--active" aria-current="page" aria-disabled="true">English</span></div></div><div class="rp-nav-screen-divider"></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div></div></ul></button></div></header><div class="rp-doc-layout__menu"><div class="rp-sidebar-menu"><button type="button" class="rp-sidebar-menu__left"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M4 6h24v2H4zm0 18h24v2H4zm0-12h24v2H4zm0 6h24v2H4z"></path></svg><span>Menu</span></button><button type="button" class="rp-sidebar-menu__right"><span class="rp-sidebar-menu__right__text">ON THIS PAGE</span><svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-sidebar-menu__right__icon" style="transform:rotate(0deg);transition:transform 0.2s ease-out"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></button></div></div><div class="rp-doc-layout__container"><aside class="rp-doc-layout__sidebar rp-scrollbar"><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Getting Started</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/index.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Introduction</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/quickstart.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">5-Minute Quickstart</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/prerequisites.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Prerequisites</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/desktop.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">macOS Desktop App</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Core Concepts</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/architecture.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Architecture</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/session-model.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Session &amp; Topic Model</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Features</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/cards.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Streaming Cards</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/topic-unavailable-policy.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Unavailable Topic Policy</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/web-terminal.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Web Terminal</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/multi-bot.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Multi-Bot Collaboration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/multi-topic.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Multi-Topic Orchestration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/project-card.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Project Progress Card</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/mention-mode.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Mention Policy</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/whiteboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Local Whiteboard</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/decision-board.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Decision Board &amp; Steward</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/roles.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Roles &amp; Teams</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/tmux.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">tmux Session Persistence</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/zmx.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">ZMX Session Backend</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/adopt.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Adopt a Session</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/relay.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Relay a Session</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/group.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">One-Click Session Groups</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/doc-comment.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Feishu Doc Comment Entry</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/schedule.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Scheduled Tasks</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/oncall.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">On-Call Mode</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/permissions.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Permissions &amp; Access</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/sandbox.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">File Sandbox</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/voice.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Voice Summary</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/dashboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Dashboard</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/workbench.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Agent Workbench</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/webhook.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Webhook Ingress</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/api-task-trigger.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Programmatic Task Trigger API</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/headless-session.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Headless Automation Sessions</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/turn-results.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Turn Results</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/api-core-only.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Core-only API Control</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/workflow.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Workflow (Experimental)</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/hooks.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Lifecycle Hooks</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/skill-cli.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Skill + CLI Interaction</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Development &amp; Extensions</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/plugins.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Plugin Development &amp; Market</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Command Reference</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/slash-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Slash Commands</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/cli-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">CLI Commands</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Configuration</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/bots-json.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">bots.json</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/feedback-storage.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Feedback Storage &amp; Migration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/env.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Environment &amp; File Locations</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/global-settings.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Global Settings (config.json)</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/companion-api.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Local Companion API</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/model-proxy.html" class="rp-sidebar-item rp-sidebar-item--active rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Model Proxy (Experimental)</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/adapters.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">CLI Adapters</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Practices &amp; Troubleshooting</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/best-practices.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Best Practices</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/pitfalls.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Common Pitfalls</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/faq.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">FAQ / Troubleshooting</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/about.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">About &amp; Resources</span></div><div class="rp-sidebar-item__right"></div></a></div></div></aside><div class="rp-doc-layout__doc"><main class="rp-doc-layout__doc-container"><div class="rp-doc rspress-doc"><!--$--><h1 class="rp-toc-include" id="model-proxy-experimental"><a href="#model-proxy-experimental" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Model Proxy (Experimental)<!-- --> </h1>
+<blockquote>
+<p>⚠️ Experimental: endpoints, fields and limits may change. It does not affect regular Feishu bots.</p>
+</blockquote>
+<p><code>botmux model-proxy serve</code> starts an <strong>authenticated, OpenAI Chat Completions–compatible endpoint</strong> on <code>127.0.0.1</code>. Tools that only speak the OpenAI protocol (scripts built on the OpenAI SDK, code-review tools, and so on) can point their <code>baseURL</code> here and call models through a CLI&#x27;s <strong>own login</strong> (Codex, Claude Code, …) — no separate API key needed.</p>
+<div class="rp-codeblock language-text"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="text"><code><span class="line"><span>Your tool (OpenAI SDK)</span></span>
+<span class="line"><span>   │  HTTP + Bearer token, 127.0.0.1 only</span></span>
+<span class="line"><span>   ▼</span></span>
+<span class="line"><span>botmux model-proxy (this page)</span></span>
+<span class="line"><span>   │  local signed IPC</span></span>
+<span class="line"><span>   ▼</span></span>
+<span class="line"><span>Dedicated core-only instance (apiOnly bot with its own native login)</span></span>
+<span class="line"><span>   │</span></span>
+<span class="line"><span>   ▼</span></span>
+<span class="line"><span>Native CLI model call (all tools disabled, inference only)</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<h2 class="rp-toc-include" id="when-to-use-it"><a href="#when-to-use-it" class="rp-header-anchor rp-link" aria-hidden="true">#</a>When to use it</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>I want to…</th><th>Use this?</th></tr></thead><tbody><tr><td>Let an existing OpenAI-protocol tool reuse a CLI&#x27;s model login</td><td>✅ That&#x27;s what it&#x27;s for</td></tr><tr><td>My tool manages context and tool calls itself and only needs a &quot;model endpoint&quot;</td><td>✅ Tool calls come back as <strong>proposals</strong>; your tool executes them</td></tr><tr><td>Have AI work and edit code in Feishu</td><td>❌ Use a regular bot, see <a href="/botmux/en/quickstart.html" class="rp-link">Quick Start</a></td></tr><tr><td>Drive a full CLI session over HTTP (read/write files, run commands)</td><td>❌ See <a href="/botmux/en/api-core-only.html" class="rp-link">Core-only (apiOnly) API control</a></td></tr><tr><td>Streaming, embeddings, images, audio, direct browser access</td><td>❌ Not supported yet</td></tr></tbody></table></div>
+<p>Key points up front:</p>
+<ul>
+<li><strong>Loopback only</strong> (<code>127.0.0.1</code>). The config only accepts this address, so it is not reachable from the network.</li>
+<li><strong>The CLI never touches your files</strong>: native CLI tools are disabled on every call; it only does inference. Returned <code>tool_calls</code> are proposals — execution stays with your tool.</li>
+<li><strong>No borrowed logins</strong>: the proxy only uses the login in the dedicated bot directory you specify. It never picks up chat bots&#x27;, the global, or other bots&#x27; credentials.</li>
+</ul>
+<h2 class="rp-toc-include" id="quick-start"><a href="#quick-start" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Quick start</h2>
+<h3 class="rp-toc-include" id="step-1-start-a-dedicated-core-only-instance"><a href="#step-1-start-a-dedicated-core-only-instance" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Step 1: Start a dedicated core-only instance</h3>
+<p>The proxy doesn&#x27;t call models itself. It forwards requests to a <strong>separate core-only instance</strong> (a botmux that doesn&#x27;t connect to Feishu and only serves local HTTP, see <a href="/botmux/en/api-core-only.html" class="rp-link">Core-only</a>). That instance must:</p>
+<ul>
+<li>Be its own process with its own data directory and port. <strong>Do not reuse — or restart for this — a running Feishu bot daemon.</strong></li>
+<li>Have a bot ID of the form <code>local_&lt;name&gt;</code>, using only letters, digits, <code>_</code> and <code>-</code> in the name (the proxy config rejects <code>.</code>).</li>
+<li>Use one of the supported CLIs below, with a native login completed in that bot&#x27;s dedicated directory.</li>
+</ul>
+<div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-keyword)">export</span><span style="color:var(--shiki-foreground)"> STATE_DIR</span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-string-expression)">&quot;$HOME/model-proxy-demo&quot;</span><span style="color:var(--shiki-token-comment)">     # pick a fresh directory</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">export</span><span style="color:var(--shiki-foreground)"> BOTMUX_CORE_CLI</span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)">codex                  </span><span style="color:var(--shiki-token-comment)"># or claude-code / pi / opencode</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">export</span><span style="color:var(--shiki-foreground)"> BOTMUX_API_ONLY_BOT</span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)">local_reasoner</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">export</span><span style="color:var(--shiki-foreground)"> BOTMUX_CORE_CODEX_AUTH_SYNC</span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-foreground)">isolated   </span><span style="color:var(--shiki-token-comment)"># Codex only</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">export</span><span style="color:var(--shiki-foreground)"> BOTMUX_CORE_STATE_DIR</span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-string-expression)">&quot;$STATE_DIR/data&quot;</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">export</span><span style="color:var(--shiki-foreground)"> BOTMUX_API_PORT</span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-constant)">8930</span><span style="color:var(--shiki-token-comment)">                   # pick a free port</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">botmux</span><span style="color:var(--shiki-token-string)"> serve</span><span style="color:var(--shiki-token-string)"> --api-only</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>This command runs in the foreground. Use another terminal for the next steps, and <code>export STATE_DIR=...</code> again there (same directory as above).</p>
+<p>Login files live under <code>$STATE_DIR/bots/&lt;bot ID&gt;/&lt;subdir&gt;</code>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>CLI</th><th>Subdir</th><th>Login files needed</th></tr></thead><tbody><tr><td><code>codex</code> / <code>codex-app</code></td><td><code>codex</code></td><td><code>auth.json</code>, plus a <code>models_cache.json</code> that contains the target model; <code>BOTMUX_CORE_CODEX_AUTH_SYNC=isolated</code> is required</td></tr><tr><td><code>claude-code</code></td><td><code>claude</code></td><td><code>.credentials.json</code> (a login that only lives in the system keychain won&#x27;t work)</td></tr><tr><td><code>pi</code></td><td><code>pi</code></td><td><code>auth.json</code> (API key or OAuth; executable helpers not supported)</td></tr><tr><td><code>opencode</code></td><td><code>opencode</code></td><td><code>auth.json</code> (API / OAuth records only)</td></tr></tbody></table></div>
+<p>For Codex, for example, log that directory in with <code>CODEX_HOME=&quot;$STATE_DIR/bots/local_reasoner/codex&quot; codex login</code>.</p>
+<blockquote>
+<p>Keep this instance &quot;plain&quot;: no sandbox, no <code>--backend</code>, no extra env vars, startup commands or wrapper. With any of these, the proxy refuses to start with <code>inference_profile_unsupported</code>.</p>
+</blockquote>
+<h3 class="rp-toc-include" id="step-2-write-the-proxy-config-file"><a href="#step-2-write-the-proxy-config-file" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Step 2: Write the proxy config file</h3>
+<p>Save the following to a file, e.g. <code>$STATE_DIR/model-proxy.json</code>:</p>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;port&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 8788</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;models&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;review-model&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">      &quot;bot&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;local_reasoner&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">      &quot;model&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;&lt;native-model-id&gt;&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">      &quot;deadlineMs&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 120000</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  }</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;clients&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> [</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    { </span><span style="color:var(--shiki-token-keyword)">&quot;id&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;review-client&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-keyword)"> &quot;tokenEnv&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;BOTMUX_MODEL_PROXY_TOKEN&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-keyword)"> &quot;models&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> [</span><span style="color:var(--shiki-token-string-expression)">&quot;review-model&quot;</span><span style="color:var(--shiki-foreground)">] }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  ]</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>Lock it down so only you can read and write it, otherwise the proxy won&#x27;t start:</p>
+<div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-keyword)">export</span><span style="color:var(--shiki-foreground)"> PROXY_CONFIG</span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-string-expression)">&quot;$STATE_DIR/model-proxy.json&quot;</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">chmod</span><span style="color:var(--shiki-token-constant)"> 600</span><span style="color:var(--shiki-token-string-expression)"> &quot;$PROXY_CONFIG&quot;</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<ul>
+<li>It must be a <strong>regular file owned by the current user with mode exactly <code>0600</code></strong>.</li>
+<li>Its directory (and the directories above it) must not be writable by other users.</li>
+</ul>
+<h3 class="rp-toc-include" id="step-3-create-a-token-and-start-the-proxy"><a href="#step-3-create-a-token-and-start-the-proxy" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Step 3: Create a token and start the proxy</h3>
+<div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-comment)"># At least 32 characters, no whitespace; hand it to the tool over a secure channel</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">export</span><span style="color:var(--shiki-foreground)"> BOTMUX_MODEL_PROXY_TOKEN</span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-string-expression)">&quot;$(</span><span style="color:var(--shiki-token-function)">openssl</span><span style="color:var(--shiki-token-string)"> rand</span><span style="color:var(--shiki-token-string)"> -hex</span><span style="color:var(--shiki-token-constant)"> 32</span><span style="color:var(--shiki-token-string-expression)">)&quot;</span></span>
+<span class="line"><span style="color:var(--shiki-token-comment)"># Point at the data directory of the Step 1 instance so the proxy can find it</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">export</span><span style="color:var(--shiki-foreground)"> SESSION_DATA_DIR</span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-string-expression)">&quot;$STATE_DIR/data&quot;</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">botmux</span><span style="color:var(--shiki-token-string)"> model-proxy</span><span style="color:var(--shiki-token-string)"> serve</span><span style="color:var(--shiki-token-string)"> --config</span><span style="color:var(--shiki-token-string-expression)"> &quot;$PROXY_CONFIG&quot;</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>On success it prints one line of JSON:</p>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span><span style="color:var(--shiki-token-keyword)">&quot;listening&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)">&quot;http://127.0.0.1:8788/v1&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-keyword)">&quot;protocol&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)">&quot;chat-completions-v1&quot;</span><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>The proxy runs in the foreground. <code>Ctrl+C</code> (SIGINT) or SIGTERM stops it and cancels calls still in flight.</p>
+<h3 class="rp-toc-include" id="step-4-connect-your-tool"><a href="#step-4-connect-your-tool" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Step 4: Connect your tool</h3>
+<div class="rp-codeblock language-javascript"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="javascript"><code><span class="line"><span style="color:var(--shiki-token-keyword)">import</span><span style="color:var(--shiki-foreground)"> OpenAI </span><span style="color:var(--shiki-token-keyword)">from</span><span style="color:var(--shiki-token-string-expression)"> &#x27;openai&#x27;</span><span style="color:var(--shiki-foreground)">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">const</span><span style="color:var(--shiki-token-constant)"> client</span><span style="color:var(--shiki-token-keyword)"> =</span><span style="color:var(--shiki-token-keyword)"> new</span><span style="color:var(--shiki-token-function)"> OpenAI</span><span style="color:var(--shiki-foreground)">({</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  baseURL</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-string-expression)"> &#x27;http://127.0.0.1:8788/v1&#x27;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  apiKey</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-constant)"> process</span><span style="color:var(--shiki-foreground)">.</span><span style="color:var(--shiki-token-constant)">env</span><span style="color:var(--shiki-foreground)">.</span><span style="color:var(--shiki-token-constant)">BOTMUX_MODEL_PROXY_TOKEN</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  maxRetries</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-constant)"> 0</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-comment)"> // retries are your call; send an Idempotency-Key if you need dedup</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">});</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">const</span><span style="color:var(--shiki-token-constant)"> result</span><span style="color:var(--shiki-token-keyword)"> =</span><span style="color:var(--shiki-token-keyword)"> await</span><span style="color:var(--shiki-token-constant)"> client</span><span style="color:var(--shiki-token-function)">.</span><span style="color:var(--shiki-token-constant)">chat</span><span style="color:var(--shiki-token-function)">.</span><span style="color:var(--shiki-token-constant)">completions</span><span style="color:var(--shiki-token-function)">.create</span><span style="color:var(--shiki-foreground)">({</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  model</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-string-expression)"> &#x27;review-model&#x27;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-comment)"> // the alias from the config, not the native model name</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  messages</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-foreground)"> [{ role</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-string-expression)"> &#x27;user&#x27;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-foreground)"> content</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-string-expression)"> &#x27;Explain binary search in one sentence.&#x27;</span><span style="color:var(--shiki-foreground)"> }]</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">});</span></span>
+<span class="line"><span style="color:var(--shiki-token-constant)">console</span><span style="color:var(--shiki-token-function)">.log</span><span style="color:var(--shiki-foreground)">(</span><span style="color:var(--shiki-token-constant)">result</span><span style="color:var(--shiki-foreground)">.choices[</span><span style="color:var(--shiki-token-constant)">0</span><span style="color:var(--shiki-foreground)">].</span><span style="color:var(--shiki-token-constant)">message</span><span style="color:var(--shiki-foreground)">.content);</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>To check connectivity first, list the models this token can use:</p>
+<div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-function)">curl</span><span style="color:var(--shiki-token-string)"> -s</span><span style="color:var(--shiki-token-string)"> http://127.0.0.1:8788/v1/models</span><span style="color:var(--shiki-foreground)"> \</span></span>
+<span class="line"><span style="color:var(--shiki-token-string)">  -H</span><span style="color:var(--shiki-token-string-expression)"> &quot;Authorization: Bearer $BOTMUX_MODEL_PROXY_TOKEN&quot;</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<h2 class="rp-toc-include" id="config-file-reference"><a href="#config-file-reference" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Config file reference</h2>
+<h3 class="rp-toc-include" id="top-level-fields"><a href="#top-level-fields" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Top-level fields</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Field</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>host</code></td><td>No</td><td>Must be <code>127.0.0.1</code> (the default)</td></tr><tr><td><code>port</code></td><td>No</td><td>Listening port, default <code>8788</code>; <code>0</code> lets the OS pick one</td></tr><tr><td><code>models</code></td><td>Yes</td><td>Model <strong>alias</strong> table, at least one entry</td></tr><tr><td><code>clients</code></td><td>Yes</td><td>Clients allowed to connect, 1–100</td></tr></tbody></table></div>
+<p>Unknown fields in the config are rejected, not ignored.</p>
+<h3 class="rp-toc-include" id="models-model-aliases"><a href="#models-model-aliases" class="rp-header-anchor rp-link" aria-hidden="true">#</a><code>models</code>: model aliases</h3>
+<p>Clients only see the alias (e.g. <code>review-model</code>), never which bot or native model is behind it.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Field</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>bot</code></td><td>Yes</td><td>Bot ID of the Step 1 dedicated instance, e.g. <code>local_reasoner</code></td></tr><tr><td><code>model</code></td><td>Yes</td><td>Native model name, as understood by the CLI</td></tr><tr><td><code>reasoningEffort</code></td><td>No</td><td>Reasoning effort: <code>none</code> / <code>minimal</code> / <code>low</code> / <code>medium</code> / <code>high</code> / <code>xhigh</code> / <code>max</code> / <code>ultra</code>; ultimately bounded by what the CLI supports</td></tr><tr><td><code>deadlineMs</code></td><td>No</td><td>Per-call time limit, 100–300000 ms, default <code>120000</code>; returns 504 on timeout</td></tr></tbody></table></div>
+<h3 class="rp-toc-include" id="clients-clients-and-tokens"><a href="#clients-clients-and-tokens" class="rp-header-anchor rp-link" aria-hidden="true">#</a><code>clients</code>: clients and tokens</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody><tr><td><code>id</code></td><td>Client name (letters, digits, <code>_</code>, <code>-</code>), must be unique</td></tr><tr><td><code>tokenEnv</code></td><td><strong>Name of the env var holding the token</strong> (starts with an uppercase letter, e.g. <code>BOTMUX_MODEL_PROXY_TOKEN</code>). The token itself never goes in the config file</td></tr><tr><td><code>models</code></td><td>Aliases this client may use; all must exist in <code>models</code></td></tr></tbody></table></div>
+<ul>
+<li>Tokens must be at least 32 characters with no whitespace; different clients can&#x27;t share a token.</li>
+<li>The token is <strong>unrelated</strong> to the CLI&#x27;s subscription credentials — it only decides which aliases are allowed.</li>
+<li>Changing a token requires restarting the proxy.</li>
+</ul>
+<h2 class="rp-toc-include" id="supported-endpoints-and-fields"><a href="#supported-endpoints-and-fields" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Supported endpoints and fields</h2>
+<p>There are only two endpoints, both requiring <code>Authorization: Bearer &lt;token&gt;</code>:</p>
+<ul>
+<li><code>GET /v1/models</code>: lists the aliases this token may use.</li>
+<li><code>POST /v1/chat/completions</code>: <strong>non-streaming</strong> chat completion; <code>Content-Type</code> must be <code>application/json</code>.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Field</th><th>Support</th></tr></thead><tbody><tr><td><code>model</code></td><td>Required; an alias that is in this client&#x27;s allow list</td></tr><tr><td><code>messages</code></td><td>Five roles: <code>system</code> / <code>developer</code> / <code>user</code> / <code>assistant</code> / <code>tool</code>; content is a string or an array of <code>text</code> parts only; up to 2000 messages</td></tr><tr><td><code>tools</code></td><td><code>function</code> type only, up to 128; parameter schema must be an object</td></tr><tr><td><code>tool_choice</code></td><td><code>auto</code> / <code>none</code> / <code>required</code> / a specific function</td></tr><tr><td><code>parallel_tool_calls</code></td><td>When <code>false</code>, at most one call proposal is returned</td></tr><tr><td><code>response_format</code></td><td><code>text</code>, <code>json_object</code>, <code>json_schema</code></td></tr><tr><td><code>stream</code> / <code>n</code></td><td>Omit them, or use <code>stream: false</code>, <code>n: 1</code></td></tr><tr><td><code>max_completion_tokens</code></td><td>Omitted or <code>null</code> means no limit specified; an integer 1–128000 is <strong>only supported by Claude Code</strong> — other CLIs return 400 <code>max_completion_tokens_unsupported</code></td></tr><tr><td>Anything else</td><td>Always 400 <code>unsupported_or_invalid_parameter</code>, including <code>temperature</code>, <code>top_p</code>, <code>max_tokens</code>, <code>seed</code>, <code>stop</code>, <code>logprobs</code>, etc. — <strong>never silently ignored</strong></td></tr></tbody></table></div>
+<p>Supported JSON Schema keywords for tool parameters and <code>json_schema</code>: <code>type</code>, <code>properties</code>, <code>required</code>, boolean <code>additionalProperties</code>, <code>items</code>, <code>enum</code>, <code>description</code>, <code>title</code>, numeric bounds, string length, array length. <code>$ref</code>, combinators like <code>anyOf</code>/<code>oneOf</code>, regex patterns and the like are not supported and are rejected.</p>
+<h3 class="rp-toc-include" id="multi-turn-tool-calls"><a href="#multi-turn-tool-calls" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Multi-turn tool calls</h3>
+<p>Same as with OpenAI: the model returns <code>tool_calls</code> → your tool executes them → send the results back as <code>tool</code> messages (with <code>tool_call_id</code>) in the next request. The proxy checks that history is complete:</p>
+<ul>
+<li><code>tool_call_id</code>s must be unique, and every call needs a matching result.</li>
+<li>No other message may be inserted before all results are in.</li>
+</ul>
+<p>The model&#x27;s answer is validated too: calling an unknown function, arguments that don&#x27;t match the schema, violating <code>tool_choice</code>, or invalid JSON when JSON was requested all return 502 instead of handing you a bad result as success.</p>
+<h3 class="rp-toc-include" id="what-comes-back"><a href="#what-comes-back" class="rp-header-anchor rp-link" aria-hidden="true">#</a>What comes back</h3>
+<ul>
+<li>On success <code>finish_reason</code> is <code>stop</code> or <code>tool_calls</code>. <code>length</code> is never returned.</li>
+<li>Tool call IDs are generated deterministically, so replaying an idempotent request keeps the same IDs.</li>
+<li>The standard <code>usage</code> field is always <code>null</code>. Real usage is in <code>botmux.native_invocation_usage</code>, which totals the <strong>whole CLI invocation</strong> (possibly including internal retries) and can&#x27;t be treated as a single API bill. Some tools display <code>null</code> as 0 — that doesn&#x27;t mean nothing was consumed.</li>
+</ul>
+<h2 class="rp-toc-include" id="idempotency-and-timeouts"><a href="#idempotency-and-timeouts" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Idempotency and timeouts</h2>
+<ul>
+<li>With an <code>Idempotency-Key</code> header (alphanumerics and <code>_.:-</code>, up to 128 chars), the same key + same request from the same client and alias replays the stored result without calling the CLI again; same key with a different request returns 409.</li>
+<li>Two requests without a key are two independent calls.</li>
+<li>A client disconnect cancels the call; within one proxy process, if several connections wait on the same result, one disconnecting doesn&#x27;t affect the others.</li>
+<li>Run one proxy process per inference bot.</li>
+</ul>
+<h2 class="rp-toc-include" id="common-errors"><a href="#common-errors" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Common errors</h2>
+<p>Errors always look like <code>{&quot;error&quot;:{&quot;message&quot;:&quot;&lt;code&gt;&quot;,&quot;type&quot;:&quot;...&quot;,&quot;param&quot;:...,&quot;code&quot;:&quot;&lt;code&gt;&quot;}}</code> and never include CLI error output, credentials or local paths.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Status</th><th>Common causes</th></tr></thead><tbody><tr><td>400</td><td>Unsupported or malformed field (check which field <code>param</code> points to), incomplete tool history</td></tr><tr><td>401</td><td>Wrong token or missing <code>Authorization</code></td></tr><tr><td>403</td><td>Alias not allowed for this token; or the request carries an <code>Origin</code> header (direct browser access isn&#x27;t supported)</td></tr><tr><td>404</td><td>Unsupported endpoint</td></tr><tr><td>409</td><td>Idempotency key conflict, or the call was cancelled</td></tr><tr><td>413</td><td>Request body over 1 MB, or the assembled prompt is too long</td></tr><tr><td>415</td><td><code>Content-Type</code> isn&#x27;t <code>application/json</code>, or a content encoding was used</td></tr><tr><td>429</td><td>Inference instance is at capacity</td></tr><tr><td>502</td><td>Inference failed or the model output failed validation, e.g. <code>native_auth_missing</code> (dedicated directory not logged in), <code>native_model_not_found</code> (wrong model name)</td></tr><tr><td>503</td><td>Dedicated instance not found (<code>inference_profile_offline</code>), instance config doesn&#x27;t qualify (<code>inference_profile_unsupported</code>), transport failure</td></tr><tr><td>504</td><td><code>deadlineMs</code> exceeded</td></tr></tbody></table></div>
+<h2 class="rp-toc-include" id="faq"><a href="#faq" class="rp-header-anchor rp-link" aria-hidden="true">#</a>FAQ</h2>
+<p><strong>Startup fails with <code>model_proxy_config_missing</code> or a permission error?</strong>
+Check that the <code>--config</code> path exists, the file is <code>chmod 600</code>, and its directory isn&#x27;t writable by other users.</p>
+<p><strong>Startup fails with <code>model_proxy_token_requires_32_nonwhitespace_characters</code>?</strong>
+The env var named by <code>tokenEnv</code> isn&#x27;t set, or the token is too short or contains whitespace.</p>
+<p><strong>Getting <code>inference_profile_offline</code>?</strong>
+The proxy can&#x27;t find the dedicated instance. Make sure it&#x27;s running and that <code>SESSION_DATA_DIR</code> points at its data directory (<code>$STATE_DIR/data</code> from Step 1) when you start the proxy.</p>
+<p><strong>Is it exactly the same as calling the model API directly?</strong>
+Not exactly. Conversation roles and tool definitions are serialized into text for the CLI, then the response is rebuilt from structured output. Role order and tool associations are preserved, but this isn&#x27;t native verbatim passthrough, and the CLI&#x27;s internal prompts and retries also affect results.</p>
+<p><strong>Can the output limit be used as a cost cap?</strong>
+No. <code>max_completion_tokens</code> only applies to Claude&#x27;s generation request; the CLI&#x27;s wrapping and retries also consume tokens.</p>
+<h2 class="rp-toc-include" id="related"><a href="#related" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Related</h2>
+<ul>
+<li><a href="/botmux/en/api-core-only.html" class="rp-link">Core-only (apiOnly) API control</a>: starting the dedicated instance, data directory and security boundaries</li>
+<li><a href="/botmux/en/cli-commands.html" class="rp-link">CLI commands</a></li>
+<li><a href="/botmux/en/adapters.html" class="rp-link">Supported CLIs</a></li>
+</ul><!--/$--></div><footer class="rp-doc-footer"><div class="rp-doc-footer__edit"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/en/model-proxy.md" target="_blank" rel="noopener noreferrer" class="rp-edit-link rp-link">Edit this page</a><div class="rp-last-updated"><p>Last Updated<!-- -->: <span>11/7/2026, 1:25:39 AM</span></p></div></div><div class="rp-doc-footer__divider"></div><div class="rp-prev-next-page"><a href="/botmux/en/companion-api.html" class="rp-prev-next-page__item rp-prev-next-page__prev rp-link"><span class="rp-prev-next-page__item__desc">Previous page</span><span class="rp-prev-next-page__item__title"><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon rp-prev-next-page__rotate_180"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg><span>Local Companion API</span></span></a><a href="/botmux/en/adapters.html" class="rp-prev-next-page__item rp-prev-next-page__next rp-link"><span class="rp-prev-next-page__item__desc">Next page</span><span class="rp-prev-next-page__item__title"><span>CLI Adapters</span><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></span></a></div></footer></main></div><aside class="rp-doc-layout__outline rp-scrollbar"><div class="rp-outline"><div class="rp-outline__title">ON THIS PAGE<svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg></div><nav class="rp-outline__toc rp-scrollbar"><a href="#when-to-use-it" class="rp-toc-item rp-link" title="When to use it" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">When to use it</span></a><a href="#quick-start" class="rp-toc-item rp-link" title="Quick start" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Quick start</span></a><a href="#step-1-start-a-dedicated-core-only-instance" class="rp-toc-item rp-link" title="Step 1: Start a dedicated core-only instance" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Step 1: Start a dedicated core-only instance</span></a><a href="#step-2-write-the-proxy-config-file" class="rp-toc-item rp-link" title="Step 2: Write the proxy config file" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Step 2: Write the proxy config file</span></a><a href="#step-3-create-a-token-and-start-the-proxy" class="rp-toc-item rp-link" title="Step 3: Create a token and start the proxy" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Step 3: Create a token and start the proxy</span></a><a href="#step-4-connect-your-tool" class="rp-toc-item rp-link" title="Step 4: Connect your tool" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Step 4: Connect your tool</span></a><a href="#config-file-reference" class="rp-toc-item rp-link" title="Config file reference" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Config file reference</span></a><a href="#top-level-fields" class="rp-toc-item rp-link" title="Top-level fields" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Top-level fields</span></a><a href="#models-model-aliases" class="rp-toc-item rp-link" title="models: model aliases" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc"><code>models</code>: model aliases</span></a><a href="#clients-clients-and-tokens" class="rp-toc-item rp-link" title="clients: clients and tokens" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc"><code>clients</code>: clients and tokens</span></a><a href="#supported-endpoints-and-fields" class="rp-toc-item rp-link" title="Supported endpoints and fields" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Supported endpoints and fields</span></a><a href="#multi-turn-tool-calls" class="rp-toc-item rp-link" title="Multi-turn tool calls" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Multi-turn tool calls</span></a><a href="#what-comes-back" class="rp-toc-item rp-link" title="What comes back" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">What comes back</span></a><a href="#idempotency-and-timeouts" class="rp-toc-item rp-link" title="Idempotency and timeouts" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Idempotency and timeouts</span></a><a href="#common-errors" class="rp-toc-item rp-link" title="Common errors" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Common errors</span></a><a href="#faq" class="rp-toc-item rp-link" title="FAQ" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">FAQ</span></a><a href="#related" class="rp-toc-item rp-link" title="Related" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Related</span></a></nav><div class="rp-outline__divider"></div><div class="rp-outline__bottom"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/en/model-proxy.md" target="_blank" rel="noopener noreferrer" class="rp-outline__action-row rp-edit-link rp-link"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"></path></svg><span>Edit this page</span></a></div></div></aside></div></div>
+    <div id="__rspress_modal_container"></div>
+  </body>
+</html>

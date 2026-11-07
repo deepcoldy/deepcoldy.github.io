@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>File &amp; Network Sandbox - botmux 文档</title>
+<script>{;const saved = localStorage.getItem('rspress-theme-appearance');const preferDark = window.matchMedia('(prefers-color-scheme: dark)').matches;const isDark = !saved || saved === 'auto' ? preferDark : saved === 'dark';document.documentElement.classList.toggle('dark', isDark);document.documentElement.classList.toggle('rp-dark', isDark);document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';}</script>
+<link href="/botmux/static/css/styles.788f7d0799.css" rel="stylesheet">
+<script defer src="/botmux/static/js/styles.b78d054ff9.js"></script>
+<script defer src="/botmux/static/js/lib-react.9b7f575772.js"></script>
+<script defer src="/botmux/static/js/lib-router.00d9fd057a.js"></script>
+<script defer src="/botmux/static/js/2390.10879bb0bb.js"></script>
+<script defer src="/botmux/static/js/index.c910afd182.js"></script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Rspress v2.0.13">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://deepcoldy.github.io/botmux/">
+<meta property="og:image" content="https://deepcoldy.github.io/botmux/botmux-logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://deepcoldy.github.io/botmux/botmux-logo.png">
+<meta name="theme-color" content="#646CEA">
+<link rel="icon" href="/botmux/botmux-logo.png">
+<meta property="og:title" content="File & Network Sandbox - botmux 文档">
+<meta name="description" content="The sandbox limits what the CLI behind a bot can touch on your host: it keeps secrets out of reach and stops the CLI from wrecking your environment. It is configured per bot and works on both Linux and macOS.">
+<meta property="og:description" content="The sandbox limits what the CLI behind a bot can touch on your host: it keeps secrets out of reach and stops the CLI from wrecking your environment. It is configured per bot and works on both Linux and macOS."></head>
+
+  <body>
+    <div id="__rspress_root"><link rel="preload" as="image" href="/botmux/botmux-logo.png"/><header class="rp-nav"><div class="rp-nav__left"><div class="rp-nav__title"><a href="/botmux/en/" class="rp-nav__title__link rp-link"><div class="rp-nav__title__logo"><img src="/botmux/botmux-logo.png" alt="logo" id="logo" class="rspress-logo rp-nav__title__logo-image"/></div><span>botmux 文档</span></a></div></div><div class="rp-nav__right"><button class="rp-search-button"><div class="rp-search-button__content"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21" class="rp-search-button__icon"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg><span class="rp-search-button__word">Search</span></div><div class="rp-search-button__hotkey" style="opacity:0"><span></span><span>K</span></div></button><div class="rp-search-button--mobile"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg></div><div class="rp-nav__others"><div class="rp-nav-menu__divider"></div><li class="rp-nav-menu__item"><div class="rp-nav-menu__item__container">English<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-menu__item__icon"><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--center"><li class="rp-hover-group__item" style="padding-left:8px" data-depth="0"><a href="/botmux/sandbox.html" class="rp-hover-group__item__link rp-link" aria-label="简体中文" lang="zh" hrefLang="zh" rel="alternate">简体中文</a></li><li class="rp-hover-group__item rp-hover-group__item--active" style="padding-left:8px" data-depth="0"><a href="/botmux/en/sandbox.html" class="rp-hover-group__item__link rp-link" aria-label="English" lang="en" hrefLang="en" rel="alternate">English</a></li></ul></li><div class="rp-switch-appearance"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" class="rp-switch-appearance__icon rp-switch-appearance__icon--sun"><path fill="currentColor" d="m7.001 15.848-1.226 1.226a.58.58 0 0 0 0 .818.58.58 0 0 0 .818 0l1.226-1.226a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0m-.352-8.735a.584.584 0 0 0 .825-.825L6.237 5.051a.584.584 0 0 0-.825.825zM5.011 11.07h-1.75a.584.584 0 0 0 0 1.167h1.75c.324 0 .584-.26.584-.583a.585.585 0 0 0-.584-.584m7.003-5.835c.324 0 .584-.26.584-.584V2.9a.58.58 0 0 0-.584-.584.58.58 0 0 0-.583.583V4.65c0 .323.262.584.583.584m5.616 1.621 1.226-1.225a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0l-1.226 1.225a.58.58 0 0 0 0 .818.576.576 0 0 0 .818 0m3.138 4.214h-1.75a.58.58 0 0 0-.584.584c0 .324.26.584.583.584h1.751a.584.584 0 1 0 0-1.167m-3.389 5.124a.584.584 0 0 0-.825.825l1.238 1.238a.584.584 0 0 0 .825-.826zm-5.365-9.795a5.256 5.256 0 0 0-5.257 5.258 5.256 5.256 0 0 0 5.257 5.257 5.256 5.256 0 0 0 5.257-5.257 5.256 5.256 0 0 0-5.257-5.258m0 11.675a.58.58 0 0 0-.583.583v1.751a.582.582 0 1 0 1.167 0v-1.75a.584.584 0 0 0-.584-.584"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" viewBox="0 0 19 19" class="rp-switch-appearance__icon rp-switch-appearance__icon--moon"><path fill="currentColor" d="M9.166 0a9.2 9.2 0 0 1 1.857.188.834.834 0 0 1 .042 1.623 4.47 4.47 0 1 0 5.457 5.457l.048-.135a.834.834 0 0 1 1.575.177q.186.902.188 1.856A9.168 9.168 0 1 1 9.166 0"></path></svg></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__sm"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg></button><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__md"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"><div class="rp-nav-menu__others-mobile__container"><div class="rp-nav-hamburger__md__hover-group"><div class="rp-nav-screen-appearance"><div class="rp-nav-screen-appearance__left">Theme</div><div class="rp-nav-screen-appearance__right"></div></div><div class="rp-nav-screen-langs"><div class="rp-nav-screen-langs__left">Languages</div><div class="rp-nav-screen-langs__right">English<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-screen-langs__icon "><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div></div><div class="rp-nav-screen-langs-group" style="display:grid;grid-template-rows:0fr;transition:grid-template-rows 0.2s ease-out"><div class="rp-nav-screen-langs-group__inner"><a href="/botmux/sandbox.html" class="rp-nav-screen-langs-group__item rp-link" hrefLang="zh" lang="zh" rel="alternate">简体中文</a><span class="rp-nav-screen-langs-group__item rp-nav-screen-langs-group__item--active" aria-current="page" aria-disabled="true">English</span></div></div><div class="rp-nav-screen-divider"></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div></div></ul></button></div></header><div class="rp-doc-layout__menu"><div class="rp-sidebar-menu"><button type="button" class="rp-sidebar-menu__left"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M4 6h24v2H4zm0 18h24v2H4zm0-12h24v2H4zm0 6h24v2H4z"></path></svg><span>Menu</span></button><button type="button" class="rp-sidebar-menu__right"><span class="rp-sidebar-menu__right__text">ON THIS PAGE</span><svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-sidebar-menu__right__icon" style="transform:rotate(0deg);transition:transform 0.2s ease-out"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></button></div></div><div class="rp-doc-layout__container"><aside class="rp-doc-layout__sidebar rp-scrollbar"><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Getting Started</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/index.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Introduction</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/quickstart.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">5-Minute Quickstart</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/prerequisites.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Prerequisites</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/desktop.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">macOS Desktop App</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Core Concepts</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/architecture.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Architecture</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/session-model.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Session &amp; Topic Model</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Features</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/cards.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Streaming Cards</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/topic-unavailable-policy.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Unavailable Topic Policy</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/web-terminal.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Web Terminal</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/multi-bot.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Multi-Bot Collaboration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/multi-topic.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Multi-Topic Orchestration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/project-card.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Project Progress Card</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/mention-mode.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Mention Policy</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/whiteboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Local Whiteboard</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/decision-board.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Decision Board &amp; Steward</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/roles.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Roles &amp; Teams</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/tmux.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">tmux Session Persistence</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/zmx.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">ZMX Session Backend</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/adopt.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Adopt a Session</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/relay.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Relay a Session</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/group.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">One-Click Session Groups</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/doc-comment.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Feishu Doc Comment Entry</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/schedule.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Scheduled Tasks</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/oncall.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">On-Call Mode</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/permissions.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Permissions &amp; Access</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/sandbox.html" class="rp-sidebar-item rp-sidebar-item--active rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">File Sandbox</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/voice.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Voice Summary</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/dashboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Dashboard</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/workbench.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Agent Workbench</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/webhook.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Webhook Ingress</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/api-task-trigger.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Programmatic Task Trigger API</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/headless-session.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Headless Automation Sessions</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/turn-results.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Turn Results</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/api-core-only.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Core-only API Control</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/workflow.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Workflow (Experimental)</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/hooks.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Lifecycle Hooks</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/skill-cli.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Skill + CLI Interaction</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Development &amp; Extensions</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/plugins.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Plugin Development &amp; Market</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Command Reference</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/slash-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Slash Commands</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/cli-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">CLI Commands</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Configuration</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/bots-json.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">bots.json</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/feedback-storage.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Feedback Storage &amp; Migration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/env.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Environment &amp; File Locations</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/global-settings.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Global Settings (config.json)</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/companion-api.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Local Companion API</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/model-proxy.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Model Proxy (Experimental)</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/adapters.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">CLI Adapters</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Practices &amp; Troubleshooting</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/best-practices.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Best Practices</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/pitfalls.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Common Pitfalls</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/faq.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">FAQ / Troubleshooting</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/about.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">About &amp; Resources</span></div><div class="rp-sidebar-item__right"></div></a></div></div></aside><div class="rp-doc-layout__doc"><main class="rp-doc-layout__doc-container"><div class="rp-doc rspress-doc"><!--$--><h1 class="rp-toc-include" id="file--network-sandbox"><a href="#file--network-sandbox" class="rp-header-anchor rp-link" aria-hidden="true">#</a>File &amp; Network Sandbox<!-- --> </h1>
+<p>The sandbox limits what the CLI behind a bot can touch on your host: it keeps secrets out of reach and stops the CLI from wrecking your environment. It is configured per bot and <strong>works on both Linux and macOS</strong>.</p>
+<h2 class="rp-toc-include" id="pick-a-mode"><a href="#pick-a-mode" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Pick a mode</h2>
+<p>The file sandbox is one switch with three positions:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Mode (config value)</th><th>In one line</th><th>What it can read</th><th>Where writes go</th><th>Who it suits</th></tr></thead><tbody><tr><td>Off (<code>off</code>, the default)</td><td>No isolation</td><td>Every host file</td><td>Straight to the host</td><td>Only you, in a fully trusted environment</td></tr><tr><td>Allowlist isolation (<code>oncall</code>)</td><td><strong>Keep secrets in</strong></td><td>Only allowlisted paths; everything else does not exist inside the sandbox</td><td>Writable allowlisted paths, written straight to the host</td><td>Sharing the bot with group members or outside collaborators</td></tr><tr><td>scratch (<code>scratch</code>)</td><td><strong>Keep the machine clean</strong></td><td>The whole real filesystem (only botmux&#x27;s own credentials are hidden)</td><td>A throwaway copy, discarded when the session ends; the host is untouched</td><td>Your own risky commands, experimental refactors, building untrusted code</td></tr></tbody></table></div>
+<p>How to choose:</p>
+<ul>
+<li><strong>Other people will use this bot</strong> (group members, Oncall, several authorized users) → choose <strong>Allowlist isolation</strong>. Private keys, tokens, other repositories and other bots&#x27; data are invisible by default.</li>
+<li><strong>Only you use it, but you worry a command will mess up the machine</strong> → choose <strong>scratch</strong>. No allowlist to configure, every tool just works, and anything that breaks is simply thrown away.</li>
+<li>⚠️ <strong>scratch isolates writes, not credentials</strong>: the agent can still read the secrets on this machine, including other people&#x27;s tokens and login state (such as <code>user-token-*</code> and <code>lark-cli-home/</code> under <code>~/.botmux/data/</code>). Do not use scratch for a bot several people share.</li>
+</ul>
+<blockquote>
+<p>The sandbox governs which files the CLI can access, not who can talk to the bot. Who can talk is decided by <a href="/botmux/en/oncall.html" class="rp-link">On-Call Mode</a> and <a href="/botmux/en/permissions.html" class="rp-link">Permissions</a>.</p>
+</blockquote>
+<h2 class="rp-toc-include" id="turning-it-on"><a href="#turning-it-on" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Turning it on</h2>
+<h3 class="rp-toc-include" id="in-the-dashboard-recommended"><a href="#in-the-dashboard-recommended" class="rp-header-anchor rp-link" aria-hidden="true">#</a>In the Dashboard (recommended)</h3>
+<ol>
+<li>Open the Dashboard → <strong>Bot Config</strong> → select the bot.</li>
+<li>Under <strong>File sandbox</strong>, pick <strong>Off / Allowlist isolation / scratch (throwaway)</strong>.</li>
+<li>When switching to Allowlist isolation or scratch, a confirmation dialog explains what the mode does; click <strong>Switch</strong>. Switching back to Off has no dialog.</li>
+<li>For scratch you can also pick the storage: in-memory or disk.</li>
+</ol>
+<p>The Dashboard also checks a few things for you:</p>
+<ul>
+<li>When the bot is used by more than its owner (Oncall, whole-group access, several <code>allowedUsers</code>, or per-sender auth) but allowlist isolation is off, it suggests turning it on and says whether the current CLI is verified to work.</li>
+<li>When you pick scratch, it warns up front if this machine cannot run scratch or can only use disk storage, and lists the missing dependencies and how to install them.</li>
+</ul>
+<h3 class="rp-toc-include" id="in-botsjson"><a href="#in-botsjson" class="rp-header-anchor rp-link" aria-hidden="true">#</a>In <code>bots.json</code></h3>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">[</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;name&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;public-oncall&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;cliId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;codex&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;sandbox&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;oncall&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;sandboxPaths&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> { </span><span style="color:var(--shiki-token-keyword)">&quot;deny&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> [</span><span style="color:var(--shiki-token-string-expression)">&quot;~/.kube&quot;</span><span style="color:var(--shiki-foreground)">] }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  }</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;name&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;my-scratch&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;cliId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;claude-code&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;sandbox&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;scratch&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;scratchStorage&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;tmpfs&quot;</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">]</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<ul>
+<li>Leaving out <code>sandbox</code>, or setting it to <code>false</code>, means off; <code>true</code> is the same as <code>&quot;oncall&quot;</code>.</li>
+<li>The legacy field <code>readIsolation: true</code> is treated as allowlist isolation and migrated automatically at daemon startup.</li>
+</ul>
+<h3 class="rp-toc-include" id="when-changes-take-effect"><a href="#when-changes-take-effect" class="rp-header-anchor rp-link" aria-hidden="true">#</a>When changes take effect</h3>
+<p><strong>New sessions only.</strong> A session records its sandbox mode the first time it starts and keeps using that record. Running sessions keep the mode they started with, even across <code>/restart</code> or a daemon restart. To use the new mode right away, start a new topic.</p>
+<p>To check whether a session is sandboxed:</p>
+<ul>
+<li>The session card in Lark shows a small line &quot;🛡️ Sandbox: Allowlist isolation&quot; or &quot;🛡️ Sandbox: scratch (throwaway)&quot;. No line means no sandbox.</li>
+<li>In the Dashboard session list and kanban, a session whose recorded sandbox mode differs from the bot&#x27;s current config is tagged &quot;Sandbox ≠ config&quot;. Hover to see both values (for example &quot;session uses Off, config is now Allowlist isolation&quot;).</li>
+</ul>
+<p>&quot;Sandbox ≠ config&quot; is not an error. It means you changed this bot&#x27;s sandbox mode after the session started, and the session still runs with the old mode.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>You want</th><th>Do this</th></tr></thead><tbody><tr><td>This session to use the new mode</td><td>Start a new topic. <code>/restart</code> does not switch the mode, and the tag stays</td></tr><tr><td>To keep the old mode</td><td>Nothing. The session keeps working as before</td></tr></tbody></table></div>
+<p>Sessions that have not started yet (for example, still picking a repo) don&#x27;t show this tag.</p>
+<h3 class="rp-toc-include" id="forcing-it-on-machine-wide"><a href="#forcing-it-on-machine-wide" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Forcing it on machine-wide</h3>
+<p><code>BOTMUX_SANDBOX</code> is handy for testing or blanket hardening and applies to every bot on the machine:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Value</th><th>Effect</th></tr></thead><tbody><tr><td><code>1</code> or <code>oncall</code></td><td>Every bot is forced into allowlist isolation</td></tr><tr><td><code>scratch</code></td><td>Every bot is forced into scratch</td></tr><tr><td>Unset, empty, <code>0</code>, <code>false</code></td><td>No force; each bot follows its own <code>sandbox</code> setting</td></tr><tr><td>Anything else</td><td>Rejected at startup</td></tr></tbody></table></div>
+<p>The variable <strong>can only force the sandbox on, never off</strong>: setting it to <code>0</code> does not turn off a sandbox the bot enables itself.</p>
+<hr/>
+<h2 class="rp-toc-include" id="allowlist-isolation-oncall"><a href="#allowlist-isolation-oncall" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Allowlist isolation (<code>oncall</code>)</h2>
+<p>The CLI is confined to a per-session file allowlist that governs both reads and writes. However group members try to steer the model, it cannot reach your private keys, other repositories, or Lark app secrets. It is often paired with <a href="/botmux/en/oncall.html" class="rp-link">On-Call Mode</a>.</p>
+<h3 class="rp-toc-include" id="what-the-sandbox-can-see"><a href="#what-the-sandbox-can-see" class="rp-header-anchor rp-link" aria-hidden="true">#</a>What the sandbox can see</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Path</th><th>Inside the sandbox</th></tr></thead><tbody><tr><td>Working directory (<code>workingDir</code>)</td><td>Read-write; changes land on the host directly</td></tr><tr><td>System tools, shared libraries, the CLI itself</td><td>Read-only</td></tr><tr><td><code>/tmp</code>, <code>/run</code>, <code>/var/tmp</code>, <code>/dev/shm</code></td><td>Session-private empty directories, separate from the host</td></tr><tr><td><code>~/.ssh</code>, <code>~/.aws</code>, shared <code>~/.lark-cli</code></td><td>Hidden</td></tr><tr><td><code>~/.botmux</code> (botmux data directory)</td><td>Only what this session needs (the bot&#x27;s own <code>bots/&lt;appId&gt;/</code>, the <code>botmux</code> command and plugins, this session&#x27;s records); <code>bots.json</code>, the Dashboard secret and other bots&#x27; directories can be neither read nor written</td></tr><tr><td>botmux install directory</td><td>Read-only, so the <code>botmux</code> command runs; if it is a git checkout, files git does not track (<code>.env</code>, login state, <code>data/</code>, …) and <code>.git</code> are hidden</td></tr><tr><td>Rest of your home directory</td><td><strong>Not mounted as a whole</strong>, unless it is inside the working directory</td></tr><tr><td>Network</td><td><strong>Not restricted</strong> by default, same as the host; see <a href="#network-sandbox" class="rp-link">Network sandbox</a></td></tr></tbody></table></div>
+<p>Things to watch:</p>
+<ul>
+<li><strong>Point the working directory at a specific project</strong> (e.g. <code>~/proj</code>). <code>workingDir</code> defaults to <code>~</code>, which puts every unhidden file in your home directory on the allowlist, writable.</li>
+<li>The working directory cannot be inside the botmux data directory (except the bot&#x27;s own <code>bots/&lt;appId&gt;/</code>); such a session refuses to start.</li>
+<li>On Linux, the private <code>/run</code> also holds a few read-only mounts the session needs: the command relay directory <code>/run/sbxbin</code>, the MCP plugin gateway socket directory (when the gateway is on), <code>/etc/resolv.conf</code> when it links into <code>/run</code>, and CLI / interpreter directories living under <code>/run</code> (such as fnm or nvm multishell directories).</li>
+</ul>
+<h3 class="rp-toc-include" id="adding-paths-or-masks-sandboxpaths"><a href="#adding-paths-or-masks-sandboxpaths" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Adding paths or masks (<code>sandboxPaths</code>)</h3>
+<p>To let the sandbox see more directories, or hide more sensitive paths:</p>
+<div class="rp-codeblock language-jsonc"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="jsonc"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;sandbox&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;oncall&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;sandboxPaths&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">    // Extra read-write directories</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;readWrite&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> [</span><span style="color:var(--shiki-token-string-expression)">&quot;~/shared-output&quot;</span><span style="color:var(--shiki-foreground)">]</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">    // Extra read-only directories (shared sources, docs, …)</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;readOnly&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> [</span><span style="color:var(--shiki-token-string-expression)">&quot;/srv/shared-libs&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-string-expression)"> &quot;~/docs/runbooks&quot;</span><span style="color:var(--shiki-foreground)">]</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">    // Extra sensitive paths to hide</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;deny&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> [</span><span style="color:var(--shiki-token-string-expression)">&quot;~/.kube&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-string-expression)"> &quot;/opt/confidential&quot;</span><span style="color:var(--shiki-foreground)">]</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>Rules:</p>
+<ul>
+<li><strong>Use absolute paths</strong> (starting with <code>/</code> or <code>~/</code>). A relative path is resolved against the session working directory, where <code>..</code> may already be your home directory, so none of the three lists accepts one.</li>
+<li><strong><code>readWrite</code> cannot contain <code>/</code>, your home directory, the botmux data directory, or any parent of them</strong>: that would hand the whole disk or every credential to the sandbox. A specific directory such as <code>~/projects/foo</code> is fine.</li>
+<li><strong>On Linux, <code>readOnly</code> cannot contain <code>/</code> or <code>/run</code></strong>: the mount points the sandbox needs could not be created and the session would exit at launch. Use specific directories such as <code>/usr</code>, <code>/opt/&lt;tool dir&gt;</code>, <code>/run/lock</code>.</li>
+<li>The Dashboard rejects these on save and explains why. Older entries hand-written into <code>bots.json</code> are downgraded at spawn: home / data directory move from read-write to read-only, <code>/</code> and relative paths in <code>readWrite</code> are dropped, and on Linux <code>/</code> and <code>/run</code> in <code>readOnly</code> are dropped too.</li>
+<li><code>readWrite</code> / <code>readOnly</code> paths that do not exist yet are skipped at spawn; to allow a file that has not been created, allow its existing parent directory.</li>
+<li>The legacy fields <code>sandboxHidePaths</code> and <code>sandboxReadonlyPaths</code> are still read and are migrated to <code>deny</code> / <code>readOnly</code> at daemon startup.</li>
+</ul>
+<h3 class="rp-toc-include" id="where-each-cli-keeps-its-data"><a href="#where-each-cli-keeps-its-data" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Where each CLI keeps its data</h3>
+<ul>
+<li><strong>Claude Code (including Seed, built on it) and Codex</strong>: config, transcripts and memory live in the bot&#x27;s own directory <code>&lt;BOTMUX_HOME&gt;/bots/&lt;appId&gt;/</code> (<code>.../claude</code>, <code>.../codex</code>) instead of your global <code>~/.claude</code> / <code>~/.codex</code>. The Dashboard shows &quot;Enhanced CLI data isolation&quot;.</li>
+<li><strong>Other CLIs</strong> (Cursor, Antigravity, Grok, Kimi, …): keep using their global data directory on the host, mounted into the sandbox as each adapter declares (some writable as a whole directory, some only their credential files).</li>
+<li>With <code>wrapperCli</code> configured, this redirect is skipped and the CLI uses its usual data directory.</li>
+</ul>
+<h3 class="rp-toc-include" id="which-clis-are-verified"><a href="#which-clis-are-verified" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Which CLIs are verified</h3>
+<p>These CLIs were tested under allowlist isolation on Linux (start, first turn, shell tool, working directory read/write, network, <code>botmux send</code> and credential isolation, on both tmux and pty backends):</p>
+<p>Claude Code, Codex, Antigravity, OpenCode, Pi, oh-my-pi, Grok, Kimi.</p>
+<ul>
+<li><strong>Codex App</strong> does not support allowlist isolation on Linux and refuses to start; use Codex instead.</li>
+<li>Other CLIs have not been verified one by one; try one in a test session first.</li>
+</ul>
+<h3 class="rp-toc-include" id="using-it-with-wrappercli"><a href="#using-it-with-wrappercli" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Using it with <code>wrapperCli</code></h3>
+<p>A bot with a launch prefix (<code>wrapperCli</code>) can also be sandboxed (pty / tmux backends). The wrapper itself runs inside the sandbox, under the same allowlist:</p>
+<ul>
+<li>botmux only lets in the wrapper&#x27;s own executable file and the CLI it calls.</li>
+<li>Anything else the wrapper needs (its install tree, interpreter, config) must be added to <code>sandboxPaths</code>: <code>readOnly</code> for reading, <code>readWrite</code> if it writes.</li>
+<li>When a path is missing, the session names it before starting; if the wrapper exits right after launch, the topic also suggests adding the paths to <code>sandboxPaths</code>. Under scratch it suggests checking <code>scratchDenyPaths</code> instead.</li>
+</ul>
+<h3 class="rp-toc-include" id="multiple-accounts--credentials"><a href="#multiple-accounts--credentials" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Multiple accounts &amp; credentials</h3>
+<ul>
+<li><strong>Codex isolated login (<code>codexAuthSync: &quot;isolated&quot;</code>)</strong>: points <code>CODEX_HOME</code> at <code>&lt;BOTMUX_HOME&gt;/bots/&lt;appId&gt;/codex</code> and never reads or touches the global <code>~/.codex</code>. Works with the sandbox off or in allowlist isolation; it <strong>cannot be combined with <code>scratch</code> or <code>wrapperCli</code></strong> (the session refuses to start). When a session is bound to a non-legacy Codex instance, the instance&#x27;s own auth mode applies.</li>
+<li><strong>Codex <code>config.toml</code></strong>: when Codex uses the bot&#x27;s own directory (allowlist isolation, or <code>codexAuthSync: &quot;isolated&quot;</code>; not under scratch or with <code>wrapperCli</code>), the <code>config.toml</code> in it is copied once from the host&#x27;s <code>~/.codex/config.toml</code> when the first new session starts; later host edits are not synced. The Dashboard (next to &quot;Codex login credentials&quot;) shows the path and offers <strong>Re-sync from host</strong> (the current file is backed up as <code>config.toml.bak-&lt;time&gt;</code> first), effective for the next new session.</li>
+<li><strong>Claude per-bot accounts (<code>credentialsSourceDir</code>)</strong>: a sandboxed bot takes its OAuth credentials from this directory on every cold start, so sandboxed bots never share an account by accident. No effect on bots without a sandbox; cannot be combined with <code>codexAuthSync: &quot;isolated&quot;</code>.</li>
+<li><strong>lark-cli</strong>: the sandbox hides the shared <code>~/.lark-cli</code>. To use lark-cli inside the sandbox, the machine must first split lark-cli config per bot; see <a href="https://github.com/deepcoldy/botmux/blob/master/docs/lark-cli-per-bot.md" target="_blank" rel="noopener noreferrer" class="rp-link">lark-cli per-bot config</a> (Chinese).</li>
+</ul>
+<h4 class="rp-toc-include" id="credentials-source-dir"><a href="#credentials-source-dir" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Several accounts on one machine: a separate account for a Claude bot</h4>
+<p>By default every sandboxed bot on a machine takes its credentials from the shared login (<code>~/.claude/.credentials.json</code> or the keychain), so they all run as one Claude account. To give one bot a different account:</p>
+<ol>
+<li>
+<p>Prepare an account directory with one sub-directory per CLI, for example:</p>
+<div class="rp-codeblock language-text"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="text"><code><span class="line"><span>~/accounts/acct-b/</span></span>
+<span class="line"><span>└── claude/</span></span>
+<span class="line"><span>    └── .credentials.json</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+</li>
+<li>
+<p>Set <code>credentialsSourceDir</code> for the bot: <code>&quot;credentialsSourceDir&quot;: &quot;~/accounts/acct-b&quot;</code> in <code>bots.json</code>, or send <code>/botconfig set credentialsSourceDir ~/accounts/acct-b</code> in Lark.</p>
+</li>
+<li>
+<p>It takes effect for new sessions (<code>/restart</code> an existing one). From then on, every cold start copies the credentials from that directory into the bot&#x27;s own data directory.</p>
+</li>
+</ol>
+<p>Limits:</p>
+<ul>
+<li><strong>Only <code>claude-code</code> is supported for now</strong>, and the bot must have the file sandbox on. On a bot with no sandbox at all it has no effect (the global login is still used and a warning is logged); with the sandbox on but the data directory not redirectable (for example with <code>wrapperCli</code>), the session refuses to start.</li>
+<li>If the source directory is missing, unreadable or holds invalid credentials, the session <strong>refuses to start</strong> instead of quietly falling back to the shared login.</li>
+<li>Cannot be combined with <code>codexAuthSync: &quot;isolated&quot;</code>. For separate Codex accounts use <code>codexAuthSync: &quot;isolated&quot;</code>, see the item above.</li>
+<li>botmux only copies on cold start and <strong>does not refresh</strong> the tokens in the source directory; keeping them valid is up to you (or an external script).</li>
+<li><code>/botconfig unset credentialsSourceDir</code> goes back to the shared login.</li>
+</ul>
+<hr/>
+<h2 class="rp-toc-include" id="scratch-throwaway-sandbox"><a href="#scratch-throwaway-sandbox" class="rp-header-anchor rp-link" aria-hidden="true">#</a>scratch (throwaway sandbox)</h2>
+<p>A disposable environment for your own use.</p>
+<h3 class="rp-toc-include" id="how-it-works"><a href="#how-it-works" class="rp-header-anchor rp-link" aria-hidden="true">#</a>How it works</h3>
+<ul>
+<li><strong>Reads: zero setup</strong>. The bot sees the full real filesystem; compilers, global npm / pip packages, <code>~/.gitconfig</code> and project configs just work.</li>
+<li><strong>Writes: all go to a copy</strong>. Editing <code>/etc</code>, installing global packages, changing your home directory or project files: every write lands in a separate copy-on-write layer that is discarded when the session ends.</li>
+<li><strong>Linux</strong>: based on overlayfs, with <strong>zero writes to the host disk</strong>. A root daemon uses kernel overlayfs; a non-root daemon falls back to <code>fuse-overlayfs</code> automatically. Separately mounted data disks (such as <code>/data00</code>): under root each gets its own copy layer; under non-root they are read-only inside the sandbox, so <strong>keep the working directory on the root filesystem</strong>, otherwise the session refuses to start.</li>
+<li><strong>macOS</strong>: uses APFS clones of your home directory and project (only changed blocks take space), with system paths read-only. But <code>~/Library/{Caches,Application Support,Logs}</code> and system temp dirs such as <code>/private/tmp</code> and <code>/private/var/folders</code> <strong>still write to the real disk</strong> and are outside the throwaway guarantee.</li>
+</ul>
+<h3 class="rp-toc-include" id="storage-and-options"><a href="#storage-and-options" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Storage and options</h3>
+<div class="rp-codeblock language-jsonc"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="jsonc"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;sandbox&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;scratch&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">  // tmpfs (default, in memory) or disk</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;scratchStorage&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;tmpfs&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">  // tmpfs size limit in MB; 0 = kernel default, roughly half of RAM</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;scratchTmpfsSizeMb&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 4096</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-comment)">  // Extra paths to hide (botmux&#x27;s own credentials are hidden by default)</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;scratchDenyPaths&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> [</span><span style="color:var(--shiki-token-string-expression)">&quot;~/.ssh&quot;</span><span style="color:var(--shiki-foreground)">]</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Storage</th><th>Behavior</th><th>Requirement</th></tr></thead><tbody><tr><td><code>tmpfs</code> in-memory (default)</td><td>Kept in RAM, wiped when the session closes or the machine reboots</td><td>On Linux, <strong>the daemon must run as root</strong>; use <code>disk</code> otherwise</td></tr><tr><td><code>disk</code></td><td>Kept on disk, survives daemon restarts; cleaned up when the session closes normally</td><td>None</td></tr></tbody></table></div>
+<p>macOS always uses APFS clones; there is no memory / disk choice.</p>
+<hr/>
+<h2 class="rp-toc-include" id="network-sandbox"><a href="#network-sandbox" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Network sandbox</h2>
+<p>The file sandbox <strong>does not restrict networking by default</strong>: network and proxy access inside the sandbox are the same as on the host. To restrict it, add one of the following.</p>
+<h3 class="rp-toc-include" id="block-all-network-sandboxnetwork-false"><a href="#block-all-network-sandboxnetwork-false" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Block all network (<code>sandboxNetwork: false</code>)</h3>
+<div class="rp-codeblock language-jsonc"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="jsonc"><code><span class="line"><span style="color:var(--shiki-token-string-expression)">&quot;sandboxNetwork&quot;</span><span style="color:var(--shiki-foreground)">: </span><span style="color:var(--shiki-token-constant)">false</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>The CLI runs in a network namespace with no outside access. Good for purely local, offline tasks.</p>
+<h3 class="rp-toc-include" id="allow-by-destination-ip-sandboxnetworkpolicy"><a href="#allow-by-destination-ip-sandboxnetworkpolicy" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Allow by destination IP (<code>sandboxNetworkPolicy</code>)</h3>
+<p>Use this when the sandbox should reach only certain internal APIs or a proxy. <strong>Linux + pty backend + allowlist isolation only.</strong></p>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;sandbox&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;oncall&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;backendType&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;pty&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;sandboxNetworkPolicy&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;version&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 1</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;public&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> { </span><span style="color:var(--shiki-token-keyword)">&quot;mode&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;allow&quot;</span><span style="color:var(--shiki-foreground)"> }</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;private&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">      &quot;mode&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;allowlist&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">      &quot;rules&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> [{ </span><span style="color:var(--shiki-token-keyword)">&quot;cidr&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;10.20.0.0/16&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-keyword)"> &quot;protocol&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;tcp&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-keyword)"> &quot;ports&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> [</span><span style="color:var(--shiki-token-constant)">443</span><span style="color:var(--shiki-foreground)">] }]</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">    }</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;dnsServers&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> [</span><span style="color:var(--shiki-token-string-expression)">&quot;1.1.1.1&quot;</span><span style="color:var(--shiki-foreground)">]</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<ul>
+<li>Public (<code>public</code>) and private (<code>private</code>) ranges are set separately; each can be <code>allow</code> (everything), <code>block</code> (nothing), <code>allowlist</code> (only matching rules) or <code>denylist</code> (everything except matching rules).</li>
+<li>Rules use IP / CIDR only and can be limited to TCP / UDP ports; domain names are not supported.</li>
+<li>Filtering happens in the kernel (nftables + slirp4netns) on the real destination IP of each packet.</li>
+<li>In the Dashboard: <strong>Bot Config</strong> → <strong>Destination IP network policy</strong>; edit and click <strong>Save policy</strong>, or <strong>Clear network policy</strong> to remove it.</li>
+<li><strong>Trusted Proxy Egress (<code>proxyMode: &quot;trusted-egress&quot;</code>)</strong>: Ordinary sessions may explicitly delegate proxied business destinations to a trusted exit; the proxy socket itself remains subject to destination IP and port rules.</li>
+</ul>
+<p><strong>Check two things first</strong>, otherwise sessions either start without network access or do not start at all:</p>
+<ol>
+<li><strong>Set <code>dnsServers</code> explicitly.</strong> With a policy, the sandbox&#x27;s <code>/etc/resolv.conf</code> contains only the <code>dnsServers</code> addresses and slirp4netns&#x27; built-in DNS forwarder is disabled. Without them there is no DNS and every lookup fails (<code>getaddrinfo EAI_AGAIN</code>) — an allow-all policy included. Use the nameservers from the host&#x27;s <code>/etc/resolv.conf</code> (with systemd-resolved that file says <code>127.0.0.53</code>, which the sandbox cannot reach; use the upstream servers in <code>/run/systemd/resolve/resolv.conf</code>). Only port 53 is opened to them, even inside a blocked <code>private</code> zone. The Dashboard&#x27;s starting template fills in the host&#x27;s current nameservers.</li>
+<li><strong>Choose a trusted exit explicitly for ordinary proxy sessions.</strong> If the daemon or the bot&#x27;s <code>env</code> sets <code>HTTP_PROXY</code> / <code>HTTPS_PROXY</code> / <code>ALL_PROXY</code> (any case), a policy that is not allow-all refuses to start sessions: the proxy resolves and forwards destinations, so the kernel rules only see the proxy. Once the exit is trusted, add <code>&quot;proxyMode&quot;: &quot;trusted-egress&quot;</code> and permit the proxy&#x27;s TCP addresses and ports, or remove the proxy variables. Launch validation resolves every proxy endpoint&#x27;s complete A/AAAA list and refuses any address rejected by zone rules or ordered drops, any port or protocol mismatch, missing or invalid DNS answers, and invalid URLs. Loopback and network gateway aliases cannot be proxy exits. Validation neither rewrites environment variables nor widens kernel rules; the proxy&#x27;s ACL remains responsible for destinations behind it.</li>
+</ol>
+<p>When a plugin freezes a <strong>protected HTTP egress policy</strong> into a session, only the <code>codex</code> CLI currently supports the protected model bridge; other CLIs are rejected before launch. This mode cannot be combined with general <code>proxyMode: &quot;trusted-egress&quot;</code> delegation or task proxy variables. Conflicts fail explicitly: remove task proxies, clear general proxy delegation, and use the protected model bridge for model connections. The bridge forwards authorized model service connections only; it is not a general HTTP/CONNECT proxy. Direct connections to protected destinations are denied by their frozen IPs and ports within the existing policy; other destinations continue following their existing rules.</p>
+<p>Authentication tokens live in the separate <code>egress-private</code> subtree of the socket directory (0700 directory, 0600 file). The task&#x27;s file sandbox masks both <code>/run/botmux-mcp/egress-private</code> and its canonical host path. Model and declared local-service bridges read tokens outside the file sandbox; tasks only see the sockets. The runner must install nft rules successfully before readiness, bridges, or task execution. Failure exits instead of using a policy-presence boolean or unused environment flag as proof. Decision logs and unregistered-mutating-candidate warnings omit queries, request headers and bodies.</p>
+<p>Shared business reads use <code>BOTMUX_PROTECTED_EGRESS_PROTOCOL=shared-read-v1</code>, injected by the sandbox alongside the socket. A supporting CLI keeps the host&#x27;s existing business login credentials without reading the guard token. The <code>x-botmux-egress-client: shared-read-v1</code> marker selects a shared exit, not a user identity or write authorization. The guard must explicitly enable this protocol, still validates the frozen policy and target, and blocks writes registered in <code>denyRoutes</code>. POST queries work without a separate read-operation registry. Internal Botmux headers are stripped from business requests; shared requests carrying an authentication token or any <code>x-botmux-loopback-*</code> header are rejected and cannot reach host identity services through this exit. Existing model and controlled Lark identity bridges retain private token authentication. Protected writes must still go through the plugin&#x27;s per-call checks of the current human principal and capability, never the shared business identity.</p>
+<p>Deploy the protocol to both Botmux and the calling CLI. Persistent older CLIs may retain their original startup environment; start a new topic after installation and restart. Unknown protocols or missing required sockets must fail without falling back to a direct protected-target connection. Non-Botmux use and requests to other targets keep their original behavior.</p>
+<p><code>denyRoutes</code> also denies case-equivalent protected paths. Pathnames reject percent encoding, matrix semicolons, whitespace, duplicate separators and dot paths; no safe encoding allowlist currently exists. Valid pathnames and queries are forwarded unchanged, so legitimate reads need no per-operation registry. Unregistered mutating candidates are still allowed with a warning; the write-route registry must remain complete.</p>
+<p><strong>Residual boundary risk:</strong> Only the finite frozen IPs/ports are denied directly; other private troubleshooting destinations remain direct, without default-block egress. Other A/AAAA answers, CDN edges and unfrozen alternative addresses can still bypass the guard. This is not complete hostname isolation or proof that every write bypass is eliminated. For absolute bypass prevention, do NOT use default block today (block accepts no exception rules, and the protected model bridge exists only when the model host itself is a protected target, so a separate model gateway would become unreachable). Configure the public zone as an allowlist with a sole exit: list required addresses such as the model host explicitly, or rely on a provably complete service/network authorization boundary. Upstreams currently use only <code>frozenAddresses[0]</code> without multi-address failover; never blindly retry a possibly executed write.</p>
+<p>Close cleans its own authentication file and preserves a stable-path token already rotated by a successor. Cross-process rotation between comparison and unlink still has an availability race, without atomic conditional deletion. Serialize overlapping cross-process startup/teardown for the same session; further protocol hardening remains a follow-up.</p>
+<p>Other limits:</p>
+<ul>
+<li>The host <code>PATH</code> needs <code>slirp4netns</code> (with <code>--disable-host-loopback</code> and <code>--disable-dns</code>), <code>nft</code>, <code>ip</code> and <code>unshare</code> (with <code>--kill-child</code> and <code>--mount-proc</code>), and bwrap must support <code>--add-seccomp-fd</code> and <code>--disable-userns</code>. Nothing is installed automatically; if any piece is missing, the session refuses to start.</li>
+<li>A bot without its own backend setting uses the daemon default (tmux); switch it to pty under &quot;Session backend&quot; in the Dashboard.</li>
+<li>With a policy configured, changing the sandbox mode or backend is rejected until you clear the policy.</li>
+<li>The policy is fixed when a topic is created. After clearing or changing it, existing topics (including ones restored after a daemon restart) keep the old policy; start a new topic.</li>
+</ul>
+<hr/>
+<h2 class="rp-toc-include" id="what-works-inside-the-sandbox-and-what-does-not"><a href="#what-works-inside-the-sandbox-and-what-does-not" class="rp-header-anchor rp-link" aria-hidden="true">#</a>What works inside the sandbox, and what does not</h2>
+<h3 class="rp-toc-include" id="botmux-send-still-works-credentials-stay-outside"><a href="#botmux-send-still-works-credentials-stay-outside" class="rp-header-anchor rp-link" aria-hidden="true">#</a><code>botmux send</code> still works, credentials stay outside</h3>
+<p>When the CLI inside the sandbox calls <code>botmux send</code> to post text, cards, images or files, it never gets Lark credentials. The request is written to a session-private relay directory and the daemon outside the sandbox sends it. <strong>The Lark App Secret never enters the sandbox.</strong></p>
+<p>Sending somewhere other than the current topic (<code>--top-level</code> for the group&#x27;s top level, <code>--chat-id</code> for another group, <code>--into</code> for another message&#x27;s thread) also works, but the daemon re-checks the destination:</p>
+<ul>
+<li>The session&#x27;s own chat is always allowed;</li>
+<li>Any other chat must be a regular group (not a DM, not an external chat) that the bot is in, and the person who sent this turn&#x27;s message (or the session owner when there is none) must be a member there and allowed to talk to the bot;</li>
+<li>If any of this cannot be confirmed, the send is refused.</li>
+</ul>
+<h3 class="rp-toc-include" id="fleet-commands-belong-on-the-host"><a href="#fleet-commands-belong-on-the-host" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Fleet commands belong on the host</h3>
+<p>The sandbox cannot see the supervisor / daemon processes on the host. Running <code>botmux status / logs / start / stop / restart / start-bot / stop-bot</code> inside it prints a notice that you are inside a botmux sandbox and asks you to run the command in a host terminal. <strong>The fleet is most likely fine; do not restart it because of this.</strong></p>
+<h3 class="rp-toc-include" id="common-limits-both-sandbox-modes"><a href="#common-limits-both-sandbox-modes" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Common limits (both sandbox modes)</h3>
+<ul>
+<li><strong>No adopt</strong>: a sandbox can only wrap a CLI started from scratch, so <code>/adopt</code> is refused. Start a new session instead.</li>
+<li><strong>No Codex RPC input</strong>: under a sandbox, Codex uses normal terminal input instead of <code>codexRpcInput</code>.</li>
+<li><strong>No dynamic single card</strong>: sandboxed sessions always use the default card mode; see <a href="/botmux/en/cards.html" class="rp-link">Cards</a>.</li>
+<li><strong>Skills are a snapshot taken at spawn</strong>: the enabled managed skills are copied for the session when it starts; after updating a skill, use <code>/restart</code> or start a new session. Skills installed as links (<code>local-link</code>) or living in a CLI&#x27;s native skill directory are unavailable under allowlist isolation; <code>botmux skill show</code> suggests a copy install instead.</li>
+<li><strong>Installs inside the sandbox do not reach the host</strong>: if the CLI installs a global skill or package or edits global config, under allowlist isolation it either cannot write or writes to the bot&#x27;s own directory; under scratch it lands in the throwaway copy. Do installs that should apply globally on the host (Dashboard or a host shell).</li>
+<li><strong>Sub-agents are sandboxed too</strong>: sub-agents and child processes the CLI spawns inherit the same file and network limits.</li>
+<li><strong>Zero prompt injection (<code>promptInjection: &quot;none&quot;</code>)</strong>: fully supported under allowlist isolation; under scratch, Cursor and Antigravity are not supported (their transcript lands in the throwaway copy and cannot be captured); other CLIs work.</li>
+</ul>
+<h3 class="rp-toc-include" id="supported-session-backends"><a href="#supported-session-backends" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Supported session backends</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Backend</th><th>With a sandbox</th></tr></thead><tbody><tr><td>pty, tmux</td><td>Supported</td></tr><tr><td>zellij, herdr, zmx and other local persistent backends</td><td>Cannot set up the same file boundary, so the session <strong>refuses to start</strong>; switch to pty or tmux</td></tr><tr><td>Riff, remote-runner and other remote backends</td><td>The CLI runs remotely, so the local sandbox <strong>has no effect</strong> (the session starts normally and isolation is up to the remote side); combined with <code>sandboxNetworkPolicy</code>, though, the session refuses to start</td></tr><tr><td>mojo</td><td>Same as remote backends when it provably runs entirely remote; same as local backends (refuses to start) when it runs on this machine</td></tr></tbody></table></div>
+<hr/>
+<h2 class="rp-toc-include" id="linux-namespace"><a href="#linux-namespace" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Prerequisites in containers / restricted hosts</h2>
+<p>The Linux sandbox relies on kernel namespaces, which Docker-style containers and hardened hosts often block by default. Check per mode:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Required capability</th><th>Allowlist isolation</th><th>scratch</th><th>Network policy</th></tr></thead><tbody><tr><td>bwrap + unprivileged user namespaces + mount / PID namespaces</td><td>✅</td><td>✅</td><td>✅</td></tr><tr><td>root: kernel overlayfs; non-root: <code>fuse-overlayfs</code> + <code>/dev/fuse</code></td><td></td><td>✅</td><td></td></tr><tr><td>root (for <code>scratchStorage: &quot;tmpfs&quot;</code>; use <code>&quot;disk&quot;</code> when non-root)</td><td></td><td>✅</td><td></td></tr><tr><td>bwrap with <code>--add-seccomp-fd</code> and <code>--disable-userns</code>, plus the network tools above</td><td></td><td></td><td>✅</td></tr></tbody></table></div>
+<p>Notes:</p>
+<ul>
+<li><strong>Which bwrap</strong>: the distro binary at <code>/usr/bin/bwrap</code> or <code>/bin/bwrap</code> is preferred; only when neither exists is a bwrap from <code>PATH</code> used, with a one-time warning in the log. Codex installs its own build at <code>~/.local/bin/bwrap</code>; when that comes first, sandboxed sessions exit right after launch. Install the distro <code>bubblewrap</code> package to fix it.</li>
+<li><strong>Symlinked system directories</strong>: when a directory such as <code>/opt</code> is itself a symlink, the sandbox recreates the same symlink inside and mounts the real path read-only.</li>
+<li><strong>No downgrade by dropping PID isolation</strong>: other bots&#x27; processes on the same host hold plaintext credentials in their environment, which a sandbox without PID isolation could read through <code>/proc</code>. So a normal deployment refuses to start when procfs cannot be mounted (only the core-only deployment <code>BOTMUX_CORE_ONLY=1</code> allows it).</li>
+</ul>
+<p>botmux <strong>never</strong> falls back to running the CLI unsandboxed; it refuses to start the session instead. Common messages:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Message</th><th>Meaning</th></tr></thead><tbody><tr><td><code>sandbox requested but could not be established (bwrap missing or setup failed)</code></td><td>Allowlist isolation could not start</td></tr><tr><td><code>scratch 沙箱没能建立：&lt;reason&gt;。&lt;fix&gt;</code> (scratch sandbox could not be established)</td><td>scratch could not start; the topic names the reason and the fix (missing dependencies, in-memory storage on a non-root daemon, <code>/dev/fuse</code> unavailable, a storage setting that no longer matches the session, …). Only in-memory storage lost in a machine reboot needs a new session</td></tr><tr><td><code>[scratch-sandbox] tmpfs upper slot mount failed (non-root host? use scratchStorage &quot;disk&quot;)</code></td><td>In-memory storage on a non-root host</td></tr><tr><td><code>[scratch-sandbox] missing deps (...)</code></td><td>bubblewrap or fuse-overlayfs is missing and could not be installed automatically (only attempted as root or with passwordless sudo)</td></tr><tr><td><code>bubblewrap cannot establish the required user/mount/PID namespaces</code></td><td>The host probe failed, typically inside a container</td></tr><tr><td><code>[device-credential-isolation] ... credential-only bubblewrap could not be established</code></td><td>Machines enrolled with a managed platform and holding a device credential hide credentials with bwrap whether or not the bot has a sandbox; this means bwrap is not usable on that machine</td></tr></tbody></table></div>
+<h3 class="rp-toc-include" id="troubleshooting"><a href="#troubleshooting" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Troubleshooting</h3>
+<ol>
+<li>
+<p>Try bwrap directly:</p>
+<div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-function)">bwrap</span><span style="color:var(--shiki-token-string)"> --unshare-user</span><span style="color:var(--shiki-token-string)"> --unshare-pid</span><span style="color:var(--shiki-token-string)"> --bind</span><span style="color:var(--shiki-token-string)"> /</span><span style="color:var(--shiki-token-string)"> /</span><span style="color:var(--shiki-token-string)"> --proc</span><span style="color:var(--shiki-token-string)"> /proc</span><span style="color:var(--shiki-token-constant)"> true</span><span style="color:var(--shiki-token-punctuation)"> &amp;&amp;</span><span style="color:var(--shiki-token-function)"> echo</span><span style="color:var(--shiki-token-string)"> ok</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>If it fails, namespaces are blocked; fix that first, nothing on the botmux side needs to change.</p>
+</li>
+<li>
+<p>Check whether unprivileged user namespaces are disabled:</p>
+<ul>
+<li><code>cat /proc/sys/user/max_user_namespaces</code>; <code>0</code> means disabled;</li>
+<li>some distributions also have <code>/proc/sys/kernel/unprivileged_userns_clone</code>; <code>0</code> means disabled;</li>
+<li>newer Ubuntu releases may restrict them through AppArmor (<code>kernel.apparmor_restrict_unprivileged_userns</code>).</li>
+</ul>
+</li>
+<li>
+<p>Inside a container: the default seccomp profile may block <code>clone</code> / <code>unshare</code>, and AppArmor / SELinux may block <code>mount</code>. Relax this through your container runtime, e.g. <code>--security-opt seccomp=...</code>.</p>
+</li>
+<li>
+<p>scratch as non-root: make sure <code>ls -l /dev/fuse</code> shows the device and <code>fuse-overlayfs</code> is installed; containers need the device passed through (e.g. <code>--device /dev/fuse</code>). scratch as root also needs mount capability in a container (e.g. <code>--cap-add SYS_ADMIN</code>).</p>
+</li>
+<li>
+<p>Network policy: <code>bwrap --help</code> must list <code>--add-seccomp-fd</code> and <code>--disable-userns</code>; upgrade bubblewrap if it is too old.</p>
+</li>
+</ol>
+<p>Relaxing container isolation weakens the container&#x27;s own security boundary, so weigh it for your environment.</p>
+<hr/>
+<h2 class="rp-toc-include" id="three-things-that-are-easy-to-mix-up"><a href="#three-things-that-are-easy-to-mix-up" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Three things that are easy to mix up</h2>
+<ul>
+<li><strong>An Oncall directory is not a sandbox</strong>: <code>/oncall bind &lt;dir&gt;</code> anchors the bot to a working directory in this group and lets members talk to it directly; it <strong>does not restrict</strong> which files the CLI can read or write. Enable allowlist isolation for that.</li>
+<li><strong>CLI auto-approval is not &quot;sandbox off&quot;</strong>: the auto-approval flags botmux adds by default (<code>--dangerously-*</code>, <code>--yolo</code>, etc.; turn them off with <code>disableCliBypass</code>) only disable the CLI&#x27;s <strong>own</strong> approvals / sandbox. The botmux file sandbox wraps the CLI from outside and still applies.</li>
+<li><strong><code>/grant</code> only grants talk access</strong>: it lets members talk to the bot, but gives no operate rights such as <code>/cd</code> or <code>/restart</code>, and does not change the sandbox or credentials. See <a href="/botmux/en/permissions.html" class="rp-link">Permissions</a>.</li>
+</ul>
+<hr/>
+<h2 class="rp-toc-include" id="several-people-on-one-bot-isolation-is-stacked"><a href="#several-people-on-one-bot-isolation-is-stacked" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Several people on one bot: isolation is stacked</h2>
+<p>No single layer covers everything; combine them as needed:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Layer</th><th>Isolates</th><th>Does not isolate</th><th>Where to configure</th></tr></thead><tbody><tr><td>Session</td><td>One CLI process per topic, with its own context and transcript</td><td>Files: all sessions see the same host files, and sessions in the same directory see each other&#x27;s changes; accounts: they share the bot&#x27;s model account and credentials</td><td>Automatic (one session per new topic)</td></tr><tr><td>Worktree</td><td>Each topic edits code in its own git worktree / branch, so topics do not overwrite each other</td><td>File access is unchanged; host files outside the worktree are still readable and writable</td><td><code>/tw</code>, <code>/repo wt &lt;repo&gt; [branch]</code>; see <a href="/botmux/en/slash-commands.html" class="rp-link">Slash Commands</a></td></tr><tr><td>File sandbox: off</td><td>Nothing</td><td>Everything</td><td><code>sandbox</code> unset / <code>false</code></td></tr><tr><td>File sandbox: allowlist isolation</td><td>Reads and writes outside the allowlist; credentials, other repositories, other bots&#x27; data; the Claude family&#x27;s and Codex&#x27;s data directories are split per bot</td><td>Writes to allowlisted paths (including the working directory) reach the host directly, and with <code>workingDir</code> at its default <code>~</code> the whole home directory is allowlisted; other CLIs keep their global host data directory; network is not restricted by default; sessions of the same bot share its model account and CLI data directory</td><td><code>sandbox: &quot;oncall&quot;</code> + <code>sandboxPaths</code></td></tr><tr><td>File sandbox: scratch</td><td>Writes (kept in a throwaway copy); botmux&#x27;s own credentials</td><td>Reads: most host files are readable, including other people&#x27;s tokens; on macOS, cache / preference and system temp dirs still write to the real disk; network is not restricted by default</td><td><code>sandbox: &quot;scratch&quot;</code> + <code>scratchStorage</code></td></tr><tr><td>Per-person tool credentials</td><td>lark-cli and other managed tools run with the <strong>current message sender&#x27;s</strong> own authorization and are refused when that person has not authorized, never borrowing the owner&#x27;s or anyone else&#x27;s login</td><td>Model account, file access and other unmanaged tools still use the machine / bot identity</td><td><code>triggerUserAuth</code>; personal Lark authorization via <code>/login</code>, other managed tools reply with an authorization link when needed</td></tr><tr><td>Model account</td><td>Different bots use different model accounts (Claude: <code>credentialsSourceDir</code>, sandbox required; Codex: <code>codexAuthSync: &quot;isolated&quot;</code>)</td><td>Split per bot, not per person: everyone using the same bot shares one model account</td><td>The corresponding <code>bots.json</code> fields</td></tr><tr><td>OS user</td><td>System-level file permissions, processes and home directories are fully separate</td><td>botmux does not provide this layer: every bot and session under one daemon runs as the same system user</td><td>Deploy a separate botmux per system user (each with its own <code>~/.botmux</code>)</td></tr></tbody></table></div><!--/$--></div><footer class="rp-doc-footer"><div class="rp-doc-footer__edit"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/en/sandbox.md" target="_blank" rel="noopener noreferrer" class="rp-edit-link rp-link">Edit this page</a><div class="rp-last-updated"><p>Last Updated<!-- -->: <span>11/7/2026, 1:25:39 AM</span></p></div></div><div class="rp-doc-footer__divider"></div><div class="rp-prev-next-page"><a href="/botmux/en/permissions.html" class="rp-prev-next-page__item rp-prev-next-page__prev rp-link"><span class="rp-prev-next-page__item__desc">Previous page</span><span class="rp-prev-next-page__item__title"><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon rp-prev-next-page__rotate_180"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg><span>Permissions &amp; Access</span></span></a><a href="/botmux/en/voice.html" class="rp-prev-next-page__item rp-prev-next-page__next rp-link"><span class="rp-prev-next-page__item__desc">Next page</span><span class="rp-prev-next-page__item__title"><span>Voice Summary</span><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></span></a></div></footer></main></div><aside class="rp-doc-layout__outline rp-scrollbar"><div class="rp-outline"><div class="rp-outline__title">ON THIS PAGE<svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg></div><nav class="rp-outline__toc rp-scrollbar"><a href="#pick-a-mode" class="rp-toc-item rp-link" title="Pick a mode" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Pick a mode</span></a><a href="#turning-it-on" class="rp-toc-item rp-link" title="Turning it on" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Turning it on</span></a><a href="#in-the-dashboard-recommended" class="rp-toc-item rp-link" title="In the Dashboard (recommended)" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">In the Dashboard (recommended)</span></a><a href="#in-botsjson" class="rp-toc-item rp-link" title="In bots.json" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">In <code>bots.json</code></span></a><a href="#when-changes-take-effect" class="rp-toc-item rp-link" title="When changes take effect" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">When changes take effect</span></a><a href="#forcing-it-on-machine-wide" class="rp-toc-item rp-link" title="Forcing it on machine-wide" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Forcing it on machine-wide</span></a><a href="#allowlist-isolation-oncall" class="rp-toc-item rp-link" title="Allowlist isolation (oncall)" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Allowlist isolation (<code>oncall</code>)</span></a><a href="#what-the-sandbox-can-see" class="rp-toc-item rp-link" title="What the sandbox can see" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">What the sandbox can see</span></a><a href="#adding-paths-or-masks-sandboxpaths" class="rp-toc-item rp-link" title="Adding paths or masks (sandboxPaths)" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Adding paths or masks (<code>sandboxPaths</code>)</span></a><a href="#where-each-cli-keeps-its-data" class="rp-toc-item rp-link" title="Where each CLI keeps its data" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Where each CLI keeps its data</span></a><a href="#which-clis-are-verified" class="rp-toc-item rp-link" title="Which CLIs are verified" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Which CLIs are verified</span></a><a href="#using-it-with-wrappercli" class="rp-toc-item rp-link" title="Using it with wrapperCli" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Using it with <code>wrapperCli</code></span></a><a href="#multiple-accounts--credentials" class="rp-toc-item rp-link" title="Multiple accounts &amp; credentials" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Multiple accounts &amp; credentials</span></a><a href="#credentials-source-dir" class="rp-toc-item rp-link" title="Several accounts on one machine: a separate account for a Claude bot" style="padding-left:24px" data-depth="2"><span class="rp-toc-item__text rp-doc">Several accounts on one machine: a separate account for a Claude bot</span></a><a href="#scratch-throwaway-sandbox" class="rp-toc-item rp-link" title="scratch (throwaway sandbox)" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">scratch (throwaway sandbox)</span></a><a href="#how-it-works" class="rp-toc-item rp-link" title="How it works" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">How it works</span></a><a href="#storage-and-options" class="rp-toc-item rp-link" title="Storage and options" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Storage and options</span></a><a href="#network-sandbox" class="rp-toc-item rp-link" title="Network sandbox" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Network sandbox</span></a><a href="#block-all-network-sandboxnetwork-false" class="rp-toc-item rp-link" title="Block all network (sandboxNetwork: false)" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Block all network (<code>sandboxNetwork: false</code>)</span></a><a href="#allow-by-destination-ip-sandboxnetworkpolicy" class="rp-toc-item rp-link" title="Allow by destination IP (sandboxNetworkPolicy)" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Allow by destination IP (<code>sandboxNetworkPolicy</code>)</span></a><a href="#what-works-inside-the-sandbox-and-what-does-not" class="rp-toc-item rp-link" title="What works inside the sandbox, and what does not" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">What works inside the sandbox, and what does not</span></a><a href="#botmux-send-still-works-credentials-stay-outside" class="rp-toc-item rp-link" title="botmux send still works, credentials stay outside" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc"><code>botmux send</code> still works, credentials stay outside</span></a><a href="#fleet-commands-belong-on-the-host" class="rp-toc-item rp-link" title="Fleet commands belong on the host" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Fleet commands belong on the host</span></a><a href="#common-limits-both-sandbox-modes" class="rp-toc-item rp-link" title="Common limits (both sandbox modes)" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Common limits (both sandbox modes)</span></a><a href="#supported-session-backends" class="rp-toc-item rp-link" title="Supported session backends" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Supported session backends</span></a><a href="#linux-namespace" class="rp-toc-item rp-link" title="Prerequisites in containers / restricted hosts" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Prerequisites in containers / restricted hosts</span></a><a href="#troubleshooting" class="rp-toc-item rp-link" title="Troubleshooting" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Troubleshooting</span></a><a href="#three-things-that-are-easy-to-mix-up" class="rp-toc-item rp-link" title="Three things that are easy to mix up" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Three things that are easy to mix up</span></a><a href="#several-people-on-one-bot-isolation-is-stacked" class="rp-toc-item rp-link" title="Several people on one bot: isolation is stacked" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Several people on one bot: isolation is stacked</span></a></nav><div class="rp-outline__divider"></div><div class="rp-outline__bottom"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/en/sandbox.md" target="_blank" rel="noopener noreferrer" class="rp-outline__action-row rp-edit-link rp-link"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"></path></svg><span>Edit this page</span></a></div></div></aside></div></div>
+    <div id="__rspress_modal_container"></div>
+  </body>
+</html>

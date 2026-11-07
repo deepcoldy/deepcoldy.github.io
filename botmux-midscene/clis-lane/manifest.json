@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "caseId": "9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88",
+      "name": "Navigate the core read-only Dashboard pages",
+      "project": "dashboard-smoke",
+      "status": "success",
+      "durationMs": 39225,
+      "attempts": 1,
+      "stepId": "1583a08f-5668-47f3-b7f4-d233b19cb684:steps:6",
+      "failure": null,
+      "reportPath": "dashboard/index.html",
+      "previewPath": "previews/case-preview-dashboard-smoke-9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88.jpg"
+    },
+    {
+      "caseId": "259cf48d4b8d326d934097576a5c74c4809acc23a22603840f5cf176af1992ce",
+      "name": "OpenCode basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "success",
+      "durationMs": 98744,
+      "attempts": 2,
+      "stepId": "ab231300-c174-4a3c-a963-4ddc5f70812e:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-clis-259cf48d4b8d326d934097576a5c74c4809acc23a22603840f5cf176af1992ce.jpg"
+    },
+    {
+      "caseId": "ba2706458b3f20b4bbec552f5220fc0ae53a7124d9eaf5d36fa3fe1008bc70fa",
+      "name": "Pi basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "success",
+      "durationMs": 541636,
+      "attempts": 1,
+      "stepId": "00f3a256-b68f-4ce8-b377-e6497219b272:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-clis-ba2706458b3f20b4bbec552f5220fc0ae53a7124d9eaf5d36fa3fe1008bc70fa.jpg"
+    },
+    {
+      "caseId": "6f9ccd74502ccc7811ff1123df2082d01af6e11036e52e2b58321add45d4ee02",
+      "name": "OhMyPi basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "success",
+      "durationMs": 91201,
+      "attempts": 1,
+      "stepId": "e98a940e-2a72-46cb-9fbf-a01475c49815:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-clis-6f9ccd74502ccc7811ff1123df2082d01af6e11036e52e2b58321add45d4ee02.jpg"
+    },
+    {
+      "caseId": "6b4282851fa7274ac10b7bc12201c8805cc7831a4bf307b0a940c44848951fea",
+      "name": "Kimi basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "success",
+      "durationMs": 101253,
+      "attempts": 1,
+      "stepId": "29c9dcda-b54d-454d-94d3-071422ae7aac:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-clis-6b4282851fa7274ac10b7bc12201c8805cc7831a4bf307b0a940c44848951fea.jpg"
+    },
+    {
+      "caseId": "ab4d024c40e24b2b2fac75d40d6d8edf36bfd0e4815b64a42ae39e3dcc6c2228",
+      "name": "Gemini basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "success",
+      "durationMs": 137737,
+      "attempts": 1,
+      "stepId": "ba49f071-a688-4aba-917f-cc8e5e140414:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-clis-ab4d024c40e24b2b2fac75d40d6d8edf36bfd0e4815b64a42ae39e3dcc6c2228.jpg"
+    },
+    {
+      "caseId": "b85c9130921c0dd701cd7ebf6e9c9f8bcc138b969749cac10e7d7a5ea66a3699",
+      "name": "Grok basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "success",
+      "durationMs": 91181,
+      "attempts": 1,
+      "stepId": "c61219ac-d946-4baa-9392-1a24077d1d5f:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-clis-b85c9130921c0dd701cd7ebf6e9c9f8bcc138b969749cac10e7d7a5ea66a3699.jpg"
+    }
+  ]
+}

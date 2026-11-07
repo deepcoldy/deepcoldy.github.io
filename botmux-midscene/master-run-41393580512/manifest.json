@@ -1,0 +1,320 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "name": "Claude basic bot flow",
+      "project": "feishu-core-claude",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "OpenCode basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Pi basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "OhMyPi basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Kimi basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Antigravity basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Grok basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Codex basic bot flow",
+      "project": "feishu-core-codex",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Codex prompt submission",
+      "project": "feishu-core-codex",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Follow-up in the same topic keeps context",
+      "project": "feishu-core-conversation",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Thread /status and /close commands",
+      "project": "feishu-core-conversation",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Claude DM chat mode replies inline and keeps one session",
+      "project": "feishu-core-dm-modes-claude",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Claude DM thread mode gives each message its own topic and session",
+      "project": "feishu-core-dm-modes-claude",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Claude DM group mode moves the conversation into a new session group",
+      "project": "feishu-core-dm-modes-claude",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Codex DM chat mode replies inline and keeps one session",
+      "project": "feishu-core-dm-modes-codex",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Codex DM thread mode gives each message its own topic and session",
+      "project": "feishu-core-dm-modes-codex",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Codex DM group mode moves the conversation into a new session group",
+      "project": "feishu-core-dm-modes-codex",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Claude group reply mode chat-topic (default) answers inline, topics get their own session",
+      "project": "feishu-core-group-modes",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Claude group reply mode chat answers inline and folds topics into the group session",
+      "project": "feishu-core-group-modes",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Claude group reply mode topic answers in topics that share one session",
+      "project": "feishu-core-group-modes",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Claude group reply mode new-topic starts a session per topic",
+      "project": "feishu-core-group-modes",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Codex group reply mode chat-topic (default) answers inline, topics get their own session",
+      "project": "feishu-core-group-modes",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Codex group reply mode chat answers inline and folds topics into the group session",
+      "project": "feishu-core-group-modes",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Codex group reply mode topic answers in topics that share one session",
+      "project": "feishu-core-group-modes",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Codex group reply mode new-topic starts a session per topic",
+      "project": "feishu-core-group-modes",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Claude group @ mode always ignores messages without an @",
+      "project": "feishu-core-group-modes",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Claude group @ mode never answers without an @",
+      "project": "feishu-core-group-modes",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Claude group @ mode ambient answers without an @ but yields to others",
+      "project": "feishu-core-group-modes",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Claude group @ mode topic continues its own topic without an @",
+      "project": "feishu-core-group-modes",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Codex group @ mode always ignores messages without an @",
+      "project": "feishu-core-group-modes",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Codex group @ mode never answers without an @",
+      "project": "feishu-core-group-modes",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Codex group @ mode ambient answers without an @ but yields to others",
+      "project": "feishu-core-group-modes",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Codex group @ mode topic continues its own topic without an @",
+      "project": "feishu-core-group-modes",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Consecutive message queue",
+      "project": "feishu-core-queue",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    },
+    {
+      "name": "Sandbox hides home and harness secrets",
+      "project": "feishu-core-sandbox",
+      "status": "skipped",
+      "attempts": 0,
+      "reportPath": null,
+      "previewPath": null,
+      "stepId": null
+    }
+  ]
+}
