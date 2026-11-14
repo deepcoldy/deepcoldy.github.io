@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="zh">
+  <head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FAQ &#x2F; 排错 - botmux 文档</title>
+<script>{;const saved = localStorage.getItem('rspress-theme-appearance');const preferDark = window.matchMedia('(prefers-color-scheme: dark)').matches;const isDark = !saved || saved === 'auto' ? preferDark : saved === 'dark';document.documentElement.classList.toggle('dark', isDark);document.documentElement.classList.toggle('rp-dark', isDark);document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';}</script>
+<link href="/botmux/static/css/styles.788f7d0799.css" rel="stylesheet">
+<script defer src="/botmux/static/js/styles.b78d054ff9.js"></script>
+<script defer src="/botmux/static/js/lib-react.9b7f575772.js"></script>
+<script defer src="/botmux/static/js/lib-router.00d9fd057a.js"></script>
+<script defer src="/botmux/static/js/2390.10879bb0bb.js"></script>
+<script defer src="/botmux/static/js/index.3f20ca128f.js"></script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Rspress v2.0.13">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://deepcoldy.github.io/botmux/">
+<meta property="og:image" content="https://deepcoldy.github.io/botmux/botmux-logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://deepcoldy.github.io/botmux/botmux-logo.png">
+<meta name="theme-color" content="#646CEA">
+<link rel="icon" href="/botmux/botmux-logo.png">
+<meta property="og:title" content="FAQ / 排错 - botmux 文档">
+<meta name="description" content="汇总自 README 和交流群里的高频问题，持续补充。更多坑见 常见踩坑。 本页按主题分组：">
+<meta property="og:description" content="汇总自 README 和交流群里的高频问题，持续补充。更多坑见 常见踩坑。 本页按主题分组："></head>
+
+  <body>
+    <div id="__rspress_root"><link rel="preload" as="image" href="/botmux/botmux-logo.png"/><header class="rp-nav"><div class="rp-nav__left"><div class="rp-nav__title"><a href="/botmux/" class="rp-nav__title__link rp-link"><div class="rp-nav__title__logo"><img src="/botmux/botmux-logo.png" alt="logo" id="logo" class="rspress-logo rp-nav__title__logo-image"/></div><span>botmux 文档</span></a></div></div><div class="rp-nav__right"><button class="rp-search-button"><div class="rp-search-button__content"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21" class="rp-search-button__icon"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg><span class="rp-search-button__word">搜索</span></div><div class="rp-search-button__hotkey" style="opacity:0"><span></span><span>K</span></div></button><div class="rp-search-button--mobile"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg></div><div class="rp-nav__others"><div class="rp-nav-menu__divider"></div><li class="rp-nav-menu__item"><div class="rp-nav-menu__item__container">简体中文<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-menu__item__icon"><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--center"><li class="rp-hover-group__item rp-hover-group__item--active" style="padding-left:8px" data-depth="0"><a href="/botmux/" class="rp-hover-group__item__link rp-link" aria-label="简体中文" lang="zh" hrefLang="zh" rel="alternate">简体中文</a></li><li class="rp-hover-group__item" style="padding-left:8px" data-depth="0"><a href="/botmux/en/faq.html" class="rp-hover-group__item__link rp-link" aria-label="English" lang="en" hrefLang="en" rel="alternate">English</a></li></ul></li><div class="rp-switch-appearance"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" class="rp-switch-appearance__icon rp-switch-appearance__icon--sun"><path fill="currentColor" d="m7.001 15.848-1.226 1.226a.58.58 0 0 0 0 .818.58.58 0 0 0 .818 0l1.226-1.226a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0m-.352-8.735a.584.584 0 0 0 .825-.825L6.237 5.051a.584.584 0 0 0-.825.825zM5.011 11.07h-1.75a.584.584 0 0 0 0 1.167h1.75c.324 0 .584-.26.584-.583a.585.585 0 0 0-.584-.584m7.003-5.835c.324 0 .584-.26.584-.584V2.9a.58.58 0 0 0-.584-.584.58.58 0 0 0-.583.583V4.65c0 .323.262.584.583.584m5.616 1.621 1.226-1.225a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0l-1.226 1.225a.58.58 0 0 0 0 .818.576.576 0 0 0 .818 0m3.138 4.214h-1.75a.58.58 0 0 0-.584.584c0 .324.26.584.583.584h1.751a.584.584 0 1 0 0-1.167m-3.389 5.124a.584.584 0 0 0-.825.825l1.238 1.238a.584.584 0 0 0 .825-.826zm-5.365-9.795a5.256 5.256 0 0 0-5.257 5.258 5.256 5.256 0 0 0 5.257 5.257 5.256 5.256 0 0 0 5.257-5.257 5.256 5.256 0 0 0-5.257-5.258m0 11.675a.58.58 0 0 0-.583.583v1.751a.582.582 0 1 0 1.167 0v-1.75a.584.584 0 0 0-.584-.584"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" viewBox="0 0 19 19" class="rp-switch-appearance__icon rp-switch-appearance__icon--moon"><path fill="currentColor" d="M9.166 0a9.2 9.2 0 0 1 1.857.188.834.834 0 0 1 .042 1.623 4.47 4.47 0 1 0 5.457 5.457l.048-.135a.834.834 0 0 1 1.575.177q.186.902.188 1.856A9.168 9.168 0 1 1 9.166 0"></path></svg></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__sm"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg></button><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__md"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"><div class="rp-nav-menu__others-mobile__container"><div class="rp-nav-hamburger__md__hover-group"><div class="rp-nav-screen-appearance"><div class="rp-nav-screen-appearance__left">主题</div><div class="rp-nav-screen-appearance__right"></div></div><div class="rp-nav-screen-langs"><div class="rp-nav-screen-langs__left">语言</div><div class="rp-nav-screen-langs__right">简体中文<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-screen-langs__icon "><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div></div><div class="rp-nav-screen-langs-group" style="display:grid;grid-template-rows:0fr;transition:grid-template-rows 0.2s ease-out"><div class="rp-nav-screen-langs-group__inner"><span class="rp-nav-screen-langs-group__item rp-nav-screen-langs-group__item--active" aria-current="page" aria-disabled="true">简体中文</span><a href="/botmux/en/faq.html" class="rp-nav-screen-langs-group__item rp-link" hrefLang="en" lang="en" rel="alternate">English</a></div></div><div class="rp-nav-screen-divider"></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div></div></ul></button></div></header><div class="rp-doc-layout__menu"><div class="rp-sidebar-menu"><button type="button" class="rp-sidebar-menu__left"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M4 6h24v2H4zm0 18h24v2H4zm0-12h24v2H4zm0 6h24v2H4z"></path></svg><span>菜单</span></button><button type="button" class="rp-sidebar-menu__right"><span class="rp-sidebar-menu__right__text">目录</span><svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-sidebar-menu__right__icon" style="transform:rotate(0deg);transition:transform 0.2s ease-out"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></button></div></div><div class="rp-doc-layout__container"><aside class="rp-doc-layout__sidebar rp-scrollbar"><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">开始</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/index.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">介绍</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/quickstart.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">5 分钟快速接入</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/prerequisites.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">前置要求</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/desktop.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">macOS 桌面版</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/platform.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">中心化平台（开源）</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">核心概念</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/architecture.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">架构总览</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/session-model.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">会话与话题模型</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">功能详解</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/cards.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">实时流式卡片</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/topic-unavailable-policy.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">原话题不可用策略</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/web-terminal.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Web 终端</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/multi-bot.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">多机器人协作</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/multi-topic.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">多话题协作模式</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/project-card.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">项目进度卡</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/mention-mode.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">@ 策略</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/whiteboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">本地白板</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/decision-board.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">决策看板与管家</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/roles.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">角色与团队</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/tmux.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">tmux 会话常驻</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/zmx.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">ZMX 会话后端</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/adopt.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">会话接入 Adopt</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/relay.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">会话接力 Relay</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/group.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">一键建会话群</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/doc-comment.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">飞书文档评论入口</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/schedule.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">定时任务</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/oncall.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Oncall 模式</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/permissions.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">权限与授权</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/sandbox.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">文件沙盒</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/voice.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">语音总结</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/dashboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Dashboard 管控面</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/workbench.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">驾驶舱（Agent 工作台）</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/webhook.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">接入点（Webhook）</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/api-task-trigger.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">API 编程式触发任务</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/headless-session.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">无群自动化会话</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/turn-results.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">通用单轮结果</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/api-core-only.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Core-only API 控制</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/workflow.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Workflow（实验性）</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/hooks.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">生命周期 Hooks</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/skill-cli.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Skill + CLI 交互</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">开发与扩展</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/plugins.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Plugin 开发与市场注册</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">命令参考</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/slash-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">斜杠命令</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/cli-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">CLI 命令</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">配置</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/bots-json.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">bots.json 配置</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/feedback-storage.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">反馈数据存储与迁移</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/env.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">环境变量与文件位置</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/global-settings.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">全局设置（config.json）</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/companion-api.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">本地 Companion API</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/model-proxy.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">模型协议代理（实验）</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/adapters.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">多 CLI 适配器</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">实践与排错</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/best-practices.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">最佳实践</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/pitfalls.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">常见踩坑</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/faq.html" class="rp-sidebar-item rp-sidebar-item--active rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">FAQ / 排错</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/about.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">关于 &amp; 资源</span></div><div class="rp-sidebar-item__right"></div></a></div></div></aside><div class="rp-doc-layout__doc"><main class="rp-doc-layout__doc-container"><div class="rp-doc rspress-doc"><!--$--><h1 class="rp-toc-include" id="faq--排错"><a href="#faq--排错" class="rp-header-anchor rp-link" aria-hidden="true">#</a>FAQ / 排错<!-- --> </h1>
+<blockquote>
+<p>汇总自 README 和交流群里的高频问题，持续补充。更多坑见 <a href="/botmux/pitfalls.html" class="rp-link">常见踩坑</a>。</p>
+</blockquote>
+<p>本页按主题分组：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>想解决</th><th>看这里</th></tr></thead><tbody><tr><td>机器人不回、别人用不了、结果没发出来</td><td><a href="#%E6%9C%BA%E5%99%A8%E4%BA%BA%E4%B8%8D%E5%9B%9E%E5%A4%8D%E6%80%8E%E4%B9%88%E6%8E%92%E6%9F%A5" class="rp-link">机器人不回复</a></td></tr><tr><td>授权、@ 策略、拉群</td><td><a href="#%E6%9D%83%E9%99%90%E4%B8%8E-" class="rp-link">权限与 @</a></td></tr><tr><td>重启、休眠、打断、目录、手机终端打不开</td><td><a href="#%E4%BC%9A%E8%AF%9D" class="rp-link">会话</a></td></tr><tr><td>登录报错、升级、字体、wrapper</td><td><a href="#%E5%AE%89%E8%A3%85%E4%B8%8E%E7%8E%AF%E5%A2%83" class="rp-link">安装与环境</a></td></tr></tbody></table></div>
+<h2 class="rp-toc-include" id="机器人不回复怎么排查"><a href="#机器人不回复怎么排查" class="rp-header-anchor rp-link" aria-hidden="true">#</a>机器人不回复怎么排查？</h2>
+<p>先按<strong>症状</strong>对号入座，不同症状根因不同：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>症状</th><th>大概率原因</th><th>跳转</th></tr></thead><tbody><tr><td>发消息<strong>完全没反应</strong>（连表情都没有）</td><td>事件订阅、发版或长连接没通</td><td><a href="#a-%E5%AE%8C%E5%85%A8%E6%94%B6%E4%B8%8D%E5%88%B0%E6%B6%88%E6%81%AF" class="rp-link">A. 完全收不到消息</a></td></tr><tr><td>只有<strong>我（owner）</strong>能触发，别人 @ 它弹授权卡或不回</td><td>别人没有对话权</td><td><a href="#b-%E5%88%AB%E4%BA%BA%E7%94%A8%E4%B8%8D%E4%BA%86" class="rp-link">B. 别人用不了</a></td></tr><tr><td>群里<strong>必须 @ 才回</strong>，想免 @</td><td>群的 @ 策略</td><td><a href="#b-%E5%88%AB%E4%BA%BA%E7%94%A8%E4%B8%8D%E4%BA%86" class="rp-link">B. 别人用不了</a></td></tr><tr><td>卡片显示「工作中」，终端里有输出，但<strong>结果没发到飞书</strong></td><td>模型没调用 <code>botmux send</code></td><td><a href="#c-%E7%BB%88%E7%AB%AF%E6%9C%89%E8%BE%93%E5%87%BA%E4%BD%86%E6%B2%A1%E5%8F%91%E9%A3%9E%E4%B9%A6" class="rp-link">C. 终端有输出但没发飞书</a></td></tr><tr><td>会话<strong>起不来</strong>，首条消息报 <code>zsh: parse error</code></td><td>登录 shell 的启动文件切了 shell</td><td><a href="#%E4%BC%9A%E8%AF%9D%E8%B5%B7%E4%B8%8D%E6%9D%A5" class="rp-link">会话起不来</a></td></tr></tbody></table></div>
+<h3 class="rp-toc-include" id="a-完全收不到消息"><a href="#a-完全收不到消息" class="rp-header-anchor rp-link" aria-hidden="true">#</a>A. 完全收不到消息</h3>
+<p>按顺序检查（PersonalAgent 默认已配好，一般不用动）：</p>
+<ol>
+<li><strong>事件订阅</strong>：开放平台 → 事件与回调，订阅 <code>im.message.receive_v1</code> 和 <code>card.action.trigger</code>，方式选「长连接（WebSocket）」，并确认 daemon 在运行。</li>
+<li><strong>机器人能力</strong>：开放平台 → 应用功能 → 机器人，已开通。</li>
+<li><strong>发版</strong>：应用要创建并发布过版本（可用范围选「仅自己可见」会自动通过）。改了权限或事件后，<strong>必须重新发版</strong>才生效。</li>
+<li><strong>长连接被占</strong>：确认没有别的程序在用同一个应用的长连接。</li>
+<li>都确认后，在干净的 shell 里执行 <code>botmux restart</code>。</li>
+</ol>
+<blockquote>
+<p>想让 agent 帮你查，见 <a href="/botmux/pitfalls.html" class="rp-link">常见踩坑</a> 里的「排查通用手法」：用 <code>botmux logs</code> 找到启动命令在本地复现，再用 Web 终端看真实报错。</p>
+</blockquote>
+<h3 class="rp-toc-include" id="b-别人用不了"><a href="#b-别人用不了" class="rp-header-anchor rp-link" aria-hidden="true">#</a>B. 别人用不了</h3>
+<p>botmux 的权限分两层：</p>
+<ul>
+<li><strong>对话权</strong>：谁能跟它说话。</li>
+<li><strong>操作权</strong>：谁能用 <code>/cd</code>、<code>/restart</code>、<code>/close</code> 这类管理命令、点卡片按钮。</li>
+</ul>
+<p>默认只有 <code>allowedUsers</code> 名单里的人有对话权，别人 @ 它会被拦，并给 owner 发一张授权申请卡。<strong>把 bot 拉进群不会自动授权任何人。</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>想做</th><th>这样做</th></tr></thead><tbody><tr><td>让整个群都能用</td><td>群里发 <code>@bot /grant</code>，或在 Dashboard「群组管理」里打开群的管理弹窗，点「整群授权」</td></tr><tr><td>只给某个人试用</td><td><code>@bot /grant @某人</code>，默认 3 条消息 / 1 小时，卡片上可改</td></tr><tr><td>一次给多个人授权</td><td>Dashboard 群成员列表多选，批量授权（最多 50 人）</td></tr><tr><td>群里不 @ 也能回</td><td>用 <code>/mention-mode</code> 改 @ 策略，见下文 <a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E7%BE%A4%E9%87%8C%E5%BF%85%E9%A1%BB--%E6%9C%BA%E5%99%A8%E4%BA%BA%E8%83%BD%E4%B8%8D%E8%83%BD%E5%85%8D-" class="rp-link">能不能免 @</a></td></tr><tr><td>值班答疑，每个工单一个群</td><td>用 <a href="/botmux/oncall.html" class="rp-link">Oncall 模式</a></td></tr><tr><td>拉黑某人</td><td>Dashboard「Bot 配置」里的黑名单 <code>blockedUsers</code>，群聊和私聊都会拦，也不再弹申请卡</td></tr></tbody></table></div>
+<p>完整规则见 <a href="/botmux/permissions.html" class="rp-link">权限与授权</a>。</p>
+<h3 class="rp-toc-include" id="c-终端有输出但没发飞书"><a href="#c-终端有输出但没发飞书" class="rp-header-anchor rp-link" aria-hidden="true">#</a>C. 终端有输出但没发飞书</h3>
+<p>终端里打印出来的内容不等于发到了飞书。对需要显式发送的 CLI（Claude Code、Codex CLI、Antigravity、CoCo 等），模型必须执行 <code>botmux send</code>，群里才看得到：</p>
+<ul>
+<li>每条都要带 <code>--mention-back</code>、<code>--mention</code>、<code>--no-mention</code> 三者之一，否则会报错、不发送。</li>
+<li>只用 <code>echo</code> / <code>print</code>，或者忘了调 <code>botmux send</code>，就什么都不会发出。</li>
+<li>多行内容用 heredoc 传，别写成 <code>&quot;第一行\n第二行&quot;</code>。</li>
+</ul>
+<p>两种情况不需要模型自己发：</p>
+<ul>
+<li><strong><code>codex-app</code></strong>（Codex App 协议）：最终回复由 botmux 自动转发。常规回复别再调 <code>botmux send</code>，否则会发两遍；只在中途推进度、发附件、跨 bot @ 时才用。</li>
+<li><strong>零注入模式</strong>（<code>promptInjection: &quot;none&quot;</code>）：botmux 从 CLI 的对话记录里自动取最终回答发回飞书，见 <a href="/botmux/bots-json.html" class="rp-link">bots.json 配置</a>。</li>
+</ul>
+<h2 class="rp-toc-include" id="权限与-"><a href="#权限与-" class="rp-header-anchor rp-link" aria-hidden="true">#</a>权限与 @</h2>
+<h3 class="rp-toc-include" id="权限怎么分谁能操作"><a href="#权限怎么分谁能操作" class="rp-header-anchor rp-link" aria-hidden="true">#</a>权限怎么分？谁能操作？</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>来源</th><th>给的权限</th><th>说明</th></tr></thead><tbody><tr><td><code>allowedUsers</code></td><td>操作权 + 对话权</td><td>owner 和管理员。能用管理命令、点按钮，改 <code>/card</code> <code>/cot</code> <code>/mention-mode</code></td></tr><tr><td><code>allowedChatGroups</code>（<code>@bot /grant</code>）</td><td>对话权</td><td>整群，不限额、不过期</td></tr><tr><td>Oncall 群</td><td>对话权</td><td>整群放行，并把群绑定到一个工作目录</td></tr><tr><td><code>chatGrants</code> / <code>globalGrants</code>（<code>/grant @某人</code>）</td><td>对话权</td><td>按人，默认 3 条 / 1 小时</td></tr><tr><td><code>blockedUsers</code></td><td>全部拒绝</td><td>优先于上面所有放行规则</td></tr></tbody></table></div>
+<p>额度、有效期和申请卡的细节见 <a href="/botmux/permissions.html" class="rp-link">权限与授权</a>。</p>
+<h3 class="rp-toc-include" id="怎么让整个群都能用"><a href="#怎么让整个群都能用" class="rp-header-anchor rp-link" aria-hidden="true">#</a>怎么让整个群都能用？</h3>
+<p>在群里发 <code>@bot /grant</code>（等同于 <code>/grant all</code>）：</p>
+<ul>
+<li>这个群会加入 <code>allowedChatGroups</code>，群里所有人马上能对话，不限条数、不过期。</li>
+<li>新成员自动生效，退群的人自动失去权限。</li>
+<li>话题群按整个群生效，覆盖群里所有话题。</li>
+<li>收回用 <code>@bot /revoke</code>。</li>
+</ul>
+<p>Dashboard「群组管理」的群管理弹窗里也有「整群授权」按钮。注意它只给对话权，操作权仍然只在 <code>allowedUsers</code>。</p>
+<h3 class="rp-toc-include" id="只想让某人先试几条怎么配"><a href="#只想让某人先试几条怎么配" class="rp-header-anchor rp-link" aria-hidden="true">#</a>只想让某人先试几条怎么配？</h3>
+<p>发 <code>@bot /grant @某人</code>，bot 会回一张授权卡，默认<strong>每人 3 条 / 1 小时</strong>。</p>
+<ul>
+<li>想直接指定条数：<code>@bot /grant @某人 20</code>。</li>
+<li>有效期可选 1 小时、8 小时、1 天、7 天、永久；额度留空表示不限。</li>
+</ul>
+<h3 class="rp-toc-include" id="oncall-和-grant-有什么区别"><a href="#oncall-和-grant-有什么区别" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Oncall 和 <code>/grant</code> 有什么区别？</h3>
+<p>两者都只给对话权、都不限额。区别在于工作目录：</p>
+<ul>
+<li><code>/oncall bind &lt;目录&gt;</code> 会把群绑定到一个目录，新话题跳过选仓库，直接开工。适合值班答疑。</li>
+<li><code>/grant</code> 只放开对话，不绑目录。适合让群成员在已经选好仓库的话题里提问。</li>
+</ul>
+<h3 class="rp-toc-include" id="为什么群里必须--机器人能不能免-"><a href="#为什么群里必须--机器人能不能免-" class="rp-header-anchor rp-link" aria-hidden="true">#</a>为什么群里必须 @ 机器人？能不能免 @？</h3>
+<p>默认策略是 <code>always</code>：普通群里只有明确 @ 它才回，避免多个 bot、多个人的群里抢答。群里发 <code>/mention-mode</code> 可以改：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>模式</th><th>效果</th></tr></thead><tbody><tr><td><code>always</code>（默认）</td><td>必须 @</td></tr><tr><td><code>topic</code></td><td>在它自己的话题里回复免 @</td></tr><tr><td><code>never</code></td><td>全群免 @</td></tr><tr><td><code>ambient</code></td><td>免 @，但有人点名别人时它不插话</td></tr></tbody></table></div>
+<ul>
+<li>修改需要操作权，只能在普通群设置。</li>
+<li>「1 个人 + 1 个 bot」的群默认免 @，这个例外可以用 <code>soloGroupMentionBypass</code> 关掉。</li>
+<li>另有几种免 @ 的例外（消息监听器、免 @ 命令等），完整说明见 <a href="/botmux/mention-mode.html" class="rp-link">@ 策略</a>。</li>
+</ul>
+<h3 class="rp-toc-include" id="多个机器人怎么协作"><a href="#多个机器人怎么协作" class="rp-header-anchor rp-link" aria-hidden="true">#</a>多个机器人怎么协作？</h3>
+<p>默认就支持，把要协作的 bot 拉进同一个群即可：</p>
+<ul>
+<li>群里只有你和一个 bot：直接说话，不用 @。</li>
+<li>多个 bot 或多个人的群：@ 你想交给的那个 bot。</li>
+<li>bot 之间接力（比如一个写、一个 review）：由 bot 互相 @ 触发，你只需把活交给第一个。</li>
+</ul>
+<p>详见 <a href="/botmux/multi-bot.html" class="rp-link">多机器人协作</a>。</p>
+<h3 class="rp-toc-include" id="能禁止别人把-bot-拉进群吗"><a href="#能禁止别人把-bot-拉进群吗" class="rp-header-anchor rp-link" aria-hidden="true">#</a>能禁止别人把 bot 拉进群吗？</h3>
+<p>不能在 botmux 里禁止。「谁能把机器人加进群」由飞书平台控制（应用可用范围、群机器人添加权限）。bot 这边能做的是：</p>
+<ul>
+<li><strong>拉进群也不自动开工</strong>：Dashboard「Bot 配置 → 主动开工」里关掉「被拉进新群自动开工」（<code>autoStartOnGroupJoin</code>）。即使开着，也要求群里至少有一个 <code>allowedUsers</code> 里的人。</li>
+<li><strong>保持限制</strong>：拉群不等于授权，没权限的人 @ 它会被拦，owner 收到申请卡。</li>
+<li><strong>不把 owner 拉进新群</strong>：bot 被拉进新群时默认会把 owner 也拉进去（<code>autoInviteOwnerOnGroupAdd</code>）。告警或 oncall 平台批量建群、不想打扰 owner 时，可以在「Bot 配置 → 主动开工」关掉「自动拉管理员进群」，或发 <code>/botconfig set autoInviteOwnerOnGroupAdd off</code>，或改 <code>bots.json</code>。</li>
+</ul>
+<h3 class="rp-toc-include" id="把-bot-拉进新群能看之前的聊天记录吗"><a href="#把-bot-拉进新群能看之前的聊天记录吗" class="rp-header-anchor rp-link" aria-hidden="true">#</a>把 bot 拉进新群，能看之前的聊天记录吗？</h3>
+<p>能。直接跟它说「看下历史聊天」，或者引用某条消息。前提是飞书应用的权限开全（包括读取群消息）。</p>
+<h3 class="rp-toc-include" id="普通群消息太多能改成话题群吗"><a href="#普通群消息太多能改成话题群吗" class="rp-header-anchor rp-link" aria-hidden="true">#</a>普通群消息太多，能改成话题群吗？</h3>
+<p>能，但要群主或群管理员操作：群设置 → 群管理 → 群消息形式 → 选「话题消息」。机器人没法替你改群设置。</p>
+<h2 class="rp-toc-include" id="会话"><a href="#会话" class="rp-header-anchor rp-link" aria-hidden="true">#</a>会话</h2>
+<h3 class="rp-toc-include" id="daemon-重启会丢上下文吗"><a href="#daemon-重启会丢上下文吗" class="rp-header-anchor rp-link" aria-hidden="true">#</a>daemon 重启会丢上下文吗？</h3>
+<p>用默认的 tmux 后端就不会。CLI 一直跑在 tmux 里，<code>botmux restart</code> 之后下一条消息会自动接回原来的进程。</p>
+<ul>
+<li>没装 tmux 时，botmux <strong>不会</strong>悄悄改用 pty，而是弹卡片让你先装 tmux。</li>
+<li>只有显式配置 <code>BACKEND_TYPE=pty</code>（或单个 bot 配 <code>backendType: &quot;pty&quot;</code>）才会用 pty。pty 会话<strong>扛不过 daemon 重启</strong>，重启后要重新拉起。</li>
+</ul>
+<h3 class="rp-toc-include" id="cli-中途被重启进行中的工作会怎样"><a href="#cli-中途被重启进行中的工作会怎样" class="rp-header-anchor rp-link" aria-hidden="true">#</a>CLI 中途被重启，进行中的工作会怎样？</h3>
+<p>CLI 意外退出（崩溃、tmux server 掉线等）后，botmux 会用原来的上下文重新拉起它，并读旧进程留下的对话记录（transcript），检查有没有被打断的工作：</p>
+<ul>
+<li><strong>上一轮还没做完</strong>，比如 review 做到一半；</li>
+<li><strong>后台任务跟着旧进程一起没了</strong>，比如 Claude Code 的后台命令、Monitor、后台子代理。</li>
+</ul>
+<p>如果有，恢复后的 CLI 会先收到一段说明（刚重启过、哪些后台任务中断了、请核对后继续），话题里也会出现一条提示。没有被打断的工作就什么都不发。</p>
+<ul>
+<li>休眠后或 daemon 重启后冷启动时也会做同样的检查，说明会放在下一条消息前面交给 CLI。像 Pi 这样把首条消息放进启动参数的 CLI，只发话题提示。</li>
+<li>只看对话记录，不读屏幕。目前支持 Claude Code，以及 Pi、Codex 等有结构化记录的 CLI（这些只判断回合是否做完）。</li>
+</ul>
+<p><strong>没送进 CLI 的消息不会丢：</strong></p>
+<ul>
+<li>首条消息作为启动参数交给 CLI、CLI 还没开始处理就退出了的，重启后会重新输入一次。</li>
+<li>daemon 重启时还排在队列里的消息，会由同一会话的下一个 worker 补投。</li>
+<li>超过 24 小时的消息不再补投，改为在话题里说明没送达；补投途中又遇到重启、无法确认是否送达的，也会说明。</li>
+<li>已经送进 CLI、CLI 也开始处理了的消息，重启后不会再输入一遍，而是用上面的说明提醒它接着做。只有重启后只能开新会话、旧上下文没了时，才会重新输入。</li>
+</ul>
+<h3 class="rp-toc-include" id="会话不关会一直占内存吗"><a href="#会话不关会一直占内存吗" class="rp-header-anchor rp-link" aria-hidden="true">#</a>会话不关会一直占内存吗？</h3>
+<p>不会无限增长。每个 bot 有两道自动回收，被回收的会话叫「休眠」：CLI 进程退出、释放内存，但话题还在，下一条消息会从磁盘记录恢复上下文（通常几秒）。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>规则</th><th>默认</th><th>在哪改</th></tr></thead><tbody><tr><td>最大常驻会话数：超出后，最久没用的会话自动休眠</td><td>30</td><td>Dashboard「Bot 配置 → 会话常驻上限」，或 <code>bots.json</code> 的 <code>maxLiveWorkers</code></td></tr><tr><td>空闲自动休眠：持续空闲超过 N 分钟就休眠</td><td>关闭</td><td>同一处的「空闲自动休眠（分钟）」，或 <code>bots.json</code> 的 <code>idleSuspendMinutes</code></td></tr></tbody></table></div>
+<ul>
+<li>正在出答案的会话不会被打断。</li>
+<li>主回合已结束、但后台任务还在跑的会话（卡片显示「⏳ 主回合已结束 · 后台子任务运行中」）也不会被休眠，因为休眠会杀掉这些任务，恢复后也找不回来。</li>
+<li>接管的外部终端（adopt）和不能恢复的会话不受影响。</li>
+</ul>
+<p>想手动清理：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>想做</th><th>命令</th></tr></thead><tbody><tr><td>预览、再批量休眠 7 天没动的会话</td><td><code>botmux maintenance suspend-idle --older-than 7d --dry-run</code>，确认后把 <code>--dry-run</code> 换成 <code>--yes</code></td></tr><tr><td>关闭某个会话</td><td>话题里发 <code>/close</code>，或 <code>botmux delete &lt;id&gt;</code></td></tr><tr><td>关闭全部会话</td><td><code>botmux delete all</code>，或在 Dashboard 批量关闭</td></tr><tr><td>清理进程已退出的会话</td><td><code>botmux delete stopped</code></td></tr></tbody></table></div>
+<p>更多命令见 <a href="/botmux/cli-commands.html" class="rp-link">CLI 命令</a>。</p>
+<h3 class="rp-toc-include" id="会话在跑能追问或打断吗"><a href="#会话在跑能追问或打断吗" class="rp-header-anchor rp-link" aria-hidden="true">#</a>会话在跑，能追问或打断吗？</h3>
+<p>默认不打断。新消息会排队，当前这一轮结束后再按顺序输入。</p>
+<p>想马上停下来纠偏：</p>
+<ul>
+<li>点卡片上的「⏹ 停止」，或在话题里发 <code>/stop</code>。它只中断当前这一轮，会话和上下文都保留。</li>
+<li>卡片展开终端截图时，也可以点 <code>Esc</code>、<code>^C</code> 快捷键；Web 终端里同样可以直接按键。</li>
+</ul>
+<p>停下后再发新的要求即可。</p>
+<h3 class="rp-toc-include" id="工作目录--仓库选错了"><a href="#工作目录--仓库选错了" class="rp-header-anchor rp-link" aria-hidden="true">#</a>工作目录 / 仓库选错了？</h3>
+<ul>
+<li><code>workingDir</code> 会从这个目录<strong>往下</strong>找 git 仓库（最多 3 层），不会往上找。指向一个放很多仓库的目录（如 <code>~/projects</code>）会列出全部；指向单个仓库只列这个仓库（含它的 worktree）。</li>
+<li>临时换目录：<code>/cd &lt;路径&gt;</code>。</li>
+<li>想跳过选仓库卡片，直接进某个仓库：配 <code>defaultWorkingDir</code>（副作用见 <a href="/botmux/pitfalls.html" class="rp-link">常见踩坑</a>）。</li>
+<li>别把 <code>workingDir</code> 设成 <code>~</code>，要扫的目录太多。</li>
+<li><code>/repo</code> 的编号会变，指定仓库时用 <code>/repo &lt;项目名&gt;</code>。</li>
+</ul>
+<h3 class="rp-toc-include" id="会话起不来"><a href="#会话起不来" class="rp-header-anchor rp-link" aria-hidden="true">#</a>会话起不来</h3>
+<p>症状：会话一直起不来，或者首条消息报 <code>zsh: parse error near &#x27;\n&#x27;</code>。</p>
+<p>多半是登录 shell（<code>$SHELL</code>，常见是 bash）的启动文件里有「切到另一个 shell」的逻辑，最典型的是 <code>~/.bashrc</code> 里：</p>
+<div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-keyword)">if</span><span style="color:var(--shiki-foreground)"> [ </span><span style="color:var(--shiki-token-keyword)">-t</span><span style="color:var(--shiki-token-constant)"> 1</span><span style="color:var(--shiki-foreground)"> ]; </span><span style="color:var(--shiki-token-keyword)">then</span><span style="color:var(--shiki-token-function)"> exec</span><span style="color:var(--shiki-token-string)"> zsh</span><span style="color:var(--shiki-foreground)">; </span><span style="color:var(--shiki-token-keyword)">fi</span><span style="color:var(--shiki-token-comment)">   # chsh 不生效时常见的写法</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="切换代码换行" aria-label="切换代码换行"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="复制代码"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>botmux 在 tmux 里用 <code>&lt;$SHELL&gt; -i -c &#x27;…启动 CLI&#x27;</code> 拉起会话。<code>-i</code> 会加载这个启动文件，<code>exec zsh</code> 把 shell 换掉了，真正启动 CLI 的命令没机会执行，于是首条消息被打进了一个空 shell。botmux 能识别这种情况，会发一张诊断卡，不再把消息打进空 shell。</p>
+<p>两种修法，选一个：</p>
+<ul>
+<li>
+<p><strong>配 <code>launchShell</code>（推荐）</strong>：让这个 bot 直接用目标 shell 启动，绕开会跳转的启动文件。</p>
+<ul>
+<li>飞书里发 <code>/botconfig set launchShell zsh</code>；</li>
+<li>或在 Dashboard「Bot 配置 → 启动 Shell」里填；</li>
+<li>或在 <code>bots.json</code> 里加 <code>&quot;launchShell&quot;: &quot;zsh&quot;</code>。</li>
+</ul>
+<p>PATH、nvm 等要写进所选 shell 自己的启动文件（如 <code>.zshrc</code>；fish 写 <code>~/.config/fish/config.fish</code>）。</p>
+</li>
+<li>
+<p><strong>改启动文件</strong>：给跳转加个条件，只在手动开终端时才切：<code>[ -z &quot;$BASH_EXECUTION_STRING&quot; ] &amp;&amp; [ -t 1 ] &amp;&amp; exec zsh</code>（PATH、nvm 等放在这行前面）。</p>
+</li>
+</ul>
+<p>改完执行 <code>botmux restart</code>，再发一条消息。这个问题只影响要靠 shell 拉起的后端（<code>tmux</code> / <code>zellij</code> / <code>zmx</code>）；<code>pty</code> 后端直接启动 CLI，不受影响。</p>
+<h3 class="rp-toc-include" id="手机上驾驶舱或终端打不开"><a href="#手机上驾驶舱或终端打不开" class="rp-header-anchor rp-link" aria-hidden="true">#</a>手机上驾驶舱或终端打不开？</h3>
+<p>电脑上正常、手机上驾驶舱空白或终端一直不出来时，在手机浏览器里打开 <code>&lt;你的 Dashboard 地址&gt;/workbench-doctor</code>。</p>
+<ul>
+<li>这个诊断页不需要登录，会自动检查服务版本、登录状态（Cookie）、终端链接和实时连接。</li>
+<li>跑完截一张图发给机器人或维护者，就能看出是网络、登录状态还是旧缓存的问题。</li>
+<li>页面不显示任何 token 或密钥，截图可以放心发。</li>
+</ul>
+<p>每项检查的含义见 <a href="/botmux/workbench.html#%E6%89%8B%E6%9C%BA%E6%89%93%E4%B8%8D%E5%BC%80%E7%94%A8%E8%87%AA%E5%8A%A9%E8%AF%8A%E6%96%AD%E9%A1%B5" class="rp-link">驾驶舱 · 手机打不开？用自助诊断页</a>。</p>
+<h2 class="rp-toc-include" id="安装与环境"><a href="#安装与环境" class="rp-header-anchor rp-link" aria-hidden="true">#</a>安装与环境</h2>
+<h3 class="rp-toc-include" id="怎么升级"><a href="#怎么升级" class="rp-header-anchor rp-link" aria-hidden="true">#</a>怎么升级？</h3>
+<p>最稳的办法是<strong>重跑安装命令</strong>，不管当初怎么装的（npm / pnpm 全局安装也适用）：</p>
+<div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-function)">curl</span><span style="color:var(--shiki-token-string)"> -fsSL</span><span style="color:var(--shiki-token-string)"> https://raw.githubusercontent.com/deepcoldy/botmux/master/install.sh</span><span style="color:var(--shiki-token-keyword)"> |</span><span style="color:var(--shiki-token-function)"> sh</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="切换代码换行" aria-label="切换代码换行"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="复制代码"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<ul>
+<li>它会把 <code>~/.botmux/bin/botmux</code> 原地换成新版本。下载后先在本机试跑，跑不起来就报错并<strong>保留旧版本</strong>。</li>
+<li>可以重复执行，不会重复写 PATH，也不需要 Node。</li>
+<li>装完<strong>开一个新终端</strong>再执行 <code>botmux restart</code>。安装脚本把 <code>~/.botmux/bin</code> 放到了 PATH 最前面，新终端才能保证用上新版本。</li>
+<li>会话里的 <code>botmux</code> 命令始终跟 daemon 同版本，不用单独升级。</li>
+</ul>
+<p>已经是 v3.18.0 及以上的版本，也可以直接用内置命令：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>想做</th><th>命令</th></tr></thead><tbody><tr><td>升到最新正式版</td><td><code>botmux update</code>（<code>botmux upgrade</code> 同义）</td></tr><tr><td>切到预览版</td><td><code>botmux update canary</code>（也支持 <code>beta</code>、<code>rc</code>、<code>next</code>）</td></tr><tr><td>装指定版本</td><td><code>botmux update 3.28.0</code></td></tr></tbody></table></div>
+<p>用 curl 装指定版本（回滚、锁版本也一样；版本号要带 <code>v</code>）：</p>
+<div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-function)">curl</span><span style="color:var(--shiki-token-string)"> -fsSL</span><span style="color:var(--shiki-token-string)"> https://raw.githubusercontent.com/deepcoldy/botmux/master/install.sh</span><span style="color:var(--shiki-token-keyword)"> |</span><span style="color:var(--shiki-foreground)"> BOTMUX_VERSION</span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-string)">v3.18.8</span><span style="color:var(--shiki-token-function)"> sh</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="切换代码换行" aria-label="切换代码换行"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="复制代码"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<blockquote>
+<p>⚠️ <code>BOTMUX_VERSION</code> 要写在管道<strong>右边的 <code>sh</code> 前面</strong>。写成 <code>BOTMUX_VERSION=… curl … | sh</code> 时变量只传给了 curl，<code>sh</code> 收不到，会悄悄装成最新版。</p>
+</blockquote>
+<h4 class="rp-toc-include" id="为什么-v3180-之前的老版本只能用-curl-升"><a href="#为什么-v3180-之前的老版本只能用-curl-升" class="rp-header-anchor rp-link" aria-hidden="true">#</a>为什么 v3.18.0 之前的老版本只能用 curl 升？</h4>
+<p>v3.18.0 起，npm 包从「Node + 源码」改成了<strong>平台二进制</strong>，<code>node-pty</code> 也移出了依赖。老版本的 <code>botmux upgrade</code> 是交给 npm 去装的：npm 跨过这个版本时会删掉旧目录里的 <code>node-pty</code>，而旧 daemon 重启时还要加载它，结果报 <code>ERR_MODULE_NOT_FOUND</code>，所有 bot 都起不来（输出里可能已经显示「正在重启以应用更新」）。curl 直接放下新二进制，不依赖旧目录，所以是跨这个版本唯一稳妥的方式。不确定自己是哪种安装方式，就统一用 curl。</p>
+<h3 class="rp-toc-include" id="报-please-run-login--api-error-403-怎么办"><a href="#报-please-run-login--api-error-403-怎么办" class="rp-header-anchor rp-link" aria-hidden="true">#</a>报 <code>Please run /login · API Error: 403</code> 怎么办？</h3>
+<p>先分清是哪一边要登录：</p>
+<ul>
+<li><strong>飞书授权被拒</strong>（用户身份调飞书 API 失败）：在话题里发 <code>/login</code>，点授权链接，然后把浏览器跳转后的地址（<code>http://127.0.0.1:9768/callback?...</code>，页面打不开是正常的）复制回话题。</li>
+<li><strong>模型网关返回 403</strong>：跟飞书无关，多半是环境变量或网关 token 的问题。常见原因是 bash 用户把变量写在 <code>.bash_profile</code> 里，<code>bash -i</code> 读不到（见 <a href="/botmux/pitfalls.html" class="rp-link">常见踩坑</a>）。</li>
+</ul>
+<p><strong>macOS 上 claude 反复要求 <code>/login</code></strong></p>
+<p>claude 的登录 token 存在两个地方，两边不一致是 macOS 上报 <code>Please run /login</code> 的主要原因：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>存储位置</th><th>谁会用</th></tr></thead><tbody><tr><td>钥匙串条目 <code>Claude Code-credentials</code></td><td>在图形界面里跑的 claude，以及 botmux 默认（非隔离）配置</td></tr><tr><td>文件 <code>~/.claude/.credentials.json</code></td><td>通过 SSH 跑 <code>/login</code> 时只能写到这里</td></tr></tbody></table></div>
+<p>只要钥匙串条目存在，claude 就只读钥匙串，不读文件。所以会出现「SSH 里 <code>/login</code> 成功了（只写进了文件），图形界面和 bot 却还在用钥匙串里的旧 token」。再加上 claude 刷新 token 时会轮换，谁先刷新就把另一边的作废，于是大家一起掉登录。</p>
+<p>建议统一只用文件这一份：</p>
+<ol>
+<li>不要在图形界面里用 claude code，它会往钥匙串写 token。</li>
+<li>统一通过 SSH 跑 <code>/login</code> 更新 token。</li>
+<li>钥匙串里如果已经有旧条目，删掉它。</li>
+</ol>
+<h3 class="rp-toc-include" id="botmux-history-报-400或飞书网关报-411"><a href="#botmux-history-报-400或飞书网关报-411" class="rp-header-anchor rp-link" aria-hidden="true">#</a><code>botmux history</code> 报 400，或飞书网关报 411？</h3>
+<ul>
+<li><strong>400</strong>：通常是飞书应用缺权限（如 <code>im:message.group_msg</code>），把权限清单全部开通。</li>
+<li><strong>411</strong>：旧版本发 GET 请求时带了空 body，被飞书网关拒绝。升级到新版本即可。</li>
+</ul>
+<h3 class="rp-toc-include" id="支持-lark-国际版larksuitecom吗"><a href="#支持-lark-国际版larksuitecom吗" class="rp-header-anchor rp-link" aria-hidden="true">#</a>支持 Lark 国际版（larksuite.com）吗？</h3>
+<p>支持。飞书（feishu.cn）和 Lark 国际版（larksuite.com）都能用：</p>
+<ul>
+<li>扫码创建应用时会<strong>自动识别</strong>是国内还是国际版；手动粘贴 AppID / Secret 时会让你选一次。</li>
+<li>每个 bot 按自己的版本连对应的域名。同一台机器可以同时跑飞书和 Lark 的 bot，登录凭证互不干扰。</li>
+</ul>
+<h3 class="rp-toc-include" id="能用-ccr自定义网关或-wrapper-启动-cli-吗"><a href="#能用-ccr自定义网关或-wrapper-启动-cli-吗" class="rp-header-anchor rp-link" aria-hidden="true">#</a>能用 ccr、自定义网关或 wrapper 启动 CLI 吗？</h3>
+<p>能。写一个把参数（<code>&quot;$@&quot;</code>）原样传下去的 wrapper 脚本，在 <code>botmux setup</code> 编辑机器人时，把 <code>cliPathOverride</code> 设成这个脚本的路径。</p>
+<h3 class="rp-toc-include" id="截图里中文--emoji-显示成方块"><a href="#截图里中文--emoji-显示成方块" class="rp-header-anchor rp-link" aria-hidden="true">#</a>截图里中文 / emoji 显示成方块？</h3>
+<p>缺中文字体。Debian / Ubuntu 上 daemon 会尝试自动安装 <code>fonts-noto-cjk</code> 和 <code>fonts-noto-color-emoji</code>（需要 root 或免密 sudo）；其它 Linux 请手动装 Noto CJK 和 Noto Color Emoji，然后重启 daemon。</p>
+<h3 class="rp-toc-include" id="原来-cliid-gemini-的-bot-起不来了"><a href="#原来-cliid-gemini-的-bot-起不来了" class="rp-header-anchor rp-link" aria-hidden="true">#</a>原来 <code>cliId: &quot;gemini&quot;</code> 的 bot 起不来了？</h3>
+<p>Gemini CLI 已下线，<code>gemini</code> 适配器已移除。这个 bot 会拒绝启动并提示改用 Antigravity，其它 bot 照常运行。迁移步骤：</p>
+<ol>
+<li>装好 <code>agy</code>，用 Google 账号登录（或在 <code>~/.gemini/antigravity-cli/settings.json</code> 里设 <code>modelProvider: &quot;gemini&quot;</code>，并提供 <code>GEMINI_API_KEY</code>）。</li>
+<li>把 <code>cliId</code> 改成 <code>&quot;antigravity&quot;</code>（改 <code>bots.json</code> 或用 <code>botmux setup</code>）。</li>
+<li>执行 <code>botmux restart</code>。</li>
+</ol>
+<p>原来的 <code>cliPathOverride</code> / <code>wrapperCli</code>（如 <code>ttadk gemini</code>）、Gemini 的 <code>model</code> 名和 <code>GEMINI_CLI_HOME</code> 不会沿用。详见 <a href="/botmux/adapters.html" class="rp-link">CLI 适配器</a>。</p>
+<h3 class="rp-toc-include" id="coco-忙的时候发的消息丢了"><a href="#coco-忙的时候发的消息丢了" class="rp-header-anchor rp-link" aria-hidden="true">#</a>CoCo 忙的时候发的消息丢了？</h3>
+<p>升级到 <strong>CoCo 0.120.32 或更高版本</strong>。忙时发的消息要进 CoCo 自己的队列，依赖这个版本的行为。</p>
+<h3 class="rp-toc-include" id="windows-能用吗"><a href="#windows-能用吗" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Windows 能用吗？</h3>
+<p>不支持原生 Windows：daemon 只能跑在类 Unix 系统上，也没有 Windows 版的安装包（curl 和 npm 都装不上）。请在 <strong>WSL2</strong> 里安装，WSL2 里按 Linux 的方式装即可。</p><!--/$--></div><footer class="rp-doc-footer"><div class="rp-doc-footer__edit"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/zh/faq.md" target="_blank" rel="noopener noreferrer" class="rp-edit-link rp-link">编辑此页面</a><div class="rp-last-updated"><p>最后更新于<!-- -->: <span>2026/11/14 07:04:37</span></p></div></div><div class="rp-doc-footer__divider"></div><div class="rp-prev-next-page"><a href="/botmux/pitfalls.html" class="rp-prev-next-page__item rp-prev-next-page__prev rp-link"><span class="rp-prev-next-page__item__desc">上一页</span><span class="rp-prev-next-page__item__title"><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon rp-prev-next-page__rotate_180"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg><span>常见踩坑</span></span></a><a href="/botmux/about.html" class="rp-prev-next-page__item rp-prev-next-page__next rp-link"><span class="rp-prev-next-page__item__desc">下一页</span><span class="rp-prev-next-page__item__title"><span>关于 &amp; 资源</span><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></span></a></div></footer></main></div><aside class="rp-doc-layout__outline rp-scrollbar"><div class="rp-outline"><div class="rp-outline__title">目录<svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg></div><nav class="rp-outline__toc rp-scrollbar"><a href="#机器人不回复怎么排查" class="rp-toc-item rp-link" title="机器人不回复怎么排查？" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">机器人不回复怎么排查？</span></a><a href="#a-完全收不到消息" class="rp-toc-item rp-link" title="A. 完全收不到消息" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">A. 完全收不到消息</span></a><a href="#b-别人用不了" class="rp-toc-item rp-link" title="B. 别人用不了" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">B. 别人用不了</span></a><a href="#c-终端有输出但没发飞书" class="rp-toc-item rp-link" title="C. 终端有输出但没发飞书" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">C. 终端有输出但没发飞书</span></a><a href="#权限与-" class="rp-toc-item rp-link" title="权限与 @" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">权限与 @</span></a><a href="#权限怎么分谁能操作" class="rp-toc-item rp-link" title="权限怎么分？谁能操作？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">权限怎么分？谁能操作？</span></a><a href="#怎么让整个群都能用" class="rp-toc-item rp-link" title="怎么让整个群都能用？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">怎么让整个群都能用？</span></a><a href="#只想让某人先试几条怎么配" class="rp-toc-item rp-link" title="只想让某人先试几条怎么配？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">只想让某人先试几条怎么配？</span></a><a href="#oncall-和-grant-有什么区别" class="rp-toc-item rp-link" title="Oncall 和 /grant 有什么区别？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Oncall 和 <code>/grant</code> 有什么区别？</span></a><a href="#为什么群里必须--机器人能不能免-" class="rp-toc-item rp-link" title="为什么群里必须 @ 机器人？能不能免 @？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">为什么群里必须 @ 机器人？能不能免 @？</span></a><a href="#多个机器人怎么协作" class="rp-toc-item rp-link" title="多个机器人怎么协作？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">多个机器人怎么协作？</span></a><a href="#能禁止别人把-bot-拉进群吗" class="rp-toc-item rp-link" title="能禁止别人把 bot 拉进群吗？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">能禁止别人把 bot 拉进群吗？</span></a><a href="#把-bot-拉进新群能看之前的聊天记录吗" class="rp-toc-item rp-link" title="把 bot 拉进新群，能看之前的聊天记录吗？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">把 bot 拉进新群，能看之前的聊天记录吗？</span></a><a href="#普通群消息太多能改成话题群吗" class="rp-toc-item rp-link" title="普通群消息太多，能改成话题群吗？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">普通群消息太多，能改成话题群吗？</span></a><a href="#会话" class="rp-toc-item rp-link" title="会话" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">会话</span></a><a href="#daemon-重启会丢上下文吗" class="rp-toc-item rp-link" title="daemon 重启会丢上下文吗？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">daemon 重启会丢上下文吗？</span></a><a href="#cli-中途被重启进行中的工作会怎样" class="rp-toc-item rp-link" title="CLI 中途被重启，进行中的工作会怎样？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">CLI 中途被重启，进行中的工作会怎样？</span></a><a href="#会话不关会一直占内存吗" class="rp-toc-item rp-link" title="会话不关会一直占内存吗？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">会话不关会一直占内存吗？</span></a><a href="#会话在跑能追问或打断吗" class="rp-toc-item rp-link" title="会话在跑，能追问或打断吗？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">会话在跑，能追问或打断吗？</span></a><a href="#工作目录--仓库选错了" class="rp-toc-item rp-link" title="工作目录 / 仓库选错了？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">工作目录 / 仓库选错了？</span></a><a href="#会话起不来" class="rp-toc-item rp-link" title="会话起不来" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">会话起不来</span></a><a href="#手机上驾驶舱或终端打不开" class="rp-toc-item rp-link" title="手机上驾驶舱或终端打不开？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">手机上驾驶舱或终端打不开？</span></a><a href="#安装与环境" class="rp-toc-item rp-link" title="安装与环境" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">安装与环境</span></a><a href="#怎么升级" class="rp-toc-item rp-link" title="怎么升级？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">怎么升级？</span></a><a href="#为什么-v3180-之前的老版本只能用-curl-升" class="rp-toc-item rp-link" title="为什么 v3.18.0 之前的老版本只能用 curl 升？" style="padding-left:24px" data-depth="2"><span class="rp-toc-item__text rp-doc">为什么 v3.18.0 之前的老版本只能用 curl 升？</span></a><a href="#报-please-run-login--api-error-403-怎么办" class="rp-toc-item rp-link" title="报 Please run /login · API Error: 403 怎么办？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">报 <code>Please run /login · API Error: 403</code> 怎么办？</span></a><a href="#botmux-history-报-400或飞书网关报-411" class="rp-toc-item rp-link" title="botmux history 报 400，或飞书网关报 411？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc"><code>botmux history</code> 报 400，或飞书网关报 411？</span></a><a href="#支持-lark-国际版larksuitecom吗" class="rp-toc-item rp-link" title="支持 Lark 国际版（larksuite.com）吗？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">支持 Lark 国际版（larksuite.com）吗？</span></a><a href="#能用-ccr自定义网关或-wrapper-启动-cli-吗" class="rp-toc-item rp-link" title="能用 ccr、自定义网关或 wrapper 启动 CLI 吗？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">能用 ccr、自定义网关或 wrapper 启动 CLI 吗？</span></a><a href="#截图里中文--emoji-显示成方块" class="rp-toc-item rp-link" title="截图里中文 / emoji 显示成方块？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">截图里中文 / emoji 显示成方块？</span></a><a href="#原来-cliid-gemini-的-bot-起不来了" class="rp-toc-item rp-link" title="原来 cliId: &quot;gemini&quot; 的 bot 起不来了？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">原来 <code>cliId: "gemini"</code> 的 bot 起不来了？</span></a><a href="#coco-忙的时候发的消息丢了" class="rp-toc-item rp-link" title="CoCo 忙的时候发的消息丢了？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">CoCo 忙的时候发的消息丢了？</span></a><a href="#windows-能用吗" class="rp-toc-item rp-link" title="Windows 能用吗？" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Windows 能用吗？</span></a></nav><div class="rp-outline__divider"></div><div class="rp-outline__bottom"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/zh/faq.md" target="_blank" rel="noopener noreferrer" class="rp-outline__action-row rp-edit-link rp-link"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"></path></svg><span>编辑此页面</span></a></div></div></aside></div></div>
+    <div id="__rspress_modal_container"></div>
+  </body>
+</html>

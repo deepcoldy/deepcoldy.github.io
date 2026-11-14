@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="zh">
+  <head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard 管控面 - botmux 文档</title>
+<script>{;const saved = localStorage.getItem('rspress-theme-appearance');const preferDark = window.matchMedia('(prefers-color-scheme: dark)').matches;const isDark = !saved || saved === 'auto' ? preferDark : saved === 'dark';document.documentElement.classList.toggle('dark', isDark);document.documentElement.classList.toggle('rp-dark', isDark);document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';}</script>
+<link href="/botmux/static/css/styles.788f7d0799.css" rel="stylesheet">
+<script defer src="/botmux/static/js/styles.b78d054ff9.js"></script>
+<script defer src="/botmux/static/js/lib-react.9b7f575772.js"></script>
+<script defer src="/botmux/static/js/lib-router.00d9fd057a.js"></script>
+<script defer src="/botmux/static/js/2390.10879bb0bb.js"></script>
+<script defer src="/botmux/static/js/index.3f20ca128f.js"></script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Rspress v2.0.13">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://deepcoldy.github.io/botmux/">
+<meta property="og:image" content="https://deepcoldy.github.io/botmux/botmux-logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://deepcoldy.github.io/botmux/botmux-logo.png">
+<meta name="theme-color" content="#646CEA">
+<link rel="icon" href="/botmux/botmux-logo.png">
+<meta property="og:title" content="Dashboard 管控面 - botmux 文档">
+<meta name="description" content="<video src=&quot;img/video-v7-dashboard.mp4&quot; controls preload=&quot;metadata&quot; style=&quot;width:100%;border-radius:8px&quot;></video> Dashboard 是 botmux 自带的网页管理后台。一个页面就能管这台机器上所有机器人的会话、群、定时任务、工作流和配置，不用逐个进飞书群敲命令。">
+<meta property="og:description" content="<video src=&quot;img/video-v7-dashboard.mp4&quot; controls preload=&quot;metadata&quot; style=&quot;width:100%;border-radius:8px&quot;></video> Dashboard 是 botmux 自带的网页管理后台。一个页面就能管这台机器上所有机器人的会话、群、定时任务、工作流和配置，不用逐个进飞书群敲命令。"></head>
+
+  <body>
+    <div id="__rspress_root"><link rel="preload" as="image" href="/botmux/botmux-logo.png"/><link rel="preload" as="image" href="/botmux/img/dashboard-command-palette.png"/><link rel="preload" as="image" href="/botmux/img/dashboard-groups-list.png"/><link rel="preload" as="image" href="/botmux/img/long-task-reminder-desktop.png"/><header class="rp-nav"><div class="rp-nav__left"><div class="rp-nav__title"><a href="/botmux/" class="rp-nav__title__link rp-link"><div class="rp-nav__title__logo"><img src="/botmux/botmux-logo.png" alt="logo" id="logo" class="rspress-logo rp-nav__title__logo-image"/></div><span>botmux 文档</span></a></div></div><div class="rp-nav__right"><button class="rp-search-button"><div class="rp-search-button__content"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21" class="rp-search-button__icon"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg><span class="rp-search-button__word">搜索</span></div><div class="rp-search-button__hotkey" style="opacity:0"><span></span><span>K</span></div></button><div class="rp-search-button--mobile"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg></div><div class="rp-nav__others"><div class="rp-nav-menu__divider"></div><li class="rp-nav-menu__item"><div class="rp-nav-menu__item__container">简体中文<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-menu__item__icon"><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--center"><li class="rp-hover-group__item rp-hover-group__item--active" style="padding-left:8px" data-depth="0"><a href="/botmux/" class="rp-hover-group__item__link rp-link" aria-label="简体中文" lang="zh" hrefLang="zh" rel="alternate">简体中文</a></li><li class="rp-hover-group__item" style="padding-left:8px" data-depth="0"><a href="/botmux/en/dashboard.html" class="rp-hover-group__item__link rp-link" aria-label="English" lang="en" hrefLang="en" rel="alternate">English</a></li></ul></li><div class="rp-switch-appearance"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" class="rp-switch-appearance__icon rp-switch-appearance__icon--sun"><path fill="currentColor" d="m7.001 15.848-1.226 1.226a.58.58 0 0 0 0 .818.58.58 0 0 0 .818 0l1.226-1.226a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0m-.352-8.735a.584.584 0 0 0 .825-.825L6.237 5.051a.584.584 0 0 0-.825.825zM5.011 11.07h-1.75a.584.584 0 0 0 0 1.167h1.75c.324 0 .584-.26.584-.583a.585.585 0 0 0-.584-.584m7.003-5.835c.324 0 .584-.26.584-.584V2.9a.58.58 0 0 0-.584-.584.58.58 0 0 0-.583.583V4.65c0 .323.262.584.583.584m5.616 1.621 1.226-1.225a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0l-1.226 1.225a.58.58 0 0 0 0 .818.576.576 0 0 0 .818 0m3.138 4.214h-1.75a.58.58 0 0 0-.584.584c0 .324.26.584.583.584h1.751a.584.584 0 1 0 0-1.167m-3.389 5.124a.584.584 0 0 0-.825.825l1.238 1.238a.584.584 0 0 0 .825-.826zm-5.365-9.795a5.256 5.256 0 0 0-5.257 5.258 5.256 5.256 0 0 0 5.257 5.257 5.256 5.256 0 0 0 5.257-5.257 5.256 5.256 0 0 0-5.257-5.258m0 11.675a.58.58 0 0 0-.583.583v1.751a.582.582 0 1 0 1.167 0v-1.75a.584.584 0 0 0-.584-.584"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" viewBox="0 0 19 19" class="rp-switch-appearance__icon rp-switch-appearance__icon--moon"><path fill="currentColor" d="M9.166 0a9.2 9.2 0 0 1 1.857.188.834.834 0 0 1 .042 1.623 4.47 4.47 0 1 0 5.457 5.457l.048-.135a.834.834 0 0 1 1.575.177q.186.902.188 1.856A9.168 9.168 0 1 1 9.166 0"></path></svg></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__sm"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg></button><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__md"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"><div class="rp-nav-menu__others-mobile__container"><div class="rp-nav-hamburger__md__hover-group"><div class="rp-nav-screen-appearance"><div class="rp-nav-screen-appearance__left">主题</div><div class="rp-nav-screen-appearance__right"></div></div><div class="rp-nav-screen-langs"><div class="rp-nav-screen-langs__left">语言</div><div class="rp-nav-screen-langs__right">简体中文<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-screen-langs__icon "><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div></div><div class="rp-nav-screen-langs-group" style="display:grid;grid-template-rows:0fr;transition:grid-template-rows 0.2s ease-out"><div class="rp-nav-screen-langs-group__inner"><span class="rp-nav-screen-langs-group__item rp-nav-screen-langs-group__item--active" aria-current="page" aria-disabled="true">简体中文</span><a href="/botmux/en/dashboard.html" class="rp-nav-screen-langs-group__item rp-link" hrefLang="en" lang="en" rel="alternate">English</a></div></div><div class="rp-nav-screen-divider"></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div></div></ul></button></div></header><div class="rp-doc-layout__menu"><div class="rp-sidebar-menu"><button type="button" class="rp-sidebar-menu__left"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M4 6h24v2H4zm0 18h24v2H4zm0-12h24v2H4zm0 6h24v2H4z"></path></svg><span>菜单</span></button><button type="button" class="rp-sidebar-menu__right"><span class="rp-sidebar-menu__right__text">目录</span><svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-sidebar-menu__right__icon" style="transform:rotate(0deg);transition:transform 0.2s ease-out"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></button></div></div><div class="rp-doc-layout__container"><aside class="rp-doc-layout__sidebar rp-scrollbar"><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">开始</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/index.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">介绍</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/quickstart.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">5 分钟快速接入</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/prerequisites.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">前置要求</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/desktop.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">macOS 桌面版</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/platform.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">中心化平台（开源）</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">核心概念</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/architecture.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">架构总览</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/session-model.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">会话与话题模型</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">功能详解</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/cards.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">实时流式卡片</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/topic-unavailable-policy.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">原话题不可用策略</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/web-terminal.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Web 终端</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/multi-bot.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">多机器人协作</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/multi-topic.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">多话题协作模式</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/project-card.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">项目进度卡</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/mention-mode.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">@ 策略</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/whiteboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">本地白板</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/decision-board.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">决策看板与管家</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/roles.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">角色与团队</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/tmux.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">tmux 会话常驻</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/zmx.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">ZMX 会话后端</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/adopt.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">会话接入 Adopt</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/relay.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">会话接力 Relay</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/group.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">一键建会话群</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/doc-comment.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">飞书文档评论入口</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/schedule.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">定时任务</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/oncall.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Oncall 模式</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/permissions.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">权限与授权</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/sandbox.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">文件沙盒</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/voice.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">语音总结</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/dashboard.html" class="rp-sidebar-item rp-sidebar-item--active rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Dashboard 管控面</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/workbench.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">驾驶舱（Agent 工作台）</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/webhook.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">接入点（Webhook）</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/api-task-trigger.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">API 编程式触发任务</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/headless-session.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">无群自动化会话</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/turn-results.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">通用单轮结果</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/api-core-only.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Core-only API 控制</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/workflow.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Workflow（实验性）</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/hooks.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">生命周期 Hooks</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/skill-cli.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Skill + CLI 交互</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">开发与扩展</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/plugins.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Plugin 开发与市场注册</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">命令参考</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/slash-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">斜杠命令</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/cli-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">CLI 命令</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">配置</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/bots-json.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">bots.json 配置</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/feedback-storage.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">反馈数据存储与迁移</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/env.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">环境变量与文件位置</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/global-settings.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">全局设置（config.json）</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/companion-api.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">本地 Companion API</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/model-proxy.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">模型协议代理（实验）</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/adapters.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">多 CLI 适配器</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">实践与排错</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/best-practices.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">最佳实践</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/pitfalls.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">常见踩坑</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/faq.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">FAQ / 排错</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/about.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">关于 &amp; 资源</span></div><div class="rp-sidebar-item__right"></div></a></div></div></aside><div class="rp-doc-layout__doc"><main class="rp-doc-layout__doc-container"><div class="rp-doc rspress-doc"><!--$--><h1 class="rp-toc-include" id="dashboard-管控面"><a href="#dashboard-管控面" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Dashboard 管控面<!-- --> </h1>
+<p><video src="img/video-v7-dashboard.mp4" controls="" preload="metadata" style="width:100%;border-radius:8px"></video></p>
+<p>Dashboard 是 botmux 自带的网页管理后台。一个页面就能管这台机器上<strong>所有机器人</strong>的会话、群、定时任务、工作流和配置，不用逐个进飞书群敲命令。</p>
+<h2 class="rp-toc-include" id="打开-dashboard"><a href="#打开-dashboard" class="rp-header-anchor rp-link" aria-hidden="true">#</a>打开 Dashboard</h2>
+<p>在运行 botmux 的机器上执行：</p>
+<div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-function)">botmux</span><span style="color:var(--shiki-token-string)"> dashboard</span><span style="color:var(--shiki-token-comment)">          # 打印登录链接（第一次运行会自动生成 token）</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">botmux</span><span style="color:var(--shiki-token-string)"> dashboard</span><span style="color:var(--shiki-token-string)"> rotate</span><span style="color:var(--shiki-token-comment)">   # 换一个新 token，旧链接立刻失效</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="切换代码换行" aria-label="切换代码换行"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="复制代码"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p><code>botmux dashboard current</code> 和裸命令完全一样，只是写法更明确。</p>
+<p>输出的<strong>第一行永远只是那条链接</strong>，脚本里可以直接 <code>botmux dashboard | head -1</code> 取用。后面几行是：</p>
+<ul>
+<li><code>工作台: …</code>：直接打开「驾驶舱」的链接，适合收藏成书签。</li>
+<li>一段安全提示（见下文）。</li>
+</ul>
+<p>默认端口是 <code>7891</code>，可以用环境变量 <code>BOTMUX_DASHBOARD_PORT</code> 改。</p>
+<p>用 <a href="/botmux/desktop.html" class="rp-link">macOS 桌面版</a> 的话，App 窗口里就能直接打开 Dashboard。</p>
+<h3 class="rp-toc-include" id="链接里的-token-是什么"><a href="#链接里的-token-是什么" class="rp-header-anchor rp-link" aria-hidden="true">#</a>链接里的 token 是什么</h3>
+<p>token 是登录凭证，像一把长期有效的钥匙：</p>
+<ul>
+<li>同一条链接可以反复登录，<code>botmux restart</code> 之后也还能用。</li>
+<li>只有执行 <code>botmux dashboard rotate</code> 才会换钥匙，旧链接随之作废。</li>
+<li>第一次用 <code>?t=&lt;token&gt;</code> 打开后，浏览器会记住登录状态，地址栏里的 token 会被去掉。</li>
+</ul>
+<h3 class="rp-toc-include" id="什么时候链接里不带-token"><a href="#什么时候链接里不带-token" class="rp-header-anchor rp-link" aria-hidden="true">#</a>什么时候链接里不带 token</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>你的部署方式</th><th>链接长什么样</th><th>原因</th></tr></thead><tbody><tr><td>已绑定<a href="/botmux/platform.html" class="rp-link">中心化平台</a>（开了远程访问并完成绑定）</td><td><code>https://m-&lt;machineId&gt;.&lt;平台域名&gt;/</code>，<strong>不带 token</strong></td><td>平台会先让你走单点登录，认出你是谁。这时 token 不起作用，带着反而有泄漏风险</td></tr><tr><td>自建反向代理（<code>BOTMUX_PUBLIC_URL</code>）或 Devbox 短链</td><td><code>https://&lt;你的域名&gt;/?t=&lt;token&gt;</code>，<strong>带 token</strong></td><td>代理只是转发请求，不会帮你认身份，token 是唯一的门票</td></tr><tr><td>只在局域网用</td><td><code>http://&lt;局域网 IP&gt;:7891/?t=&lt;token&gt;</code>，<strong>带 token</strong></td><td>同上</td></tr></tbody></table></div>
+<p>是否去掉 token 由 Dashboard 自己判断（它知道链接用的是哪个地址）。判断不了时一律保留 token：多带一个 token 只是麻烦一点，少带了可能就进不去了。</p>
+<p>绑定平台后，那条「本机 IP + token」的直连链接默认隐藏，它只在平台出问题时兜底用。确实需要时，按命令输出里提示的参数重新运行即可取回。这个参数故意不写进 <code>--help</code>，避免 AI 在自动化里顺手带上，把 token 写进对话记录。</p>
+<div class="rp-callout rp-callout--warning"><div class="rp-callout__title">链接等于管理员密码</div><div class="rp-callout__content"><p>
+带 <code>?t=</code> 的链接只发给你自己，<strong>不要贴进多人群</strong>：聊天记录会长期保存，也可能被转发或截图。别人问怎么进后台时，让对方在服务器上自己运行 <code>botmux dashboard</code>。</p><p>怀疑链接泄漏了，马上执行 <code>botmux dashboard rotate</code>，所有旧链接当场失效。</p></div></div>
+<h3 class="rp-toc-include" id="不登录也能看只读模式"><a href="#不登录也能看只读模式" class="rp-header-anchor rp-link" aria-hidden="true">#</a>不登录也能看：只读模式</h3>
+<p>不带 token 打开 Dashboard，默认会进入<strong>只读模式</strong>：能看会话、定时任务、群列表这类「看进度」的页面，但不能做任何修改，Bot 配置、Skill、Webhook、终端等管理页也看不到。</p>
+<p>不想让局域网里的人看到这些信息，可以在「全局设置 → 通用设置 → 访问权限」里关掉「允许无 token 只读访问 dashboard」。详细边界见下文<a href="#%E5%85%AC%E5%BC%80%E5%8F%AA%E8%AF%BB%E4%B8%8E-token-%E7%9A%84%E8%BE%B9%E7%95%8C" class="rp-link">公开只读与 token 的边界</a>。</p>
+<h2 class="rp-toc-include" id="页面一览"><a href="#页面一览" class="rp-header-anchor rp-link" aria-hidden="true">#</a>页面一览</h2>
+<p>左侧导航按用途分成五组。带 🔒 的页面需要用 token 登录后才出现。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>分组</th><th>页面</th><th>用来做什么</th></tr></thead><tbody><tr><td>概览</td><td>工作台</td><td>首页：在线 Bot 数、待你处理的事项、正在工作的会话</td></tr><tr><td>协作</td><td>会话控制</td><td>看和管所有会话（看板 / 表格两种视图），详见下文</td></tr><tr><td></td><td>决策看板</td><td>在网页上集中拍板，见<a href="/botmux/decision-board.html" class="rp-link">决策看板与管家</a>。至少有一个 Bot 设为管家时才出现</td></tr><tr><td></td><td>驾驶舱</td><td>多会话并排工作的界面，可以直接和会话对话、看终端，见<a href="/botmux/workbench.html" class="rp-link">驾驶舱</a></td></tr><tr><td></td><td>群组管理</td><td>建群、拉 Bot 进群、按群调设置和成员授权，详见下文</td></tr><tr><td></td><td>定时任务</td><td>新建、编辑、暂停、立即运行定时任务，见<a href="/botmux/schedule.html" class="rp-link">定时任务</a></td></tr><tr><td></td><td>工作流</td><td>查看工作流运行情况、取消运行，见<a href="/botmux/workflow.html" class="rp-link">工作流</a></td></tr><tr><td>数字员工</td><td>角色管理 🔒</td><td>给每个 Bot 按群设人设，见<a href="/botmux/roles.html" class="rp-link">角色与团队</a></td></tr><tr><td></td><td>Skill 管理 🔒</td><td>从 GitHub / Git 地址或本机目录安装 Skill</td></tr><tr><td></td><td>自定义 🔒</td><td>改写内置提示词和 Skill，支持导出 / 导入、回滚</td></tr><tr><td></td><td>消息监听 🔒</td><td>让 Bot 不用 @ 也能按规则响应群消息，可按群单独设置</td></tr><tr><td></td><td>文档监听 🔒</td><td>管理飞书文档评论的监听，见<a href="/botmux/doc-comment.html" class="rp-link">文档评论</a></td></tr><tr><td></td><td>Bot 配置 🔒</td><td>每个 Bot 的默认行为，详见下文</td></tr><tr><td></td><td>Agent 🔒</td><td>可复用的执行配置（CLI、模型、目录、沙盒），多个 Bot 可共用一份</td></tr><tr><td>分析</td><td>监控看板</td><td>机器的运行健康、内存和会话压力</td></tr><tr><td></td><td>数据洞察 🔒</td><td>会话和工具调用的统计分析，详见下文</td></tr><tr><td></td><td>反馈分析 🔒</td><td>最终回答的评价覆盖率、最新评价和失败明细；换存储（SQLite / PostgreSQL）见<a href="/botmux/feedback-storage.html" class="rp-link">反馈数据存储与迁移</a></td></tr><tr><td>管理</td><td>终端 🔒</td><td>本机 shell / tmux / herdr 的网页终端，只对本机 owner 显示</td></tr><tr><td></td><td>Webhook 🔒</td><td>接入点和调用日志，见<a href="/botmux/webhook.html" class="rp-link">接入点</a></td></tr><tr><td></td><td>插件 🔒</td><td>管理插件，见<a href="/botmux/plugins.html" class="rp-link">插件</a></td></tr><tr><td></td><td>白板 🔒</td><td>本地白板，见<a href="/botmux/whiteboard.html" class="rp-link">白板</a></td></tr><tr><td></td><td>全局设置</td><td>访问权限、飞书卡片、定时任务、自动更新、开机自启等全局开关，见<a href="/botmux/global-settings.html" class="rp-link">全局设置</a></td></tr></tbody></table></div>
+<p>侧边栏顶部还有「创建会话」和「创建机器人」两个快捷按钮。</p>
+<h2 class="rp-toc-include" id="全局搜索k"><a href="#全局搜索k" class="rp-header-anchor rp-link" aria-hidden="true">#</a>全局搜索（⌘K）</h2>
+<p>想快速找到某个会话、某项配置 → 在任意页面按 <code>⌘K</code>（macOS）或 <code>Ctrl+K</code>（其它系统），也可以点顶栏的搜索框。</p>
+<p><img src="/botmux/img/dashboard-command-palette.png" alt="⌘K 全局搜索"/></p>
+<p>能搜到的内容：</p>
+<ul>
+<li><strong>会话</strong>：包括已关闭的会话。</li>
+<li><strong>设置项</strong>：全局设置和 Bot 配置里的具体某一项（例如「普通群会话模式」），选中后直接跳过去并定位到那一行。当前 Bot 没有这一项时，会停在所属分类并提示原因。</li>
+<li><strong>机器人</strong>：按名字或 app id 搜，直达该 Bot 的配置。</li>
+<li><strong>Skill / Agent</strong>。</li>
+<li><strong>页面</strong>：包括不在侧边栏里的子页面，如会话监控室、Webhook 调用日志、角色 Profiles、数据洞察的各个标签页。</li>
+<li><strong>快捷操作</strong>：例如切换主题。</li>
+</ul>
+<p>中文、英文叫法都能搜。Skill、Agent、机器人这几类只对登录后的管理员显示。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>按键</th><th>作用</th></tr></thead><tbody><tr><td><code>↑</code> <code>↓</code></td><td>上下选择</td></tr><tr><td><code>↵</code></td><td>打开</td></tr><tr><td><code>⌘↵</code> / <code>Ctrl+↵</code></td><td>次要动作：登录后，活跃会话在驾驶舱打开；其它情况跳到飞书话题</td></tr><tr><td><code>Tab</code></td><td>切换分类</td></tr><tr><td><code>Esc</code></td><td>关闭</td></tr></tbody></table></div>
+<p>不输入内容时，列表里显示最近用过的条目。</p>
+<h2 class="rp-toc-include" id="会话控制"><a href="#会话控制" class="rp-header-anchor rp-link" aria-hidden="true">#</a>会话控制</h2>
+<p>这里列出所有 Bot 的会话，有两种视图，在页面顶部切换：</p>
+<ul>
+<li><strong>看板</strong>：按「待办池 / 待办 / 进行中 / 需要你 / 已完成」分列。会话会按状态自动归列（比如等你选仓库、等你确认的会话进「需要你」），也可以手动拖到别的列。「待办池」不会自动归入：要么手动拖进去，要么在「创建会话」时直接选「待办池」（先建群、拉 Bot，暂不启动 CLI）。休眠的会话默认不上看板，可以到表格视图里看。</li>
+<li><strong>表格</strong>：适合批量操作，可以自选显示哪些列。</li>
+</ul>
+<p>两种视图都能按状态、机器人、所在聊天、CLI、来源（飞书原生 / 外部接入 <code>/adopt</code>）筛选，也能搜群名、工作目录、标题或 ID。</p>
+<p>常用操作：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>想做什么</th><th>怎么做</th></tr></thead><tbody><tr><td>回到飞书里的那个话题</td><td>点「定位话题」：Bot 会在原话题里发一条只 @ 会话 owner 的消息，点通知就能跳回去</td></tr><tr><td>打开所在群</td><td>点「打开群聊」</td></tr><tr><td>看终端</td><td>「打开只读终端」只看不动；「接管终端」可以直接操作</td></tr><tr><td>CLI 卡住了</td><td>「重启 CLI」。如果会话还有没处理完的任务，为防丢失会暂时拒绝重启</td></tr><tr><td>关掉会话</td><td>「关闭会话」，或多选后「关闭选中」</td></tr><tr><td>恢复已关闭的会话</td><td>「恢复会话」</td></tr><tr><td>批量清理空闲会话</td><td>「清理空闲」，可选空闲超过 24 小时、72 小时或 7 天。等你处理的会话和锁定的会话不会被清掉</td></tr><tr><td>不想被「清理空闲」关掉</td><td>「锁定会话」</td></tr><tr><td>同时盯几个会话</td><td>多选后「添加到监控室」，在会话监控室里一屏看多个终端</td></tr><tr><td>看这个会话做了哪些事</td><td>「洞察」：统计工具调用次数、失败、耗时，并给出建议</td></tr><tr><td>复现 CLI 启动参数</td><td>「复制复现命令」。命令里含 token 等凭证，注意保密</td></tr></tbody></table></div>
+<h3 class="rp-toc-include" id="session-status-todo"><a href="#session-status-todo" class="rp-header-anchor rp-link" aria-hidden="true">#</a>运行状态、任务状态与 TODO</h3>
+<p>自动的，不用配置。会话卡片上的状态分成两层：</p>
+<ul>
+<li><strong>运行状态</strong>：CLI 这会儿是空闲还是在工作（工作中、启动中、正在分析等）。</li>
+<li><strong>任务状态</strong>：活有没有干完。Claude Code / Codex 的会话记录里还有没完成的 TODO 时，卡片上会挂一个「TODO 已完成数/总数」徽标。鼠标悬停预览清单，点一下固定住，可以选中复制。</li>
+</ul>
+<p>所以 CLI 已经空闲、但还有 TODO 没做完的会话，会被归到看板的「待办」列，而不是混在空闲里。读不到 TODO 的 CLI 不受影响，按运行状态归列。不登录的只读模式下看不到 TODO 内容。</p>
+<h2 class="rp-toc-include" id="群组管理"><a href="#群组管理" class="rp-header-anchor rp-link" aria-hidden="true">#</a>群组管理</h2>
+<p><img src="/botmux/img/dashboard-groups-list.png" alt="群组管理：普通群列表"/></p>
+<p>页面顶部可以在两类群之间切换：</p>
+<ul>
+<li><strong>普通群</strong>：你自己建的或拉 Bot 进去的群。每行显示群里有哪些 Bot，右侧有「添加 bot」「复制为新群」「管理」。</li>
+<li><strong>会话群</strong>：私聊里由 Bot 自动创建的群，一个会话一个群，可按最近活跃或创建时间排序。</li>
+</ul>
+<p>常用操作：</p>
+<ul>
+<li><strong>新建群聊</strong>：选要拉的 Bot，可以绑定一个工作目录（新话题直接在这个目录启动，不再让你选仓库）。建群后会把你拉进群，并尝试把群主转给你。</li>
+<li><strong>复制为新群</strong>：用现有群的 Bot、绑定目录和群角色，一键再建一个群。</li>
+<li><strong>管理</strong>：打开群设置抽屉，分六个标签页：</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>标签页</th><th>内容</th></tr></thead><tbody><tr><td>概览</td><td>本群每个 Bot 的设置一览：群角色、回复模式、Oncall 目录、默认模型、串行处理、空闲关闭、过程卡片、卡片置顶。点一行进入该 Bot 的设置</td></tr><tr><td>机器人设置</td><td>按 Bot 调本群的回复模式、Oncall、新话题默认模型、多人消息串行处理、空闲自动关闭、运行过程卡片、实时卡片置顶</td></tr><tr><td>协作模式</td><td>普通群（Bot 各自响应）或项目群（一个主控 Bot 统筹，子任务各开话题）</td></tr><tr><td>成员权限</td><td>按 Bot 视角管理：多选成员<strong>批量授权</strong>（一次最多 50 人，可设消息额度和有效期，写入前会再确认对方还在群里）、<strong>整群授权</strong>（相当于在群里发不带参数的 <code>/grant</code>）、对单个成员<strong>封禁 / 解封</strong></td></tr><tr><td>撤回消息</td><td>选择一个在群内的 Bot，分页查看该群消息（可进入话题查看回复），只勾选并撤回该 Bot <strong>自己发出</strong>的消息，每次最多 50 条，逐条返回成功或失败结果；可撤回期限以飞书为准</td></tr><tr><td>退群 / 解散</td><td>让选中的 Bot 退群，或解散群聊（只有 Bot 是群主时才能解散）。相关会话会自动清理</td></tr></tbody></table></div>
+<h3 class="rp-toc-include" id="串行处理与空闲关闭"><a href="#串行处理与空闲关闭" class="rp-header-anchor rp-link" aria-hidden="true">#</a>串行处理与空闲关闭</h3>
+<p>「机器人设置」里这两项都按「群 × Bot」单独设置，默认都是关的，保存后不用重启。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>设置</th><th>打开后的效果</th></tr></thead><tbody><tr><td>群内多人消息串行处理</td><td>Bot 正在处理一轮时，群里新来的消息（包括你自己发的）先排队，等这一轮做完再按到达顺序逐条处理，不会打断当前这一轮。只影响保存之后收到的消息，和 Oncall 无关；<code>/adopt</code> 接管的会话不受影响</td></tr><tr><td>无交互的会话自动关闭</td><td>本群的会话（已有的和新建的都算）超过设定时长没收到新消息，就会被自动关闭。时长是正整数，单位选「天」或「小时」，默认 1 天</td></tr></tbody></table></div>
+<p>自动关闭只会关「空闲」或「休眠」的会话。下面这些会被跳过：</p>
+<ul>
+<li>正在执行、等你确认或选仓库、提示需要你处理（包括额度受限）、还有排队消息的会话。</li>
+<li>已锁定的会话。</li>
+<li>通过 <code>/adopt</code> 接管的会话。</li>
+</ul>
+<p>没设置过空闲关闭的群，会话不会因为空闲被自动关掉。</p>
+<h2 class="rp-toc-include" id="bot-配置"><a href="#bot-配置" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Bot 配置</h2>
+<p>每个 Bot 的默认行为都在这里，分为「常用 / 会话 / 权限与安全 / 消息卡片 / 高级」五类。切换分类不会丢掉还没保存的输入。</p>
+<p>几项常用的：</p>
+<ul>
+<li><strong>默认角色</strong>：该 Bot 在所有会话里的默认人设；单个群可以在「角色管理」里覆盖。</li>
+<li><strong>黑名单 <code>blockedUsers</code></strong>：名单里的人无法触发这个 Bot。</li>
+<li><strong>静默模式预设</strong>：一键同时「关思考卡、开静默表情回应、关流式卡片」。这是一次性写入，之后单独改这三个开关不受影响。</li>
+<li><strong>卡片签名</strong>：最终回答卡片页脚的个性签名。</li>
+<li><strong>长任务卡片提醒</strong>：在「消息卡片」里开启并保存。分别配置首次提醒阈值和后续间隔，默认均为 10 分钟；实际执行超时且任务未结束时，在原群聊或话题定期发卡片，完成或取消后停止。详见<a href="/botmux/bots-json.html#reminders" class="rp-link">提醒配置</a>。</li>
+</ul>
+<p>长任务提醒配置示例（首次 12 分钟、后续每 3 分钟；初始默认值均为 10 分钟）：</p>
+<p><img src="/botmux/img/long-task-reminder-desktop.png" alt="长任务卡片提醒配置"/></p>
+<h3 class="rp-toc-include" id="改名称头像和名片描述"><a href="#改名称头像和名片描述" class="rp-header-anchor rp-link" aria-hidden="true">#</a>改名称、头像和名片描述</h3>
+<p>Bot 配置页顶部可以直接改 Bot 的名称、头像和飞书名片描述。保存时会同步到飞书开放平台并发布新版本，大约 10 秒，之后群里看到的就是新名字和新头像。</p>
+<p>这一步要用到服务器上缓存的飞书网页登录态。登录态缺失或过期时，页面会提示并出现「扫码登录飞书」按钮：</p>
+<ol>
+<li>点「扫码登录飞书」，弹出二维码。</li>
+<li>用飞书 App 扫码并确认登录。</li>
+<li>登录成功后，改名和换头像会自动重试；名片描述会重新加载，草稿需要你再点一次「发布描述」。</li>
+</ol>
+<p>登录态只存在本机，和 <code>botmux setup</code> 用的是同一份。扫码的账号必须是这个应用的协作者，否则会提示没有权限。改名在飞书侧失败时，只会更新 Dashboard 里的展示名。国际版 Lark 租户暂不支持自动改名称、头像和描述。</p>
+<h2 class="rp-toc-include" id="数据洞察"><a href="#数据洞察" class="rp-header-anchor rp-link" aria-hidden="true">#</a>数据洞察</h2>
+<p>数据洞察分析会话里的工具调用（span），帮你找出哪里慢、哪里总出错。顶部可以按项目、时间（全部、近 1 / 7 / 30 天）、CLI 筛选，也能只看「值得复盘」「有失败」「有慢 span」的会话。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>标签页</th><th>回答什么问题</th></tr></thead><tbody><tr><td>总览</td><td>整体情况怎么样：会话数、span 数、失败 span、慢 span、读改比，以及优先级最高的优化建议和失败最多的工具</td></tr><tr><td>会话</td><td>某个会话具体做了什么：按最近、回看分、失败、耗时等排序，点进去看动作 span、子代理和建议</td></tr><tr><td>行为流</td><td>时间花在哪：研究、修改、运行、委派、讨论各阶段的动作数和耗时占比，以及各会话的节奏</td></tr><tr><td>分布</td><td>典型值在哪：每会话 span 数、失败数、慢 span、工作时长、读改比、改动行数的分布，以及近 4 周每天的会话数</td></tr><tr><td>热点</td><td>哪些问题反复出现：跨会话复发的文件、命令和报错，项目分布，以及最慢的会话</td></tr></tbody></table></div>
+<p>耗时只算工具执行时间，不含等你回复的时间，所以不等于实际经过的时间。不同 CLI 的统计口径有差异（例如 Codex 的读文件多走 shell，读改比会偏低），跨 CLI 对比仅供参考。</p>
+<h2 class="rp-toc-include" id="工作流"><a href="#工作流" class="rp-header-anchor rp-link" aria-hidden="true">#</a>工作流</h2>
+<p>工作流功能默认关闭。要用的话，先在「全局设置 → 通用设置 → 工作流」打开「启用工作流功能」。</p>
+<ul>
+<li><strong>运行列表</strong>：所有工作流运行及其状态。还没有运行时，可以在飞书里用 <code>/workflow new</code> 发起。</li>
+<li><strong>运行详情</strong>：节点图上能看到每个节点由哪个 Bot 负责、当前状态和耗时；点节点看依赖、落点、实例终端等详情。</li>
+<li><strong>取消运行</strong>：已完成的节点会保留，运行中的节点会被中断。</li>
+</ul>
+<p>有两件事不在 Dashboard 里做：</p>
+<ul>
+<li>工作流的人工审批（humanGate 批准 / 拒绝）在<strong>飞书审批卡</strong>上点。</li>
+<li>带参数触发工作流走<a href="/botmux/webhook.html" class="rp-link">接入点（Webhook）</a>。</li>
+</ul>
+<h2 class="rp-toc-include" id="monitoring"><a href="#monitoring" class="rp-header-anchor rp-link" aria-hidden="true">#</a>监控看板与会话监控室</h2>
+<p>默认就有，只读模式也能看：左侧「分析 → 监控看板」（<code>#/monitoring</code>），实时看这台机器上 botmux 的运行健康（数据新不新、daemon 在不在线、会话有没有堆积）、内存占用和会话压力。内存按 PSS 统计（macOS 用 <code>phys_footprint</code>），分成 botmux 本体和外部 CLI 两部分，多个进程相加不会重复计算共享内存。</p>
+<p>要同时盯几个会话的终端：到「会话控制」里多选会话，点「添加到监控室」，就会在「会话监控室」（<code>#/monitor-room</code>）里一屏并排看多个终端。</p>
+<h2 class="rp-toc-include" id="agents"><a href="#agents" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Agent 与关联图</h2>
+<p>默认就有，需要登录：左侧「数字员工 → Agent」（<code>#/agents</code>）。Agent 是一份可复用的执行配置（CLI、模型、工作目录、沙盒），一个 Agent 可以给多个 Bot 共用，改一次就同步到所有关联 Bot 的新会话。</p>
+<ol>
+<li>点「新建 Agent」，选「从 Bot 复制」（配置和那个 Bot 完全一样，可以勾「同时关联这个 Bot」）或「空白」。</li>
+<li>页面顶部在「配置」和「关联图」之间切换。在「关联图」里，从 Agent 右侧的圆点拖到 Bot 上就能关联。</li>
+<li>关联后，这个 Bot 的执行配置由 Agent 统一管理；要单独改，先在关联图里解除关联。</li>
+</ol>
+<p>不想用 Agent 也没关系，单个 Bot 照样可以在「Bot 配置 → 常用 → Agent 配置」里直接选 CLI 和模型。</p>
+<h2 class="rp-toc-include" id="customization"><a href="#customization" class="rp-header-anchor rp-link" aria-hidden="true">#</a>自定义提示词与 Skill</h2>
+<p>默认就有，需要登录：左侧「数字员工 → 自定义」（<code>#/customization</code>），调整 botmux 内置的框架提示词片段和内置 Skill。</p>
+<ul>
+<li>每一项都能直接改写；改动<strong>下一个会话生效，不用重启 daemon</strong>。</li>
+<li>每项可以单独「恢复出厂」，也可以「全部恢复出厂」。每次改动都会存快照，「历史 / 回滚」里能回到任意快照，回滚本身也会存快照。</li>
+<li>「导出 bundle」把你的改动打包下载，发给同事后，对方用「导入 bundle」导入（导入前会先存快照）。</li>
+<li>能删掉关键指令（比如 <code>botmux send</code>），但这样 Bot 可能没法把回复发回飞书，拿不准就恢复出厂。</li>
+</ul>
+<h2 class="rp-toc-include" id="host-terminal"><a href="#host-terminal" class="rp-header-anchor rp-link" aria-hidden="true">#</a>宿主网页终端</h2>
+<p>默认就有，<strong>只对能管理这台机器的人开放</strong>：用本机管理链接登录 Dashboard，或从中心平台打开这台机器的 Dashboard，左侧会出现「管理 → 终端」（<code>#/terminal</code>）。</p>
+<ul>
+<li>「新建 Shell」打开这台机器的登录 shell；也可以从列表里连接本机已有的 tmux / herdr 会话，包括 botmux 托管的会话。</li>
+<li>支持多个标签页、全屏和调字号。</li>
+<li>关闭 Shell 标签会结束这个 shell 和里面还在跑的程序；关闭 tmux / herdr 标签只是断开连接，不影响会话。</li>
+</ul>
+<p>它拿到的是这台机器的 shell，权限很大，管理链接别外传。这里的终端和会话卡片上的 <a href="/botmux/web-terminal.html" class="rp-link">Web 终端</a>不是一回事：后者只能看和操作某个会话的 CLI。</p>
+<h2 class="rp-toc-include" id="开机自启"><a href="#开机自启" class="rp-header-anchor rp-link" aria-hidden="true">#</a>开机自启</h2>
+<p>在「全局设置 → 系统与维护 → 开机自启」打开「自动启动 botmux 后台服务」，机器重启或重新登录后 botmux 会自己起来。需要登录后才能看到和修改。</p>
+<p>这个开关和 <code>botmux autostart</code> 命令是同一套机制，只影响<strong>下次开机</strong>，不会启动、停止或重启当前正在运行的服务。</p>
+<h2 class="rp-toc-include" id="给集成方用的接口"><a href="#给集成方用的接口" class="rp-header-anchor rp-link" aria-hidden="true">#</a>给集成方用的接口</h2>
+<p>下面这部分面向写监控、状态页或自动化脚本的开发者，普通使用可以跳过。</p>
+<h3 class="rp-toc-include" id="修改群名"><a href="#修改群名" class="rp-header-anchor rp-link" aria-hidden="true">#</a>修改群名</h3>
+<p>已认证的集成可以指定某个 Bot 的身份来改飞书群名：</p>
+<div class="rp-codeblock language-http"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="http"><code><span class="line"><span style="color:var(--shiki-token-keyword)">PUT</span><span style="color:var(--shiki-foreground)"> /api/groups/{chatId}/name/{larkAppId}</span></span>
+<span class="line"><span style="color:var(--shiki-token-string-expression)">Content-Type</span><span style="color:var(--shiki-token-keyword)">:</span><span style="color:var(--shiki-token-string)"> application/json</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:var(--shiki-foreground)">{</span><span style="color:var(--shiki-token-keyword)">&quot;name&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)">&quot;新的群名称&quot;</span><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="切换代码换行" aria-label="切换代码换行"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="复制代码"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<ul>
+<li>两个路径参数都要做 URL 编码。</li>
+<li>指定的 Bot 必须当前就在群里；失败时<strong>不会</strong>换别的 Bot 重试。</li>
+<li>群名最多 100 个字符（按 Unicode 码点算），不能有控制字符和不可见格式字符。</li>
+<li>请求体最大 4 KiB，只接受 <code>name</code> 字段。</li>
+<li>需要 Dashboard 管理权限；就算开了公开只读，这个写操作也不能匿名调用。</li>
+</ul>
+<h3 class="rp-toc-include" id="只读查询接口"><a href="#只读查询接口" class="rp-header-anchor rp-link" aria-hidden="true">#</a>只读查询接口</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>接口</th><th>内容</th></tr></thead><tbody><tr><td><code>GET /api/dashboard/v1/summary</code></td><td>带版本号、强脱敏的整体运行摘要</td></tr><tr><td><code>GET /api/sessions</code></td><td>当前所有活跃 + 已关闭会话</td></tr><tr><td><code>GET /events</code></td><td>Dashboard 对外的 SSE 事件流。<code>session.spawned</code> 的 <code>body.session</code> 带完整会话，<code>session.update</code> 的 <code>body.patch</code> 带变更字段</td></tr></tbody></table></div>
+<p>每个 daemon 内部还有一个只监听本机回环地址的 <code>/api/events</code>，那是 Dashboard 汇总数据用的内部通道，不是对外地址。</p>
+<h3 class="rp-toc-include" id="运行摘要-get-apidashboardv1summary"><a href="#运行摘要-get-apidashboardv1summary" class="rp-header-anchor rp-link" aria-hidden="true">#</a>运行摘要 <code>GET /api/dashboard/v1/summary</code></h3>
+<p>适合把 botmux 接进外部状态页、监控或编排系统。它汇总在线 daemon 的会话和定时任务，只返回白名单里的状态和计数，<strong>不会</strong>返回 Bot / 会话 ID、标题、群名、工作目录、提示词、定时任务内容或诊断日志。200、429、503 响应都带 <code>Cache-Control: no-store</code>。</p>
+<div class="rp-callout rp-callout--tip"><div class="rp-callout__title">Tip</div><div class="rp-callout__content"><p>
+这个接口由 <code>botmux start</code> 一起启动的 <code>botmux-dashboard</code> 进程提供。<code>botmux serve --api-only</code> 模式不启动 Dashboard，所以没有这个接口，它的健康检查见 <a href="/botmux/api-core-only.html" class="rp-link">Core-only API 控制</a>。</p></div></div>
+<p>成功时返回 HTTP 200。注意 200 只代表快照生成成功：有 Bot 配置了但不在线时，<code>service.status</code> 仍是 <code>degraded</code>。</p>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;schemaVersion&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 1</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;generatedAt&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;2026-08-09T02:30:00.000Z&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;service&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> { </span><span style="color:var(--shiki-token-keyword)">&quot;status&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;healthy&quot;</span><span style="color:var(--shiki-foreground)"> }</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;bots&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> { </span><span style="color:var(--shiki-token-keyword)">&quot;online&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 3</span><span style="color:var(--shiki-foreground)"> }</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;sessions&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> { </span><span style="color:var(--shiki-token-keyword)">&quot;active&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 7</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-keyword)"> &quot;attention&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 1</span><span style="color:var(--shiki-foreground)"> }</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;schedules&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;enabled&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 2</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;nextRunAt&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;2026-08-09T04:00:00.000Z&quot;</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  }</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;dashboard&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> { </span><span style="color:var(--shiki-token-keyword)">&quot;href&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;/&quot;</span><span style="color:var(--shiki-foreground)"> }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="切换代码换行" aria-label="切换代码换行"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="复制代码"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>字段</th><th>含义</th></tr></thead><tbody><tr><td><code>schemaVersion</code></td><td>返回格式的版本，当前是 <code>1</code></td></tr><tr><td><code>generatedAt</code></td><td>生成这份快照的时间（ISO-8601）</td></tr><tr><td><code>service.status</code></td><td>在线 Bot 数等于配置的 Bot 数时是 <code>healthy</code>，否则是 <code>degraded</code></td></tr><tr><td><code>bots.online</code></td><td>当前在线的 daemon / Bot 数</td></tr><tr><td><code>sessions.active</code></td><td>在线 daemon 里状态不是 <code>closed</code> 的会话数</td></tr><tr><td><code>sessions.attention</code></td><td>活跃会话中需要人处理的数量：等选仓库、TUI 弹出提示、Agent 请求关注，以及 <code>limited</code> / <code>stalled</code> 状态</td></tr><tr><td><code>schedules.enabled</code></td><td>在线 daemon 里已启用的定时任务数</td></tr><tr><td><code>schedules.nextRunAt</code></td><td>已启用定时任务中最早的下次运行时间（ISO-8601），没有时为 <code>null</code></td></tr><tr><td><code>dashboard.href</code></td><td>Dashboard 首页的相对路径，按当前 Dashboard 地址解析</td></tr></tbody></table></div>
+<p>只要有一个在线 daemon 的数据超时、出错或格式不对，就返回 HTTP 503，并且<strong>故意不给计数字段</strong>，免得把「拿不到」误当成「是 0」：</p>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;schemaVersion&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 1</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;generatedAt&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;2026-08-09T02:30:00.000Z&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;service&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> { </span><span style="color:var(--shiki-token-keyword)">&quot;status&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;degraded&quot;</span><span style="color:var(--shiki-foreground)"> }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="切换代码换行" aria-label="切换代码换行"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="复制代码"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p><strong>匿名限流</strong>：没带有效 token 的请求共用一份配额，任意 10 秒内最多 5 次，第 6 次返回 HTTP 429：</p>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;error&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;rate_limited&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;retryAfterSeconds&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 7</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="切换代码换行" aria-label="切换代码换行"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="复制代码"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>响应头 <code>Retry-After</code> 是同样的秒数（至少 <code>1</code>，通常 <code>1</code>–<code>10</code>），等这么久再重试。</p>
+<p>带当前 token 的请求不受限流。认证方式和浏览器登录一样：用 <code>?t=&lt;token&gt;</code> 访问会先返回 302、写入 <code>botmux_dashboard_token</code> cookie，再跳到不带参数的地址。纯 API 客户端想免限流，需要保存这个 cookie 并在之后的请求里带上。这里<strong>不支持</strong> <code>Authorization: Bearer</code>。</p>
+<h3 class="rp-toc-include" id="会话数据里的可选字段"><a href="#会话数据里的可选字段" class="rp-header-anchor rp-link" aria-hidden="true">#</a>会话数据里的可选字段</h3>
+<p>下面这些字段只出现在 <code>/api/sessions</code> 和 <code>/events</code> 的会话数据里，摘要接口不会返回。它们都是<strong>可选的</strong>，旧会话或旧版本可能没有，使用时要做兼容：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>字段</th><th>含义</th></tr></thead><tbody><tr><td><code>backendType</code></td><td>最近一次启动时用的后端（<code>pty</code> / <code>tmux</code> / <code>herdr</code> / <code>zellij</code> / <code>zmx</code>），可用于筛选和展示；冷恢复后可能随配置变化</td></tr><tr><td><code>backendSessionName</code></td><td>只有受管的持久后端会话才有，目前规则是 <code>bmx-&lt;sessionId 前 8 位&gt;</code>。PTY 会话、adopt 会话和部分老数据没有。它只是定位信息，<strong>不代表进程或 socket 还活着</strong></td></tr><tr><td><code>titleUpdatedAt</code></td><td>标题最后更新时间（ISO-8601）</td></tr><tr><td><code>titleSource</code></td><td>标题来源：<code>initial</code> / <code>user</code> / <code>agent</code> / <code>cli</code> / <code>dashboard</code> / <code>system</code>。只用于展示和调试，<strong>不能当作身份或审计依据</strong></td></tr></tbody></table></div>
+<h3 class="rp-toc-include" id="公开只读与-token-的边界"><a href="#公开只读与-token-的边界" class="rp-header-anchor rp-link" aria-hidden="true">#</a>公开只读与 token 的边界</h3>
+<p>公开只读（<code>publicReadOnly</code>）默认开启。开启时，下面这些只读接口在 Dashboard 监听地址上<strong>不需要 token</strong> 就能访问：</p>
+<ul>
+<li><code>GET /api/dashboard/v1/summary</code>（强脱敏摘要）</li>
+<li><code>GET /api/sessions</code>（会话列表）</li>
+<li><code>GET /api/schedules</code>（定时任务，匿名访问时提示词会被隐去）</li>
+<li><code>GET /api/settings</code>（只读设置）</li>
+<li><code>GET /api/groups</code>（Bot 名称和群名）</li>
+<li><code>GET /events</code>（事件流，匿名访问时定时任务提示词会被隐去）</li>
+</ul>
+<p>所以会话名称、标题、后端类型等会话元数据，要按「对这个网络公开」来看待。</p>
+<ul>
+<li>所有写操作（POST / PUT / PATCH / DELETE）、不在上面名单里的读接口，以及原始终端输出和诊断日志，始终需要当前 token。名单是「默认不公开」的：以后新增的读接口不会因为开了公开只读就自动暴露。</li>
+<li>关掉公开只读后，不带 token 请求摘要会返回 401；带当前 token 的请求照常可用，也不受匿名限流。开着公开只读时，错误的或已轮换的旧 token 按匿名处理。</li>
+<li>token 只管 Dashboard 应用层的访问，不能代替主机防火墙、VPN 或反向代理的鉴权。</li>
+<li>不需要匿名查看时，在「全局设置 → 通用设置 → 访问权限」关掉「允许无 token 只读访问 dashboard」。也可以在启动前设 <code>BOTMUX_DASHBOARD_PUBLIC_READONLY=false</code>；但只要在设置页保存过这个开关，<code>~/.botmux/config.json</code> 里的值就会优先于环境变量。</li>
+</ul>
+<h2 class="rp-toc-include" id="部署细节"><a href="#部署细节" class="rp-header-anchor rp-link" aria-hidden="true">#</a>部署细节</h2>
+<p>Dashboard 是独立进程 <code>botmux-dashboard</code>，由内置 supervisor 托管，和 daemon 一起启动、一起停止。</p>
+<p>每个 daemon 只在 <code>127.0.0.1</code> 上开放内部接口，Dashboard 进程负责转发请求并做签名校验。签名密钥存在 <code>~/.botmux/.dashboard-secret</code>（权限 0600），只在 daemon 和 Dashboard 之间使用，<strong>不会发给浏览器</strong>；浏览器那边用的是上文的登录 token。</p><!--/$--></div><footer class="rp-doc-footer"><div class="rp-doc-footer__edit"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/zh/dashboard.md" target="_blank" rel="noopener noreferrer" class="rp-edit-link rp-link">编辑此页面</a><div class="rp-last-updated"><p>最后更新于<!-- -->: <span>2026/11/14 07:04:37</span></p></div></div><div class="rp-doc-footer__divider"></div><div class="rp-prev-next-page"><a href="/botmux/voice.html" class="rp-prev-next-page__item rp-prev-next-page__prev rp-link"><span class="rp-prev-next-page__item__desc">上一页</span><span class="rp-prev-next-page__item__title"><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon rp-prev-next-page__rotate_180"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg><span>语音总结</span></span></a><a href="/botmux/workbench.html" class="rp-prev-next-page__item rp-prev-next-page__next rp-link"><span class="rp-prev-next-page__item__desc">下一页</span><span class="rp-prev-next-page__item__title"><span>驾驶舱（Agent 工作台）</span><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></span></a></div></footer></main></div><aside class="rp-doc-layout__outline rp-scrollbar"><div class="rp-outline"><div class="rp-outline__title">目录<svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg></div><nav class="rp-outline__toc rp-scrollbar"><a href="#打开-dashboard" class="rp-toc-item rp-link" title="打开 Dashboard" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">打开 Dashboard</span></a><a href="#链接里的-token-是什么" class="rp-toc-item rp-link" title="链接里的 token 是什么" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">链接里的 token 是什么</span></a><a href="#什么时候链接里不带-token" class="rp-toc-item rp-link" title="什么时候链接里不带 token" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">什么时候链接里不带 token</span></a><a href="#不登录也能看只读模式" class="rp-toc-item rp-link" title="不登录也能看：只读模式" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">不登录也能看：只读模式</span></a><a href="#页面一览" class="rp-toc-item rp-link" title="页面一览" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">页面一览</span></a><a href="#全局搜索k" class="rp-toc-item rp-link" title="全局搜索（⌘K）" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">全局搜索（⌘K）</span></a><a href="#会话控制" class="rp-toc-item rp-link" title="会话控制" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">会话控制</span></a><a href="#session-status-todo" class="rp-toc-item rp-link" title="运行状态、任务状态与 TODO" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">运行状态、任务状态与 TODO</span></a><a href="#群组管理" class="rp-toc-item rp-link" title="群组管理" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">群组管理</span></a><a href="#串行处理与空闲关闭" class="rp-toc-item rp-link" title="串行处理与空闲关闭" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">串行处理与空闲关闭</span></a><a href="#bot-配置" class="rp-toc-item rp-link" title="Bot 配置" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Bot 配置</span></a><a href="#改名称头像和名片描述" class="rp-toc-item rp-link" title="改名称、头像和名片描述" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">改名称、头像和名片描述</span></a><a href="#数据洞察" class="rp-toc-item rp-link" title="数据洞察" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">数据洞察</span></a><a href="#工作流" class="rp-toc-item rp-link" title="工作流" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">工作流</span></a><a href="#monitoring" class="rp-toc-item rp-link" title="监控看板与会话监控室" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">监控看板与会话监控室</span></a><a href="#agents" class="rp-toc-item rp-link" title="Agent 与关联图" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Agent 与关联图</span></a><a href="#customization" class="rp-toc-item rp-link" title="自定义提示词与 Skill" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">自定义提示词与 Skill</span></a><a href="#host-terminal" class="rp-toc-item rp-link" title="宿主网页终端" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">宿主网页终端</span></a><a href="#开机自启" class="rp-toc-item rp-link" title="开机自启" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">开机自启</span></a><a href="#给集成方用的接口" class="rp-toc-item rp-link" title="给集成方用的接口" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">给集成方用的接口</span></a><a href="#修改群名" class="rp-toc-item rp-link" title="修改群名" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">修改群名</span></a><a href="#只读查询接口" class="rp-toc-item rp-link" title="只读查询接口" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">只读查询接口</span></a><a href="#运行摘要-get-apidashboardv1summary" class="rp-toc-item rp-link" title="运行摘要 GET /api/dashboard/v1/summary" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">运行摘要 <code>GET /api/dashboard/v1/summary</code></span></a><a href="#会话数据里的可选字段" class="rp-toc-item rp-link" title="会话数据里的可选字段" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">会话数据里的可选字段</span></a><a href="#公开只读与-token-的边界" class="rp-toc-item rp-link" title="公开只读与 token 的边界" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">公开只读与 token 的边界</span></a><a href="#部署细节" class="rp-toc-item rp-link" title="部署细节" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">部署细节</span></a></nav><div class="rp-outline__divider"></div><div class="rp-outline__bottom"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/zh/dashboard.md" target="_blank" rel="noopener noreferrer" class="rp-outline__action-row rp-edit-link rp-link"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"></path></svg><span>编辑此页面</span></a></div></div></aside></div></div>
+    <div id="__rspress_modal_container"></div>
+  </body>
+</html>

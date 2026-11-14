@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Multi-CLI Adapters - botmux 文档</title>
+<script>{;const saved = localStorage.getItem('rspress-theme-appearance');const preferDark = window.matchMedia('(prefers-color-scheme: dark)').matches;const isDark = !saved || saved === 'auto' ? preferDark : saved === 'dark';document.documentElement.classList.toggle('dark', isDark);document.documentElement.classList.toggle('rp-dark', isDark);document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';}</script>
+<link href="/botmux/static/css/styles.788f7d0799.css" rel="stylesheet">
+<script defer src="/botmux/static/js/styles.b78d054ff9.js"></script>
+<script defer src="/botmux/static/js/lib-react.9b7f575772.js"></script>
+<script defer src="/botmux/static/js/lib-router.00d9fd057a.js"></script>
+<script defer src="/botmux/static/js/2390.10879bb0bb.js"></script>
+<script defer src="/botmux/static/js/index.3f20ca128f.js"></script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Rspress v2.0.13">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://deepcoldy.github.io/botmux/">
+<meta property="og:image" content="https://deepcoldy.github.io/botmux/botmux-logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://deepcoldy.github.io/botmux/botmux-logo.png">
+<meta name="theme-color" content="#646CEA">
+<link rel="icon" href="/botmux/botmux-logo.png">
+<meta property="og:title" content="Multi-CLI Adapters - botmux 文档">
+<meta name="description" content="botmux is not tied to one AI coding tool. Each bot picks the CLI / agent it runs with cliId, and the adapter delivers Lark messages to it and brings the replies back. Switching CLIs means changing one field. Local CLIs: every session is a real process on this machine. Under the default tmux backend you can tmux attach and watch it directly (pty / zellij / herdr backends differ).API / remote agents: a few adapters (e.g. Mira App, riff, Remote Runner) don't start a local CLI process; they call a remote service. For minimal configs see API / remote adapters. Use this page when: you want to switch the underlying CLI, wire up a new tool, or check whether a CLI accepts a model. No new adapter needed: for gateways / launchers (aiden, ttadk, ccr, …) see Wrapper / gateway integration; for strictly Codex-compatible distributions see Codex-compatible distributions.">
+<meta property="og:description" content="botmux is not tied to one AI coding tool. Each bot picks the CLI / agent it runs with cliId, and the adapter delivers Lark messages to it and brings the replies back. Switching CLIs means changing one field. Local CLIs: every session is a real process on this machine. Under the default tmux backend you can tmux attach and watch it directly (pty / zellij / herdr backends differ).API / remote agents: a few adapters (e.g. Mira App, riff, Remote Runner) don't start a local CLI process; they call a remote service. For minimal configs see API / remote adapters. Use this page when: you want to switch the underlying CLI, wire up a new tool, or check whether a CLI accepts a model. No new adapter needed: for gateways / launchers (aiden, ttadk, ccr, …) see Wrapper / gateway integration; for strictly Codex-compatible distributions see Codex-compatible distributions."></head>
+
+  <body>
+    <div id="__rspress_root"><link rel="preload" as="image" href="/botmux/botmux-logo.png"/><link rel="preload" as="image" href="/botmux/img/adapters-dashboard-cli-picker.png"/><link rel="preload" as="image" href="/botmux/img/adapters-dashboard-cli-missing.png"/><link rel="preload" as="image" href="/botmux/img/codex-compatible-runtime-dashboard.png"/><link rel="preload" as="image" href="/botmux/img/traex-auto-model-config.png"/><link rel="preload" as="image" href="/botmux/img/codex-native-user-input-preview.png"/><header class="rp-nav"><div class="rp-nav__left"><div class="rp-nav__title"><a href="/botmux/en/" class="rp-nav__title__link rp-link"><div class="rp-nav__title__logo"><img src="/botmux/botmux-logo.png" alt="logo" id="logo" class="rspress-logo rp-nav__title__logo-image"/></div><span>botmux 文档</span></a></div></div><div class="rp-nav__right"><button class="rp-search-button"><div class="rp-search-button__content"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21" class="rp-search-button__icon"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg><span class="rp-search-button__word">Search</span></div><div class="rp-search-button__hotkey" style="opacity:0"><span></span><span>K</span></div></button><div class="rp-search-button--mobile"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" viewBox="0 0 20 21"><path fill="currentColor" d="M8.333 1.913A6.667 6.667 0 0 1 15 8.58c0 1.54-.525 2.957-1.402 4.085l4.49 4.492a.834.834 0 0 1-1.177 1.178l-4.491-4.49a6.64 6.64 0 0 1-4.087 1.402 6.667 6.667 0 0 1 0-13.334m0 1.667a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path></svg></div><div class="rp-nav__others"><div class="rp-nav-menu__divider"></div><li class="rp-nav-menu__item"><div class="rp-nav-menu__item__container">English<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-menu__item__icon"><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--center"><li class="rp-hover-group__item" style="padding-left:8px" data-depth="0"><a href="/botmux/adapters.html" class="rp-hover-group__item__link rp-link" aria-label="简体中文" lang="zh" hrefLang="zh" rel="alternate">简体中文</a></li><li class="rp-hover-group__item rp-hover-group__item--active" style="padding-left:8px" data-depth="0"><a href="/botmux/en/adapters.html" class="rp-hover-group__item__link rp-link" aria-label="English" lang="en" hrefLang="en" rel="alternate">English</a></li></ul></li><div class="rp-switch-appearance"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" class="rp-switch-appearance__icon rp-switch-appearance__icon--sun"><path fill="currentColor" d="m7.001 15.848-1.226 1.226a.58.58 0 0 0 0 .818.58.58 0 0 0 .818 0l1.226-1.226a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0m-.352-8.735a.584.584 0 0 0 .825-.825L6.237 5.051a.584.584 0 0 0-.825.825zM5.011 11.07h-1.75a.584.584 0 0 0 0 1.167h1.75c.324 0 .584-.26.584-.583a.585.585 0 0 0-.584-.584m7.003-5.835c.324 0 .584-.26.584-.584V2.9a.58.58 0 0 0-.584-.584.58.58 0 0 0-.583.583V4.65c0 .323.262.584.583.584m5.616 1.621 1.226-1.225a.58.58 0 0 0 0-.818.58.58 0 0 0-.818 0l-1.226 1.225a.58.58 0 0 0 0 .818.576.576 0 0 0 .818 0m3.138 4.214h-1.75a.58.58 0 0 0-.584.584c0 .324.26.584.583.584h1.751a.584.584 0 1 0 0-1.167m-3.389 5.124a.584.584 0 0 0-.825.825l1.238 1.238a.584.584 0 0 0 .825-.826zm-5.365-9.795a5.256 5.256 0 0 0-5.257 5.258 5.256 5.256 0 0 0 5.257 5.257 5.256 5.256 0 0 0 5.257-5.257 5.256 5.256 0 0 0-5.257-5.258m0 11.675a.58.58 0 0 0-.583.583v1.751a.582.582 0 1 0 1.167 0v-1.75a.584.584 0 0 0-.584-.584"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" viewBox="0 0 19 19" class="rp-switch-appearance__icon rp-switch-appearance__icon--moon"><path fill="currentColor" d="M9.166 0a9.2 9.2 0 0 1 1.857.188.834.834 0 0 1 .042 1.623 4.47 4.47 0 1 0 5.457 5.457l.048-.135a.834.834 0 0 1 1.575.177q.186.902.188 1.856A9.168 9.168 0 1 1 9.166 0"></path></svg></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__sm"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg></button><button aria-label="mobile hamburger" class="rp-nav-hamburger rp-nav-hamburger__md"><svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="none" viewBox="0 0 21 21"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.667" d="M3.645 5.225h13.333M3.645 10.225h13.333M3.645 15.225h13.333"></path></svg><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"><div class="rp-nav-menu__others-mobile__container"><div class="rp-nav-hamburger__md__hover-group"><div class="rp-nav-screen-appearance"><div class="rp-nav-screen-appearance__left">Theme</div><div class="rp-nav-screen-appearance__right"></div></div><div class="rp-nav-screen-langs"><div class="rp-nav-screen-langs__left">Languages</div><div class="rp-nav-screen-langs__right">English<svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-nav-screen-langs__icon "><path fill="currentColor" d="M16 22 6 12l1.4-1.4 8.6 8.6 8.6-8.6L26 12z"></path></svg></div></div><div class="rp-nav-screen-langs-group" style="display:grid;grid-template-rows:0fr;transition:grid-template-rows 0.2s ease-out"><div class="rp-nav-screen-langs-group__inner"><a href="/botmux/adapters.html" class="rp-nav-screen-langs-group__item rp-link" hrefLang="zh" lang="zh" rel="alternate">简体中文</a><span class="rp-nav-screen-langs-group__item rp-nav-screen-langs-group__item--active" aria-current="page" aria-disabled="true">English</span></div></div><div class="rp-nav-screen-divider"></div><div class="rp-social-links"><a href="https://github.com/deepcoldy/botmux" target="_blank" rel="noopener noreferrer" class="rp-social-links__item"><div class="rp-social-links__icon"><div class="rp-social-links__icon"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></div></div></a><ul class="rp-hover-group rp-hover-group--hidden rp-hover-group--right"></ul></div></div></div></ul></button></div></header><div class="rp-doc-layout__menu"><div class="rp-sidebar-menu"><button type="button" class="rp-sidebar-menu__left"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M4 6h24v2H4zm0 18h24v2H4zm0-12h24v2H4zm0 6h24v2H4z"></path></svg><span>Menu</span></button><button type="button" class="rp-sidebar-menu__right"><span class="rp-sidebar-menu__right__text">ON THIS PAGE</span><svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-sidebar-menu__right__icon" style="transform:rotate(0deg);transition:transform 0.2s ease-out"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></button></div></div><div class="rp-doc-layout__container"><aside class="rp-doc-layout__sidebar rp-scrollbar"><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Getting Started</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/index.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Introduction</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/quickstart.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">5-Minute Quickstart</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/prerequisites.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Prerequisites</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/desktop.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">macOS Desktop App</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/platform.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Central Platform (Open Source)</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Core Concepts</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/architecture.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Architecture</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/session-model.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Session &amp; Topic Model</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Features</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/cards.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Streaming Cards</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/topic-unavailable-policy.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Unavailable Topic Policy</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/web-terminal.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Web Terminal</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/multi-bot.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Multi-Bot Collaboration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/multi-topic.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Multi-Topic Orchestration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/project-card.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Project Progress Card</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/mention-mode.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Mention Policy</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/whiteboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Local Whiteboard</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/decision-board.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Decision Board &amp; Steward</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/roles.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Roles &amp; Teams</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/tmux.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">tmux Session Persistence</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/zmx.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">ZMX Session Backend</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/adopt.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Adopt a Session</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/relay.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Relay a Session</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/group.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">One-Click Session Groups</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/doc-comment.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Feishu Doc Comment Entry</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/schedule.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Scheduled Tasks</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/oncall.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">On-Call Mode</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/permissions.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Permissions &amp; Access</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/sandbox.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">File Sandbox</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/voice.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Voice Summary</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/dashboard.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Dashboard</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/workbench.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Agent Workbench</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/webhook.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Webhook Ingress</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/api-task-trigger.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Programmatic Task Trigger API</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/headless-session.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Headless Automation Sessions</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/turn-results.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Turn Results</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/api-core-only.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Core-only API Control</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/workflow.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Workflow (Experimental)</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/hooks.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Lifecycle Hooks</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/skill-cli.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Skill + CLI Interaction</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Development &amp; Extensions</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/plugins.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Plugin Development &amp; Market</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Command Reference</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/slash-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Slash Commands</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/cli-commands.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">CLI Commands</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Configuration</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/bots-json.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">bots.json</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/feedback-storage.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Feedback Storage &amp; Migration</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/env.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Environment &amp; File Locations</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/global-settings.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Global Settings (config.json)</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/companion-api.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Local Companion API</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/model-proxy.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Model Proxy (Experimental)</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/adapters.html" class="rp-sidebar-item rp-sidebar-item--active rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">CLI Adapters</span></div><div class="rp-sidebar-item__right"></div></a></div></div><div class="rp-sidebar-item rp-sidebar-group" style="padding-left:12px" data-depth="0"><div class="rp-sidebar-item__left"><span class="rp-doc">Practices &amp; Troubleshooting</span></div><div class="rp-sidebar-item__right"><div style="cursor:pointer;transition:transform 0.2s ease-out;transform:rotate(90deg)"><svg width="1em" height="1em" viewBox="0 0 32 32"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></div></div></div><div style="display:grid;grid-template-rows:1fr;transition:grid-template-rows 0.2s ease-out"><div style="overflow:hidden"><a href="/botmux/en/best-practices.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Best Practices</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/pitfalls.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">Common Pitfalls</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/faq.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">FAQ / Troubleshooting</span></div><div class="rp-sidebar-item__right"></div></a><a href="/botmux/en/about.html" class="rp-sidebar-item rp-sidebar-item--group-item rp-link" style="padding-left:calc(12px * 1 + 12px)" data-depth="1"><div class="rp-sidebar-item__left"><span class="rp-doc">About &amp; Resources</span></div><div class="rp-sidebar-item__right"></div></a></div></div></aside><div class="rp-doc-layout__doc"><main class="rp-doc-layout__doc-container"><div class="rp-doc rspress-doc"><!--$--><h1 class="rp-toc-include" id="multi-cli-adapters"><a href="#multi-cli-adapters" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Multi-CLI Adapters<!-- --> </h1>
+<p>botmux is not tied to one AI coding tool. Each bot picks the CLI / agent it runs with <code>cliId</code>, and the adapter delivers Lark messages to it and brings the replies back. Switching CLIs means changing one field.</p>
+<ul>
+<li><strong>Local CLIs</strong>: every session is a real process on this machine. Under the default tmux backend you can <code>tmux attach</code> and watch it directly (pty / zellij / herdr backends differ).</li>
+<li><strong>API / remote agents</strong>: a few adapters (e.g. Mira App, riff, Remote Runner) don&#x27;t start a local CLI process; they call a remote service. For minimal configs see <a href="#remote-agents" class="rp-link">API / remote adapters</a>.</li>
+</ul>
+<p><strong>Use this page when</strong>: you want to switch the underlying CLI, wire up a new tool, or check whether a CLI accepts a model.
+<strong>No new adapter needed</strong>: for gateways / launchers (aiden, ttadk, ccr, …) see <a href="#wrapper--gateway-integration" class="rp-link">Wrapper / gateway integration</a>; for strictly Codex-compatible distributions see <a href="#codex-compatible-distributions" class="rp-link">Codex-compatible distributions</a>.</p>
+<h2 class="rp-toc-include" id="switching-a-bots-cli"><a href="#switching-a-bots-cli" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Switching a bot&#x27;s CLI</h2>
+<p>First install the target CLI <strong>as the same system user that runs the botmux daemon</strong>, run it once in a terminal and finish its own sign-in. botmux will not sign in for you. Then pick one way:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Way</th><th>How</th><th>Takes effect</th></tr></thead><tbody><tr><td><code>botmux setup</code></td><td>Pick from the CLI menu when creating or editing a bot (related CLIs are grouped into sub-menus, e.g. Codex / Codex App, TRAE 2.0 / legacy Coco)</td><td>after <code>botmux restart</code></td></tr><tr><td>Dashboard</td><td>&quot;Bot Config → Common → Agent Config&quot;: choose CLI and model, then &quot;Save Agent Config&quot;</td><td>new sessions</td></tr><tr><td><code>bots.json</code></td><td>Edit <code>cliId</code> in the entry, see <a href="/botmux/en/bots-json.html" class="rp-link">bots.json</a></td><td>new sessions after <code>botmux restart</code></td></tr></tbody></table></div>
+<p><img src="/botmux/img/adapters-dashboard-cli-picker.png" alt="Dashboard Agent Config: choose CLI and model"/></p>
+<p>Running sessions never switch CLI mid-way: <code>cliId</code>, <code>wrapperCli</code> and <code>cliRuntime</code> are fixed when the session is created, so a change only affects new sessions.</p>
+<p>The Dashboard checks whether the selected CLI can be found. It looks the command up through your login shell (Zsh / Bash rc files), so a CLI that is only on the PATH set in <code>.zshrc</code> is still detected. When it really is missing you get a warning:</p>
+<p><img src="/botmux/img/adapters-dashboard-cli-missing.png" alt="Warning when the selected CLI is unavailable"/></p>
+<p>On macOS, when Codex / Codex App can&#x27;t find <code>codex</code> on PATH, botmux also looks for the <code>codex</code> bundled with ChatGPT.app or Codex.app, in this order:</p>
+<ul>
+<li><code>/Applications/ChatGPT.app/Contents/Resources/codex</code>, <code>~/Applications/ChatGPT.app/Contents/Resources/codex</code></li>
+<li><code>/Applications/Codex.app/Contents/Resources/codex</code>, <code>~/Applications/Codex.app/Contents/Resources/codex</code></li>
+</ul>
+<p>So having only the desktop app installed is enough. A <code>codex</code> on PATH always wins; to pin a specific one, set <code>cliPathOverride</code> to its absolute path. Linux has no such fallback.</p>
+<h2 class="rp-toc-include" id="supported-clis--agents"><a href="#supported-clis--agents" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Supported CLIs / agents</h2>
+<p>The table lists the built-in adapters. &quot;Default command&quot; is the executable botmux looks for on PATH; override it with an absolute path in <code>cliPathOverride</code>. The authoritative list is <a href="https://github.com/deepcoldy/botmux/blob/master/src/adapters/cli/registry.ts" target="_blank" rel="noopener noreferrer" class="rp-link"><code>src/adapters/cli/registry.ts</code></a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th><code>cliId</code></th><th>CLI / agent</th><th>Default command</th><th>Integration</th><th style="text-align:center"><code>model</code></th></tr></thead><tbody><tr><td><code>claude-code</code></td><td>Claude Code (default)</td><td><code>claude</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>codex</code></td><td>Codex CLI</td><td><code>codex</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>codex-app</code></td><td>Codex App</td><td><code>codex</code></td><td>local process (app-server protocol)</td><td style="text-align:center">✅</td></tr><tr><td><code>cursor</code></td><td>Cursor (cursor-agent)</td><td><code>cursor-agent</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>opencode</code></td><td>OpenCode</td><td><code>opencode</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>opencode2</code></td><td>OpenCode 2 (beta)</td><td><code>opencode2</code></td><td>local process</td><td style="text-align:center"></td></tr><tr><td><code>mimocode</code></td><td>MiMoCode</td><td><code>mimo</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>antigravity</code></td><td>Antigravity</td><td><code>agy</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>copilot</code></td><td>GitHub Copilot</td><td><code>copilot</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>grok</code></td><td>Grok Build</td><td><code>grok</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>kimi</code></td><td>Kimi Code</td><td><code>kimi</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>kiro-cli</code></td><td>Kiro</td><td><code>kiro-cli</code></td><td>local process</td><td style="text-align:center"></td></tr><tr><td><code>reasonix</code></td><td>Reasonix</td><td><code>reasonix</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>zcode</code></td><td>ZCode</td><td><code>zcode</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>doubao</code></td><td>Doubao CLI (see <a href="https://github.com/deepcoldy/botmux/blob/master/docs/doubao.en.md" target="_blank" rel="noopener noreferrer" class="rp-link">Doubao guide</a>)</td><td><code>doubao</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>pi</code></td><td>Pi</td><td><code>pi</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>oh-my-pi</code></td><td>Oh My Pi (Pi fork)</td><td><code>omp</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>aiden</code></td><td>Aiden (native agent)</td><td><code>aiden</code></td><td>local process</td><td style="text-align:center"></td></tr><tr><td><code>traex</code></td><td>TRAE CLI 2.0 (traex)</td><td><code>traex</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>coco</code></td><td>TRAE CLI 1.0 / CoCo (legacy, no longer maintained; requires ≥ 0.120.32)</td><td><code>coco</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>mtr</code></td><td>MTR</td><td><code>mtr</code></td><td>local process</td><td style="text-align:center"></td></tr><tr><td><code>hermes</code></td><td>Hermes</td><td><code>hermes</code></td><td>local process</td><td style="text-align:center"></td></tr><tr><td><code>ebsd</code></td><td>EBSD (requires credential files, see <a href="https://github.com/deepcoldy/botmux/blob/master/docs/ebsd.md" target="_blank" rel="noopener noreferrer" class="rp-link">guide</a>)</td><td><code>ebsd</code></td><td>local process</td><td style="text-align:center"></td></tr><tr><td><code>codem</code></td><td>CodeM (see <a href="https://github.com/deepcoldy/botmux/blob/master/docs/codem.md" target="_blank" rel="noopener noreferrer" class="rp-link">CodeM guide</a>)</td><td><code>codem</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>minimax</code></td><td>MiniMax Code / mcode (see <a href="https://github.com/deepcoldy/botmux/blob/master/docs/minimax-code.md" target="_blank" rel="noopener noreferrer" class="rp-link">MiniMax guide</a>)</td><td><code>mcode</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>genius</code></td><td>Genius</td><td><code>genius</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>seed</code></td><td>Seed (Claude Code fork)</td><td><code>seed</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>relay</code></td><td>Relay (new release of Seed)</td><td><code>relay</code></td><td>local process</td><td style="text-align:center">✅</td></tr><tr><td><code>dsh</code></td><td>DeepSeek Harness (see <a href="#deepseek-harness-dsh" class="rp-link">below</a>)</td><td><code>dsh</code></td><td>local process (SDK JSON-RPC)</td><td style="text-align:center">✅</td></tr><tr><td><code>mir</code></td><td>Mir CLI (local mircli, see <a href="#mir-cli-and-the-mcp-bridge" class="rp-link">below</a>)</td><td><code>mircli</code></td><td>local process</td><td style="text-align:center"></td></tr><tr><td><code>mira</code></td><td>Mira App</td><td>none</td><td>API / remote</td><td style="text-align:center"></td></tr><tr><td><code>riff</code></td><td>riff</td><td>none</td><td>cloud agent (API)</td><td style="text-align:center"></td></tr><tr><td><code>mojo</code></td><td>Mojo</td><td><code>mojo</code></td><td>API-driven (host execution / cloud sandbox)</td><td style="text-align:center">✅</td></tr><tr><td><code>remote-runner</code></td><td>Generic Remote Runner (see <a href="https://github.com/deepcoldy/botmux/blob/master/docs/remote-runner.md" target="_blank" rel="noopener noreferrer" class="rp-link">protocol</a>)</td><td><code>botmux-remote-runner</code></td><td>remote protocol</td><td style="text-align:center">✅</td></tr></tbody></table></div>
+<h3 class="rp-toc-include" id="about-the-model-column"><a href="#about-the-model-column" class="rp-header-anchor rp-link" aria-hidden="true">#</a>About the <code>model</code> column</h3>
+<ul>
+<li>✅ means the model really is passed to the CLI at launch. You can set a default model for the bot in <code>bots.json</code> / the Dashboard, or pick one for a single new topic with <code>/t … /model &lt;model&gt;</code> in its first message (see <a href="/botmux/en/slash-commands.html" class="rp-link">Slash commands</a>).</li>
+<li>For CLIs without ✅, the model is decided by the CLI&#x27;s own config or UI. The <code>model</code> field is ignored, and <code>/model</code> in a topic header is rejected outright rather than silently dropped.</li>
+<li>riff is the exception: its model only comes from the bot&#x27;s <code>riff</code> config block, not from <code>model</code>.</li>
+<li>Some CLIs accept a model but ship no built-in candidate list (e.g. Seed, Relay, Pi). Setup won&#x27;t prompt for a model; type one in if needed, or switch with the CLI&#x27;s native <code>/model</code>.</li>
+</ul>
+<h3 class="rp-toc-include" id="gemini-cli-has-been-removed"><a href="#gemini-cli-has-been-removed" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Gemini CLI has been removed</h3>
+<p>Gemini CLI is no longer maintained upstream, so botmux removed the <code>gemini</code> adapter, and the Dashboard and <code>botmux setup</code> no longer offer it. The replacement is <code>antigravity</code> (Antigravity, command <code>agy</code>).</p>
+<ul>
+<li>
+<p>A bot whose <code>bots.json</code> entry still says <code>cliId: &quot;gemini&quot;</code> <strong>refuses to start</strong>, with a hint to change it to <code>&quot;antigravity&quot;</code>. Other bots keep running.</p>
+</li>
+<li>
+<p>In scripted setup, the old Gemini number <code>6</code> now reports an error instead of selecting another CLI.</p>
+</li>
+<li>
+<p>To migrate:</p>
+<ol>
+<li>Install <code>agy</code> and sign in with a Google account; or skip the sign-in and use a Gemini API key: set <code>&quot;modelProvider&quot;: &quot;gemini&quot;</code> in <code>~/.gemini/antigravity-cli/settings.json</code> and provide <code>GEMINI_API_KEY</code>.</li>
+<li>Change <code>cliId</code> to <code>&quot;antigravity&quot;</code> (edit <code>bots.json</code>, or change the bot&#x27;s CLI with <code>botmux setup</code>).</li>
+<li>Remove or reconfigure Gemini-only settings: <code>cliPathOverride</code> / <code>wrapperCli</code> (e.g. <code>ttadk gemini</code>), Gemini <code>model</code> names, <code>GEMINI_CLI_HOME</code>.</li>
+<li>Run <code>botmux restart</code>.</li>
+</ol>
+<p>While the bot is not started, the Dashboard can only show the reason; it cannot save that bot&#x27;s settings.</p>
+</li>
+</ul>
+<h2 class="rp-toc-include" id="wrapper--gateway-integration"><a href="#wrapper--gateway-integration" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Wrapper / gateway integration</h2>
+<p>Often you don&#x27;t run the native CLI directly but through a gateway or launcher (intranet proxy + SSO, model routing, …). <strong>No new adapter is needed</strong>: keep <code>cliId</code> set to the real underlying CLI (<code>claude-code</code>, <code>codex</code>, …) and only change how it is launched. Reply capture, session resume, hooks and the rest keep working.</p>
+<h3 class="rp-toc-include" id="option-1-a-wrappercli-launch-prefix-recommended"><a href="#option-1-a-wrappercli-launch-prefix-recommended" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Option 1: a <code>wrapperCli</code> launch prefix (recommended)</h3>
+<p>Set <code>wrapperCli</code> on the bot, and botmux launches <code>&lt;wrapperCli&gt; &lt;CLI args&gt;</code>. No script needed, works on every OS.</p>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;cliId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;claude-code&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;wrapperCli&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;aiden x claude&quot;</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>The <code>botmux setup</code> and Dashboard CLI menus already include common combinations and fill this in for you:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Menu item</th><th><code>cliId</code></th><th><code>wrapperCli</code></th></tr></thead><tbody><tr><td>Aiden × Claude / Aiden × Codex</td><td><code>claude-code</code> / <code>codex</code></td><td><code>aiden x claude</code> / <code>aiden x codex</code></td></tr><tr><td>CJADK × Claude / CJADK × Codex</td><td><code>claude-code</code> / <code>codex</code></td><td><code>cjadk claude</code> / <code>cjadk codex</code></td></tr><tr><td>TTADK × Claude / Codex / OpenCode / CoCo / Cursor</td><td>matching CLI</td><td><code>ttadk claude</code>, etc.</td></tr></tbody></table></div>
+<p>Notes:</p>
+<ul>
+<li>The first word is looked up on PATH and replaces the CLI&#x27;s default command; with <code>wrapperCli</code> set, <code>cliPathOverride</code> no longer applies.</li>
+<li><code>aiden x claude</code> rejects the <code>--settings</code> botmux injects, so botmux strips it automatically; other launchers get the args unchanged.</li>
+<li>For TTADK combinations, the bot&#x27;s <code>model</code> field is passed as <code>ttadk -m &lt;model&gt;</code> (defaults to <code>glm-5.1</code> when empty; TTADK × CoCo takes no model).</li>
+<li>Any other launcher such as <code>ccr</code> works too.</li>
+<li><code>wrapperCli</code> cannot be combined with <code>cliRuntime</code>.</li>
+</ul>
+<h3 class="rp-toc-include" id="option-2-your-own-wrapper-script--clipathoverride"><a href="#option-2-your-own-wrapper-script--clipathoverride" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Option 2: your own wrapper script + <code>cliPathOverride</code></h3>
+<p>When launching is more involved (changing env vars, stripping args, forcing a PTY, …), write a script:</p>
+<ol>
+<li><strong>Sign in to the gateway first</strong> (once), as the same system user that runs the daemon. An expired token pops an interactive login that blocks the terminal, so keep the session alive.</li>
+<li><strong>Write the script</strong> in <code>~/.botmux/bin/</code> and forward botmux&#x27;s arguments to the real CLI. Some gateways reject <code>--settings</code>; strip it in the script.</li>
+<li><strong><code>chmod +x</code></strong> (the most commonly missed step). Without the executable bit you get <code>EACCES</code>, the CLI exits right away and the bot keeps restarting.</li>
+<li><strong>Run the script directly to verify</strong>: <code>~/.botmux/bin/xxx --version</code>. Don&#x27;t test with <code>bash xxx</code>; that doesn&#x27;t need the executable bit and hides the problem in step 3.</li>
+<li>Set <code>cliPathOverride</code> in <code>bots.json</code> to the script&#x27;s <strong>absolute path</strong> (not <code>~</code>), then <code>botmux restart</code>.</li>
+</ol>
+<p>Follow each gateway team&#x27;s published docs for the actual script. MTR is community-contributed; install with <code>npm i -g @metamove-code/mtr-cli@latest</code>.</p>
+<blockquote>
+<p>Debugging a wrapper: find the <code>Spawning fresh CLI:</code> line in <code>botmux logs</code>, copy the full command and run it by hand in a terminal. That usually shows whether it&#x27;s permissions, arguments or sign-in.</p>
+</blockquote>
+<h2 class="rp-toc-include" id="codex-compatible-distributions"><a href="#codex-compatible-distributions" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Codex-compatible distributions</h2>
+<p>If you run a separately released distribution that is <strong>strictly compatible with Codex</strong>, use <code>cliId: &quot;codex&quot;</code> plus <code>cliRuntime</code>: <code>cliId</code> selects the Codex protocol adapter and <code>cliRuntime</code> names the binary that actually runs. It reuses model args, session resume, idle detection and Codex RPC, without being version-checked as official Codex.</p>
+<p>&quot;Strictly compatible&quot; means it accepts the arguments botmux passes to Codex, keeps the same interactive states and rollout / resume semantics, and uses a compatible auth / home layout. If it changes arguments, the UI state machine, session storage or the protocol, contribute a real adapter instead.</p>
+<p>In the Dashboard, switch &quot;Codex Runtime&quot; to &quot;Custom Compatible&quot; and fill in the executable and update source:</p>
+<p><img src="/botmux/img/codex-compatible-runtime-dashboard.png" alt="Configuring a Codex-compatible distribution in the Dashboard"/></p>
+<p>For all fields and update sources see <a href="/botmux/en/bots-json.html#codex-runtime" class="rp-link">the Codex-compatible distributions section of <code>bots.json</code></a>. The older <code>cliPathOverride</code> setup keeps working, but it does not turn on Codex RPC features that require an explicit compatibility declaration.</p>
+<h2 class="rp-toc-include" id="remote-agents"><a href="#remote-agents" class="rp-header-anchor rp-link" aria-hidden="true">#</a>API / remote adapters</h2>
+<p>The agents behind these four adapters don&#x27;t run in a local terminal. <code>riff</code>, <code>mojo</code> and <code>remote-runner</code> are paired with the session backend of the same name automatically, so you don&#x27;t need to set <code>backendType</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th><code>cliId</code></th><th>Minimal config</th><th>Sign-in</th></tr></thead><tbody><tr><td><code>mira</code></td><td><code>cliId</code> only</td><td>reads the local Mira.app login cookie</td></tr><tr><td><code>riff</code></td><td><code>cliId</code> + <code>riff.baseUrl</code></td><td>a JWT, or the local ByteCloud sign-in</td></tr><tr><td><code>mojo</code></td><td><code>cliId</code> only, with <code>mojo</code> on PATH</td><td>local <code>mojo auth login</code>, or an injected JWT</td></tr><tr><td><code>remote-runner</code></td><td><code>cliId</code>, plus <code>cliPathOverride</code> when the provider isn&#x27;t called <code>botmux-remote-runner</code></td><td>handled by the provider</td></tr></tbody></table></div>
+<h3 class="rp-toc-include" id="mira-app"><a href="#mira-app" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Mira App</h3>
+<p>In <code>botmux setup</code>, choose <strong>Mira → Mira App (Web API)</strong>; this writes <code>cliId: &quot;mira&quot;</code>. botmux calls Mira&#x27;s Web API through a built-in runner, so no CLI is needed.</p>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">{ </span><span style="color:var(--shiki-token-keyword)">&quot;cliId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;mira&quot;</span><span style="color:var(--shiki-foreground)"> }</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>Sign-in:</p>
+<ol>
+<li>By default, open Mira.app on macOS and sign in. botmux uses the <code>sqlite3</code> command to read <code>mira_session</code> from <code>~/Library/Application Support/mira/Cookies</code>, so <code>sqlite3</code> must be installed.</li>
+<li>Not on macOS, or the cookies live elsewhere: set <code>MIRA_COOKIE_HEADER</code> (a full Cookie header) or <code>MIRA_SESSION</code> (just the <code>mira_session</code> value) in the daemon environment or the bot&#x27;s <code>env</code>, or point <code>MIRA_COOKIE_DB</code> at the cookie database. These are credentials; never post them in chat.</li>
+</ol>
+<p>Without a cookie you get &quot;Open Mira.app and sign in&quot;. The model ignores the <code>model</code> field and follows Mira&#x27;s own settings. The local Mir CLI is a separate adapter; see <a href="#mir-cli-and-the-mcp-bridge" class="rp-link">Mir CLI and the MCP Bridge</a>.</p>
+<h3 class="rp-toc-include" id="riff"><a href="#riff" class="rp-header-anchor rp-link" aria-hidden="true">#</a>riff</h3>
+<p>riff runs the agent in a cloud sandbox, so nothing is installed locally. <code>riff.baseUrl</code> is required; use the riff service address for your environment:</p>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;cliId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;riff&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;riff&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> { </span><span style="color:var(--shiki-token-keyword)">&quot;baseUrl&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;https://riff.example.internal&quot;</span><span style="color:var(--shiki-foreground)"> }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>You can also pick Riff as the CLI under &quot;Agent Config&quot; in the Dashboard and fill in the &quot;Riff backend config&quot; panel that appears. Common optional fields:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody><tr><td><code>model</code></td><td>Model used in the sandbox; empty means riff&#x27;s default. The bot&#x27;s top-level <code>model</code> has no effect on riff</td></tr><tr><td><code>reasoningEffort</code></td><td><code>low</code> / <code>medium</code> / <code>high</code> / <code>xhigh</code>; empty means the default</td></tr><tr><td><code>sandboxCluster</code></td><td>Sandbox pool for new tasks: <code>boe</code> or <code>cn</code></td></tr></tbody></table></div>
+<p>Sign-in (the JWT is looked up in this order on every riff call):</p>
+<ol>
+<li><code>riff.jwt</code> holds the token directly. Not recommended: it&#x27;s stored in plain text and expires quickly.</li>
+<li>The environment variable named by <code>riff.jwtEnv</code>, <code>RIFF_JWT</code> by default. Set it in the daemon&#x27;s environment and renew it yourself.</li>
+<li>Neither set (recommended): on the daemon machine, sign in once to a ByteCloud CLI as the same system user, and botmux reads the sign-in it stores locally, skipping expired tokens.</li>
+</ol>
+<p>On a 401, sign in again on the daemon machine; no restart needed. riff can only be configured per bot; you can&#x27;t switch a topic to it with <code>/t</code>.</p>
+<h3 class="rp-toc-include" id="mojo"><a href="#mojo" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Mojo</h3>
+<p>With <code>mojo</code> on PATH and signed in on this machine, <code>cliId</code> alone is enough:</p>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">{ </span><span style="color:var(--shiki-token-keyword)">&quot;cliId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;mojo&quot;</span><span style="color:var(--shiki-foreground)"> }</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>Sign in one of two ways:</p>
+<ul>
+<li>Run <code>mojo auth login</code> as the same system user that runs the daemon.</li>
+<li>Inject a JWT: put the token in <code>mojo.jwt</code>, or name the environment variable to read with <code>mojo.jwtEnv</code> (default <code>X_JWT_TOKEN</code>). An injected JWT takes priority over the local sign-in.</li>
+</ul>
+<p>Tools run on this host by default; set <code>mojo.cloud: true</code> to run them in the cloud sandbox instead. Put the model in the bot&#x27;s top-level <code>model</code>. Fields such as <code>bin</code>, <code>cwd</code>, <code>model</code> and <code>wrapperCli</code> are rejected inside the <code>mojo</code> block; use the top-level <code>cliPathOverride</code>, <code>workingDir</code>, <code>model</code> and <code>wrapperCli</code>.</p>
+<h3 class="rp-toc-include" id="remote-runner"><a href="#remote-runner" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Remote Runner</h3>
+<p>Remote Runner connects any remote agent platform over a JSONL protocol. botmux starts a provider subprocess, and the provider owns the remote resources and the sign-in:</p>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;cliId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;remote-runner&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;cliPathOverride&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;/opt/example/bin/my-remote-runner&quot;</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<ul>
+<li>Without <code>cliPathOverride</code>, botmux looks for <code>botmux-remote-runner</code> on PATH.</li>
+<li>The provider reads its own credentials, injected via a permission-restricted file or the deployment environment, e.g. a token file path in the bot&#x27;s <code>env</code>. The <code>remoteRunner</code> block holds no credentials, and unknown fields in it are rejected.</li>
+<li>The <code>remoteRunner</code> block is optional and describes protocol expectations:</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody><tr><td><code>expectedProvider</code></td><td>Provider name checked during the handshake</td></tr><tr><td><code>requiredCapabilities</code></td><td>Capabilities the provider must declare; it won&#x27;t start without them</td></tr><tr><td><code>handshakeTimeoutMs</code></td><td>Limit for the handshake and for start / resume to reach ready; integer, 100–300000 ms</td></tr><tr><td><code>operationTimeoutMs</code></td><td>Limit for status / cancel / detach; integer, 100–300000 ms</td></tr></tbody></table></div>
+<p><code>envPolicy.mode: &quot;strict&quot;</code> is not supported for Remote Runner and fails at startup. For protocol details see the <a href="https://github.com/deepcoldy/botmux/blob/master/docs/remote-runner.md" target="_blank" rel="noopener noreferrer" class="rp-link">Remote Runner protocol</a>.</p>
+<h2 class="rp-toc-include" id="notes-for-specific-clis"><a href="#notes-for-specific-clis" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Notes for specific CLIs</h2>
+<h3 class="rp-toc-include" id="new-clis"><a href="#new-clis" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Using the newly added CLIs</h3>
+<p>Grok Build, Reasonix, OpenCode 2, DeepSeek Harness (dsh / dsh-tui), MiniMax Code (mcode), MiMoCode, CodeM, ZCode and Doubao are all built-in adapters with no extra switch. Turning one on works like switching to any other CLI (see <a href="#switching-a-bots-cli" class="rp-link">Switching a bot&#x27;s CLI</a> above): install the command and log in under the daemon&#x27;s system user, then set the bot&#x27;s <code>cliId</code> to the value below.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>CLI</th><th><code>cliId</code></th><th>Default command</th></tr></thead><tbody><tr><td>Grok Build</td><td><code>grok</code></td><td><code>grok</code></td></tr><tr><td>Reasonix</td><td><code>reasonix</code></td><td><code>reasonix</code></td></tr><tr><td>OpenCode 2 (beta)</td><td><code>opencode2</code></td><td><code>opencode2</code></td></tr><tr><td>DeepSeek Harness</td><td><code>dsh</code></td><td><code>dsh</code> (for the full-screen TUI also set <code>dshRuntime: &quot;tui&quot;</code>, which launches <code>dsh-tui</code>; see below)</td></tr><tr><td>MiniMax Code</td><td><code>minimax</code></td><td><code>mcode</code></td></tr><tr><td>MiMoCode</td><td><code>mimocode</code></td><td><code>mimo</code></td></tr><tr><td>CodeM</td><td><code>codem</code></td><td><code>codem</code></td></tr><tr><td>ZCode</td><td><code>zcode</code></td><td><code>zcode</code></td></tr><tr><td>Doubao</td><td><code>doubao</code></td><td><code>doubao</code></td></tr></tbody></table></div>
+<p><strong>Forge × TraeX</strong>: to start TraeX through Forge, pick <strong>Forge x TraeX</strong> in the CLI menu of <code>botmux setup</code> or the Dashboard, or write <code>&quot;cliId&quot;: &quot;traex&quot;, &quot;cliLaunchMode&quot;: &quot;forge-traex&quot;</code> in <code>bots.json</code>. botmux then launches <code>forge run --agent traex --agent-args ...</code>, so <code>forge</code> must be on PATH. This launch mode only works with <code>cliId: &quot;traex&quot;</code> and can&#x27;t be combined with <code>wrapperCli</code>, <code>cliRuntime</code>, <code>cliPathOverride</code>, the file sandbox or <code>readIsolation</code>; such configs are rejected.</p>
+<h3 class="rp-toc-include" id="traex-auto-model"><a href="#traex-auto-model" class="rp-header-anchor rp-link" aria-hidden="true">#</a>TraeX automatic model switching (experimental)</h3>
+<p>A TraeX bot can set <code>model</code> to <code>auto</code> and provide an ordered model pool. A session starts on the first model and moves on to later models in the pool when it queues or runs out of quota. Switching restarts TraeX and resumes the same session; inputs already sent are not replayed.</p>
+<p>In the Dashboard, choose TraeX under &quot;Agent Config&quot;, tick &quot;Experimental: automatic model switching&quot; and order the models; each model can have its own reasoning effort and context:</p>
+<p><img src="/botmux/img/traex-auto-model-config.png" alt="TraeX automatic model switching in the Dashboard"/></p>
+<p>The matching <code>bots.json</code>:</p>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;cliId&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;traex&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;model&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-string-expression)"> &quot;auto&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">  &quot;traexAutoModel&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> {</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;enabled&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> true</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;models&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-foreground)"> [</span><span style="color:var(--shiki-token-string-expression)">&quot;model-a&quot;</span><span style="color:var(--shiki-token-punctuation)">,</span><span style="color:var(--shiki-token-string-expression)"> &quot;model-b&quot;</span><span style="color:var(--shiki-foreground)">]</span><span style="color:var(--shiki-token-punctuation)">,</span></span>
+<span class="line"><span style="color:var(--shiki-token-keyword)">    &quot;queueTimeoutMs&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> 30000</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">  }</span></span>
+<span class="line"><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="rp-table-scroll-container rp-scrollbar"><table><thead><tr><th>Field</th><th>Description</th></tr></thead><tbody><tr><td><code>enabled</code></td><td>Must be <code>true</code></td></tr><tr><td><code>models</code></td><td>The pool, in order. The first is preferred, the rest are fallbacks. Only these models are used; no duplicates, and <code>auto</code> is not allowed</td></tr><tr><td><code>trigger</code></td><td>When to switch: <code>capacity</code> (model queueing, default) or <code>quota</code> (explicit quota exhaustion)</td></tr><tr><td><code>queueTimeoutMs</code></td><td>How long sustained queueing lasts before switching; 5000–300000 ms, default 30000</td></tr><tr><td><code>switchCooldownMs</code></td><td>Minimum time since the last switch before a new queue episode can switch again; 5000–300000 ms, default 60000</td></tr><tr><td><code>reselectPerTurn</code></td><td>Default <code>false</code>: later inputs in a topic keep the selected model. With <code>true</code>, every new input starts again from the preferred model</td></tr><tr><td><code>preflightLoadCheck</code></td><td>Default <code>false</code>. With <code>true</code>, load is checked before each independent new turn and an overloaded model is switched out. <code>capacity</code> mode only</td></tr><tr><td><code>overloadThresholdPercent</code></td><td>Overload threshold for the preflight check, default 100; only load above it counts as overloaded</td></tr><tr><td><code>preflightTimeoutMs</code></td><td>Timeout for the preflight check; 100–30000 ms, default 8000</td></tr><tr><td><code>modelSettings</code></td><td>Per-model settings, e.g. <code>{&quot;model-a&quot;: {&quot;reasoningEffort&quot;: &quot;xhigh&quot;, &quot;modelBackendVariant&quot;: &quot;max&quot;}}</code></td></tr></tbody></table></div>
+<p>The two triggers:</p>
+<ul>
+<li><strong>Capacity queue (<code>capacity</code>)</strong>: after queueing for <code>queueTimeoutMs</code>, switch to the first later model with load at or below 100% (or unknown load). When all later models are above 100%, pick the lowest-load model in the pool (ties go by pool order) and wait there without further switching; when loads are incomplete, try each model in order and finally pick the one with the best queue position.</li>
+<li><strong>Quota exhausted (<code>quota</code>)</strong>: only structured quota-exhaustion errors count; ordinary 429s, queueing, network or auth failures never trigger it. Models known to be out of quota are skipped; when all are exhausted, automatic retries stop and the next independent input checks again.</li>
+</ul>
+<p>Things to know:</p>
+<ul>
+<li>Only applies to <code>cliId: &quot;traex&quot;</code>. If <code>model</code> is <code>auto</code> but <code>traexAutoModel</code> is missing or invalid, botmux logs a warning and passes no model to TraeX, so TraeX&#x27;s own default is used.</li>
+<li>New topics start on the preferred model. In <code>quota</code> mode, every new independent input starts on the first model that still has quota, regardless of <code>reselectPerTurn</code>.</li>
+<li>Changes apply to newly started or restarted sessions.</li>
+</ul>
+<h3 class="rp-toc-include" id="pi-execution-progress"><a href="#pi-execution-progress" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Pi execution progress</h3>
+<p>Bots with <code>cliId: &quot;pi&quot;</code> show Pi&#x27;s persisted thinking, narration, tool calls and results in the Lark progress bubble. Tool nodes show commands or file paths and finish with the current turn; the final answer is still sent as a reply.</p>
+<ul>
+<li>On by default; respects <code>cotEnabled</code> and the chat&#x27;s <code>/cot on</code> / <code>/cot off</code>. <code>/cot show</code> displays what the current turn has accumulated.</li>
+<li>Updates follow complete messages written by Pi: tool calls appear before they run, results after they finish, not token by token.</li>
+<li>History is not replayed into a new turn&#x27;s bubble.</li>
+</ul>
+<h3 class="rp-toc-include" id="deepseek-harness-dsh"><a href="#deepseek-harness-dsh" class="rp-header-anchor rp-link" aria-hidden="true">#</a>DeepSeek Harness (dsh)</h3>
+<p><code>cliId: &quot;dsh&quot;</code> drives the local <code>dsh</code> CLI (<a href="https://github.com/deepseek-ai/deepseek-harness" target="_blank" rel="noopener noreferrer" class="rp-link">deepseek-harness</a>) through a built-in runner, using the SDK JSON-RPC protocol of <code>dsh --profile &lt;name&gt;</code>. Reasoning and tool activity show up in the card&#x27;s thinking section.</p>
+<p><strong>Prerequisites:</strong></p>
+<ol>
+<li><code>dsh</code> is on PATH (or set via <code>cliPathOverride</code>). It must be the <code>dsh</code> command from the npm package <code>@deepseek-ai/dsh</code>; early versions used <code>dsh-jsonrpc-agent</code> from a Python package, and having only that old command on PATH gives &quot;command not found&quot;.</li>
+<li>Configure and sign in with native <code>dsh</code> first. The data dir is <code>$DSH_HOME</code>, or <code>~/.dsh</code> when unset.</li>
+<li>The profile is <code>botmux</code> by default (override per bot with <code>dshProfile</code>) and lives in <code>$DSH_HOME/profiles/&lt;name&gt;/</code>.</li>
+</ol>
+<p><strong>No need to create the profile by hand</strong>: if it&#x27;s missing, botmux writes a minimal skeleton (<code>package.json</code>, empty <code>cordis.yml</code>, <code>cordis.patch.yml</code>) and runs <code>dsh plugin add</code> to install dependencies. The default patch disables the web plugins that would block startup in headless mode and inserts the SDK JSON-RPC server; the default <code>botmux</code> profile also gets the <code>ask_user_question</code> tool. Everything else comes from <code>dsh-base</code>.</p>
+<p>To add community plugins or switch model providers, edit that profile&#x27;s <code>cordis.patch.yml</code>; botmux only creates the file when it&#x27;s missing and never overwrites it. When editing:</p>
+<ul>
+<li><code>- insert: [...]</code> <strong>adds</strong> plugins;</li>
+<li>a bare <code>- id: X</code> (no <code>insert</code>) overrides the config of an <strong>existing</strong> plugin and is silently skipped if the id doesn&#x27;t exist.</li>
+</ul>
+<p><strong>How the model is chosen</strong>: botmux takes <code>agent-default-model</code> from the composed profile; explicit values in the legacy <code>$DSH_HOME/settings.yaml</code> win while that file exists; with neither, it uses <code>deepseek-official</code> / <code>deepseek-v4-flash</code>. A bot <code>model</code> only overrides the model name; the provider still comes from the config above.</p>
+<p><strong>Other points:</strong></p>
+<ul>
+<li><code>DSH_HOME</code> can only be set in the daemon&#x27;s environment; a per-bot <code>env.DSH_HOME</code> is rejected to avoid split profile paths.</li>
+<li>Session logs go to <code>$DSH_HOME/sessions/botmux/</code>. Turns within one runner share context; after a daemon restart a new session starts without the old context.</li>
+<li>For the full-screen TUI instead of the runner: keep <code>cliId: &quot;dsh&quot;</code> and set <code>dshRuntime: &quot;tui&quot;</code> (also switchable in the Dashboard). It then launches the <code>dsh-tui</code> command; the model comes from the TUI&#x27;s own config and <code>/model</code>, and the TUI&#x27;s state lives in <code>~/.dsh-tui</code>.</li>
+<li>When the model calls <code>ask_user_question</code>, a Lark question card pops up. In TUI mode Lark is tried first, and questions a card can&#x27;t represent fall back to the native TUI. To turn the bridge off, set <code>BOTMUX_DSH_ASK_BRIDGE=0</code> and restart the session.</li>
+</ul>
+<h3 class="rp-toc-include" id="mir-cli-and-the-mcp-bridge"><a href="#mir-cli-and-the-mcp-bridge" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Mir CLI and the MCP Bridge</h3>
+<p>In <code>botmux setup</code>, choosing <strong>Mira → Mir CLI (local mircli)</strong> writes <code>cliId: &quot;mir&quot;</code> (the other item, &quot;Mira App (Web API)&quot;, is <code>cliId: &quot;mira&quot;</code>). It runs <code>mircli -p --lean</code> locally, so the system user that runs the daemon must have finished Mir CLI sign-in and initialization. The rules are the same on DevBox, macOS and other Linux machines:</p>
+<ul>
+<li>botmux can find <code>mircli</code>, or <code>cliPathOverride</code> points to its absolute path.</li>
+<li><code>~/.mira/config.json</code> already has a <code>device_id</code> (usually written by <code>mircli mcp --device-id &lt;id&gt;</code> or Mir CLI&#x27;s own setup).</li>
+<li><code>miramcp</code> is in Mir CLI&#x27;s standard location (e.g. <code>~/.local/bin/miramcp</code>), or <code>MIRAMCP_BIN</code> points to it.</li>
+</ul>
+<p>Before calling <code>mircli</code> for a message, botmux tries to start the MCP Bridge:</p>
+<div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-function)">miramcp</span><span style="color:var(--shiki-token-string)"> run</span><span style="color:var(--shiki-token-string)"> --device-id</span><span style="color:var(--shiki-token-keyword)"> &lt;</span><span style="color:var(--shiki-token-string)">device_i</span><span style="color:var(--shiki-foreground)">d</span><span style="color:var(--shiki-token-keyword)">&gt;</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>If it&#x27;s already running (checked via <code>~/.mira/miramcp/miramcp.pid</code> and local port <code>9801</code>), it isn&#x27;t started again. To check its status:</p>
+<div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-function)">mircli</span><span style="color:var(--shiki-token-string)"> mcp</span><span style="color:var(--shiki-token-string)"> status</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>To stop the auto-start, either put this in <code>~/.mira/config.json</code>:</p>
+<div class="rp-codeblock language-json"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="json"><code><span class="line"><span style="color:var(--shiki-foreground)">{</span><span style="color:var(--shiki-token-keyword)">&quot;auto_start_bridge&quot;</span><span style="color:var(--shiki-token-punctuation)">:</span><span style="color:var(--shiki-token-constant)"> false</span><span style="color:var(--shiki-foreground)">}</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p>or disable it for the botmux process only:</p>
+<div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-foreground)">MIRCLI_AUTO_START_MIRAMCP</span><span style="color:var(--shiki-token-keyword)">=</span><span style="color:var(--shiki-token-string)">0</span><span style="color:var(--shiki-token-function)"> botmux</span><span style="color:var(--shiki-token-string)"> start</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<h3 class="rp-toc-include" id="doubao-cli"><a href="#doubao-cli" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Doubao CLI</h3>
+<p><code>cliId: &quot;doubao&quot;</code> bridges the interactive UI of the local Doubao CLI. Install it and sign in as the same system user first:</p>
+<div class="rp-codeblock language-bash"><div class="rp-codeblock__content"><div class="rp-codeblock__content__scroll-container rp-scrollbar rp-scrollbar--always"><pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0" data-lang="bash"><code><span class="line"><span style="color:var(--shiki-token-function)">npm</span><span style="color:var(--shiki-token-string)"> install</span><span style="color:var(--shiki-token-string)"> -g</span><span style="color:var(--shiki-token-string-expression)"> &#x27;@bytedance/doubao-cli&#x27;</span><span style="color:var(--shiki-token-string)"> --registry=https://registry.npmjs.org</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">doubao</span><span style="color:var(--shiki-token-comment)">          # sign in, wait for the input box, then /exit</span></span>
+<span class="line"><span style="color:var(--shiki-token-function)">botmux</span><span style="color:var(--shiki-token-string)"> setup</span><span style="color:var(--shiki-token-comment)">    # choose Doubao as the CLI, then the project directory</span></span></code></pre></div><div class="rp-code-button-group"><button class="rp-code-button-group__button rp-code-wrap-button" title="Toggle code wrap" aria-label="Toggle code wrap"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrapped"><path fill="currentColor" d="M21 5H3v2h18zM3 19h7v-2H3zm0-6h15c1 0 2 .43 2 2s-1 2-2 2h-2v-2l-4 3 4 3v-2h2c2.95 0 4-1.27 4-4 0-2.72-1-4-4-4H3z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-button-group__icon--wrap"><path fill="currentColor" d="M16 7H3V5h13zM3 19h13v-2H3zm19-7-4-3v2H3v2h15v2z"></path></svg></button><button class="rp-code-button-group__button rp-code-copy-button" title="Copy code"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--copy"><path fill="currentColor" d="M20 8v12H8V8zm0-2H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2"></path><path fill="currentColor" d="M4 16H2V4a2 2 0 0 1 2-2h12v2H4Z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" class="rp-code-button-group__icon rp-code-copy-button__icon rp-code-copy-button__icon--success"><path fill="currentColor" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"></path></svg></button></div></div></div>
+<p><code>model</code> is optional; when set, use the name shown in the native <code>/model</code> menu. Press <strong>Esc</strong> in the web terminal to interrupt the current turn. botmux launches it with <code>--permission-mode always_allow</code> by default, so keep it to trusted users and projects. See the <a href="https://github.com/deepcoldy/botmux/blob/master/docs/doubao.en.md" target="_blank" rel="noopener noreferrer" class="rp-link">Doubao guide</a> for intranet installs and limitations.</p>
+<h3 class="rp-toc-include" id="codex-app-native-questions"><a href="#codex-app-native-questions" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Codex App native questions</h3>
+<p>In <code>codex-app</code> sessions (and <code>codex</code> sessions with app-server RPC enabled), when the model calls native <code>request_user_input</code>, botmux turns the question into a Lark question card. Pick on the card, or reply with text in the session, and the answer goes back to <strong>the same native turn</strong>; no new prompt needed. TRAE RPC uses the same bridge.</p>
+<p><img src="/botmux/img/codex-native-user-input-preview.png" alt="Codex native question card preview"/></p>
+<p>(Rendered locally from real card JSON; for illustration only.)</p>
+<p><strong>Answering:</strong></p>
+<ul>
+<li>All questions in one request share a card, with option descriptions shown per question; a recommended option is never auto-selected, you have to submit it.</li>
+<li>If the batch contains a free-text question, the whole batch is answered with one text reply in the session.</li>
+<li>Choice questions need at least two options; secret-input questions and malformed questions fail outright, with no partial answers. Never type passwords or other secrets in chat.</li>
+<li>Who may answer follows the existing Ask routing and reply permissions.</li>
+</ul>
+<p><strong>Waiting and cancellation:</strong></p>
+<ul>
+<li>Waits up to one hour. A failed card, timeout, expired card or unrepresentable question interrupts the original turn, so the agent never continues on an empty answer.</li>
+<li>Waiting is cancelled when the turn ends, the process exits or the session closes; late answers are not delivered.</li>
+<li>After a daemon restart these requests are not retried or restored.</li>
+</ul>
+<p><strong>Async questions (<code>request_user_input_async</code>, <code>codex-app</code> only):</strong></p>
+<ul>
+<li>The model can keep working after asking; the card can still be answered after the original turn ends normally. Answers keep the original call ID and question indexes.</li>
+<li>With <code>codexAppCleanInput</code> on, the original turn still running and steered input supported, the asker&#x27;s answer joins the original turn directly; otherwise a new turn starts in the same thread. Late answers never join a different task.</li>
+<li>A card showing &quot;Ended&quot; means the answers were collected, not that the model has read them.</li>
+<li>Reply permissions: for human-started turns, the single answerer is locked when the card is registered; scheduled / autonomous turns let members with talk permission (canTalk) answer, while the schedule creator still needs operate permission (canOperate), and silent schedules don&#x27;t show a card; for doc-comment turns only the original commenter can answer, in a private chat.</li>
+<li>With several pending cards, a text answer must <strong>quote the target card</strong>; unquoted messages are treated as normal input and you get a hint to disambiguate.</li>
+<li>Pending cards are not restored across daemon / runner restarts, and past questions are not resent.</li>
+</ul>
+<p><strong>Not covered by this bridge</strong>: Workflow sub-tasks (use <code>humanGate</code> / decision nodes), API-only sessions without a Lark channel, plain terminal-paste mode, and the App history viewer. Whether the native tool is available ultimately depends on the Codex version and mode.</p>
+<p>To test: in a normal Codex App session, ask the model to use <code>request_user_input</code> for a choice question, check that the card arrives in Lark, then submit and confirm the same turn continues and can repeat your choice.</p>
+<h3 class="rp-toc-include" id="codex-app-steer"><a href="#codex-app-steer" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Steering a running Codex App turn</h3>
+<p>Only for <code>cliId: &quot;codex-app&quot;</code> sessions; on by default with nothing to configure on the Lark side. While Codex App is running a turn, a new message you send in the topic is injected into <strong>the current turn</strong> (Codex turn/steer) instead of waiting in the queue. When it lands, the bot replies &quot;Got it — guidance accepted&quot;. Handy for &quot;also handle X&quot; or &quot;stop that, do Y instead&quot; mid-task.</p>
+<ul>
+<li>Only messages sent directly by people steer. Messages from other bots queue as usual unless <code>@steer</code> is the first semantic line of the body (it may follow the line that @mentions the recipient).</li>
+<li>If it can&#x27;t be injected (for example, the turn is wrapping up), the message is queued like a normal one; nothing is lost.</li>
+<li>Tasks triggered through the HTTP API must pass <code>steer: true</code> in <code>options</code> explicitly, starting with the first turn; see <a href="/botmux/en/api-task-trigger.html" class="rp-link">API task trigger</a>.</li>
+</ul>
+<h3 class="rp-toc-include" id="claude-osc-7501"><a href="#claude-osc-7501" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Claude Code busy/idle detection (OSC 7501)</h3>
+<p>Automatic, nothing to configure. The Claude Code adapter supports the OSC 7501 program status protocol: as soon as the CLI reports its first valid status, &quot;working / idle&quot; follows that report instead of guessing from the terminal screen, so card status and &quot;turn ended&quot; are more accurate. Until a status arrives, the screen is still used. The Pi and Kimi adapters use the same protocol.</p>
+<h2 class="rp-toc-include" id="adding-a-new-adapter-contributors"><a href="#adding-a-new-adapter-contributors" class="rp-header-anchor rp-link" aria-hidden="true">#</a>Adding a new adapter (contributors)</h2>
+<ol>
+<li>Create a file under <code>src/adapters/cli/</code> implementing the <code>CliAdapter</code> interface.</li>
+<li>Add the new ID to the <code>CliId</code> union in <code>src/adapters/cli/types.ts</code>.</li>
+<li>Add the import, switch case and export in <code>src/adapters/cli/registry.ts</code>.</li>
+<li>Add a display name to <code>CLI_DISPLAY_NAMES</code> in <code>src/adapters/cli/display-names.ts</code> (shared by cards, setup and the Dashboard; missing it fails compilation).</li>
+<li>Add a number to <code>CLI_ID_CHOICES</code> in <code>src/setup/bot-config-editor.ts</code>, <strong>always appended at the end</strong>: the numbers are a stable interface for scripted setup, and inserting in the middle makes old scripts silently pick the wrong CLI. The setup menu and Dashboard dropdown follow automatically.</li>
+<li>Update the CLI list in <code>README.md</code> and <code>README.en.md</code>.</li>
+</ol>
+<p>File-sandbox support also needs the CLI&#x27;s state directories declared correctly; see <a href="https://github.com/deepcoldy/botmux/blob/master/src/adapters/cli/CLAUDE.md" target="_blank" rel="noopener noreferrer" class="rp-link"><code>src/adapters/cli/CLAUDE.md</code></a> and <a href="https://github.com/deepcoldy/botmux/blob/master/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" class="rp-link">CONTRIBUTING.md</a>.</p><!--/$--></div><footer class="rp-doc-footer"><div class="rp-doc-footer__edit"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/en/adapters.md" target="_blank" rel="noopener noreferrer" class="rp-edit-link rp-link">Edit this page</a><div class="rp-last-updated"><p>Last Updated<!-- -->: <span>11/14/2026, 7:04:37 AM</span></p></div></div><div class="rp-doc-footer__divider"></div><div class="rp-prev-next-page"><a href="/botmux/en/model-proxy.html" class="rp-prev-next-page__item rp-prev-next-page__prev rp-link"><span class="rp-prev-next-page__item__desc">Previous page</span><span class="rp-prev-next-page__item__title"><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon rp-prev-next-page__rotate_180"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg><span>Model Proxy (Experimental)</span></span></a><a href="/botmux/en/best-practices.html" class="rp-prev-next-page__item rp-prev-next-page__next rp-link"><span class="rp-prev-next-page__item__desc">Next page</span><span class="rp-prev-next-page__item__title"><span>Best Practices</span><svg width="1em" height="1em" viewBox="0 0 32 32" class="rp-prev-next-page__icon"><path fill="currentColor" d="M22 16 12 26l-1.4-1.4 8.6-8.6-8.6-8.6L12 6z"></path></svg></span></a></div></footer></main></div><aside class="rp-doc-layout__outline rp-scrollbar"><div class="rp-outline"><div class="rp-outline__title">ON THIS PAGE<svg width="14" height="14" class="rp-progress-circle"><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-divider-light)" stroke-width="2"></circle><circle cx="7" cy="7" r="6" stroke-linecap="round" fill="none" stroke="var(--rp-c-brand)" stroke-width="2" stroke-dasharray="37.69911184307752" stroke-dashoffset="37.69911184307752" transform="rotate(-90 7 7)" style="transition:stroke-dashoffset 0.3s"></circle></svg></div><nav class="rp-outline__toc rp-scrollbar"><a href="#switching-a-bots-cli" class="rp-toc-item rp-link" title="Switching a bot&#x27;s CLI" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Switching a bot&#x27;s CLI</span></a><a href="#supported-clis--agents" class="rp-toc-item rp-link" title="Supported CLIs / agents" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Supported CLIs / agents</span></a><a href="#about-the-model-column" class="rp-toc-item rp-link" title="About the model column" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">About the <code>model</code> column</span></a><a href="#gemini-cli-has-been-removed" class="rp-toc-item rp-link" title="Gemini CLI has been removed" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Gemini CLI has been removed</span></a><a href="#wrapper--gateway-integration" class="rp-toc-item rp-link" title="Wrapper / gateway integration" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Wrapper / gateway integration</span></a><a href="#option-1-a-wrappercli-launch-prefix-recommended" class="rp-toc-item rp-link" title="Option 1: a wrapperCli launch prefix (recommended)" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Option 1: a <code>wrapperCli</code> launch prefix (recommended)</span></a><a href="#option-2-your-own-wrapper-script--clipathoverride" class="rp-toc-item rp-link" title="Option 2: your own wrapper script + cliPathOverride" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Option 2: your own wrapper script + <code>cliPathOverride</code></span></a><a href="#codex-compatible-distributions" class="rp-toc-item rp-link" title="Codex-compatible distributions" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Codex-compatible distributions</span></a><a href="#remote-agents" class="rp-toc-item rp-link" title="API / remote adapters" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">API / remote adapters</span></a><a href="#mira-app" class="rp-toc-item rp-link" title="Mira App" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Mira App</span></a><a href="#riff" class="rp-toc-item rp-link" title="riff" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">riff</span></a><a href="#mojo" class="rp-toc-item rp-link" title="Mojo" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Mojo</span></a><a href="#remote-runner" class="rp-toc-item rp-link" title="Remote Runner" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Remote Runner</span></a><a href="#notes-for-specific-clis" class="rp-toc-item rp-link" title="Notes for specific CLIs" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Notes for specific CLIs</span></a><a href="#new-clis" class="rp-toc-item rp-link" title="Using the newly added CLIs" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Using the newly added CLIs</span></a><a href="#traex-auto-model" class="rp-toc-item rp-link" title="TraeX automatic model switching (experimental)" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">TraeX automatic model switching (experimental)</span></a><a href="#pi-execution-progress" class="rp-toc-item rp-link" title="Pi execution progress" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Pi execution progress</span></a><a href="#deepseek-harness-dsh" class="rp-toc-item rp-link" title="DeepSeek Harness (dsh)" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">DeepSeek Harness (dsh)</span></a><a href="#mir-cli-and-the-mcp-bridge" class="rp-toc-item rp-link" title="Mir CLI and the MCP Bridge" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Mir CLI and the MCP Bridge</span></a><a href="#doubao-cli" class="rp-toc-item rp-link" title="Doubao CLI" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Doubao CLI</span></a><a href="#codex-app-native-questions" class="rp-toc-item rp-link" title="Codex App native questions" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Codex App native questions</span></a><a href="#codex-app-steer" class="rp-toc-item rp-link" title="Steering a running Codex App turn" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Steering a running Codex App turn</span></a><a href="#claude-osc-7501" class="rp-toc-item rp-link" title="Claude Code busy/idle detection (OSC 7501)" style="padding-left:12px" data-depth="1"><span class="rp-toc-item__text rp-doc">Claude Code busy/idle detection (OSC 7501)</span></a><a href="#adding-a-new-adapter-contributors" class="rp-toc-item rp-link" title="Adding a new adapter (contributors)" style="padding-left:0" data-depth="0"><span class="rp-toc-item__text rp-doc">Adding a new adapter (contributors)</span></a></nav><div class="rp-outline__divider"></div><div class="rp-outline__bottom"><a href="https://github.com/deepcoldy/botmux/tree/master/docs-site/docs/en/adapters.md" target="_blank" rel="noopener noreferrer" class="rp-outline__action-row rp-edit-link rp-link"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"></path></svg><span>Edit this page</span></a></div></div></aside></div></div>
+    <div id="__rspress_modal_container"></div>
+  </body>
+</html>
