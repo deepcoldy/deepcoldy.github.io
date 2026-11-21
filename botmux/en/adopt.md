@@ -1,0 +1,133 @@
+import video_v3_adopt_relay_en from '../../static/img/video-v3-adopt-relay-en.mp4';
+
+# Session Adopt
+
+Your CLI is halfway through a task and you have to leave? Send `/adopt` in Lark to bring that **already-running** CLI into the current topic: watch progress and keep sending messages from your phone, and find everything unchanged when you're back at your desk.
+
+Supported terminals: **tmux, Zellij, Herdr, and Orca (experimental)**. The same card also lists **past sessions** of the bot's CLI, so you can resume one into the current topic.
+
+<video src={video_v3_adopt_relay_en} controls preload="metadata" style={{width:'100%',borderRadius:'8px'}} />
+
+## Quick start
+
+1. Start your CLI (for example, Claude Code) as usual in tmux / Zellij / Herdr on your machine.
+2. In Lark, send `/adopt` to a **bot bound to the same CLI**.
+3. A "📡 Choose a CLI session to adopt" card appears: tap a session to select it, then tap the confirm button below.
+4. After "📡 Adopted …", messages you send in the topic are typed straight into that terminal, and the terminal's output and answers sync back to Lark.
+
+To skip the card, name the target directly:
+
+```
+/adopt                 # Scan and show the selection card
+/adopt 0:2.0           # Adopt a tmux pane (session:window.pane)
+/adopt mysess:3        # Adopt a Zellij pane (session:paneId, or session/paneId)
+/adopt <Herdr pane ID> # Adopt a Herdr pane
+/adopt orca:term_xxx   # Adopt an Orca terminal (experimental)
+/adopt <session ID>    # Resume a past session (the CLI's own session ID)
+```
+
+## What's on the selection card
+
+The card mixes two kinds of candidates and supports search (title / project / path) and paging:
+
+| Source | What it is | Confirm button | Result |
+|---|---|---|---|
+| 🟢 Running | A local CLI **currently running** in tmux / Zellij / Herdr / Orca | Take over into this topic | Bridged to the original terminal; the process keeps running |
+| 🕘 History | A session of the same CLI saved on disk that can be resumed | Resume into this topic | Botmux relaunches the CLI with `--resume`; it becomes a normal Botmux session |
+
+Each candidate shows the CLI, path, uptime (or last activity), and "Location". For tmux, Zellij, and Herdr the heading is the workspace or tab name and "Location" holds the session / pane locator; Orca headings use the terminal or CLI session title.
+
+Filtering rules:
+
+* **Only the bot's own CLI is listed**: a Pi bot won't list Codex or TRAE panes, so the CLI behind the bot never changes silently.
+* **Botmux's own sessions are hidden**: persistent `bmx-*` sessions and any session Botmux already manages (open or closed) are excluded. To bring back a Botmux session you closed, use "Resume session" on its session card.
+* **A running session never shows up again under History.**
+* **History lists at most the 20 most recent sessions.** Use search to narrow it down, or run `/adopt <session ID>` directly.
+* **Only the person who summoned the card can use it.** Others should send their own `/adopt`.
+
+CLIs that support History: Claude Code, Codex, TRAE CLI, Grok, OpenCode / OpenCode 2, Antigravity, Genius. For other CLIs the card shows live sessions only.
+
+## After adopting: a bridge, not a takeover
+
+When you adopt a live session, Botmux only observes and writes input to the target terminal. It **never changes the original terminal's focus, layout, or size**.
+
+* **Both sides stay in sync**: messages from Lark are typed into the terminal, and terminal output appears on the streaming card in real time. On adoption you first get a "📜 Last exchange before /adopt" card so you know where things stand; anything you type directly in the terminal also syncs to Lark as a "🖥️ Local terminal turn".
+* **Disconnect any time**: tap "⏏ Disconnect" on the streaming card, or send `/detach` (alias `/disconnect`; `/close` in an adopted topic does the same). Botmux removes only its own side and **never ends your CLI**; the original process keeps running locally.
+* **One adopted session per topic**: sending `/adopt` again in a topic that already has one asks you to disconnect first.
+
+> The old "🔄 Take Over" button is retired: new cards don't show it, and tapping it on an old card does nothing. Today adopt has a single form, the shared bridge.
+
+## Resuming a past session
+
+Pick a "🕘 History" entry on the card, or send `/adopt <session ID>`. Botmux relaunches the CLI with `--resume` in the original working directory and picks up that conversation. Unlike the bridge, **Botmux now starts and manages the CLI**, just like any new session (it can be restarted, and closing it ends the process).
+
+If the ID belongs to a Botmux session:
+
+* In the **current topic** → it's resumed directly.
+* In **another topic** → it isn't moved here. You're asked to tap "Resume session" in the original topic, or run `botmux resume <id>` locally.
+
+## Notes for Codex users
+
+**Drafts are never overwritten.** If the adopted Codex terminal has an unsubmitted local draft, Botmux keeps the draft, doesn't append the Lark message, and asks you to submit or clear it in the terminal before resending. Orca terminals behave the same way, and Botmux also stops if it can't reach Orca to confirm the composer is empty.
+
+**When Codex uses a shared background server**, Botmux still types into the original tmux pane. We recommend enabling `thread-id` (legacy name `session-id`) in Codex's `/statusline` and keeping the full ID visible. Botmux uses it to confirm which session received your message and to follow `/new` or `/resume` switches you make in the terminal.
+
+**Codex App conversations.** If the bot's CLI is `codex-app`, `/adopt` lists existing Codex App conversations instead ("📱 Choose a Codex App conversation"). Pick one to continue that thread in the topic, or send `/adopt <threadId>` (an ID prefix works too).
+
+**Sharing a Codex App on your dev machine (experimental).** To have Lark and the desktop Codex App connected to the **same** App Server and the same thread at once, add this to a bot whose `cliId` is `codex` or `codex-app`:
+
+```json
+{
+  "existingAppServer": { "endpoint": "unix:///absolute/path/app-server.sock" }
+}
+```
+
+`endpoint` accepts local addresses only: a `unix://` socket with an absolute path, or `ws://127.0.0.1:<port>`. Then pick a conversation with `/adopt` to share it. Botmux never creates or stops the App Server; `/detach` disconnects only the Lark side, and the App Server and Codex App session keep running. Avoid submitting different tasks from both sides at the same time. If the remote terminal shows "Hooks need review" the first time, choose "Continue without trusting" in the Web Terminal; Botmux won't trust all hooks for you. This mode can't be combined with `codexBrowser`, `codexRpcInput`, or `wrapperCli`.
+
+## Orca (experimental)
+
+Orca works in two modes:
+
+* **Server mode**: a persistent orcad on Linux, with its CLI at `~/.orca/cli/bin/orca`.
+* **SSH relay mode**: when Botmux and the SSH terminal run on the **same** Linux host, Botmux connects directly to the local relay that owns the original PTY. This route doesn't need the desktop client, so you can close your Mac and still send `/adopt` to get back to the session. **Cross-host** relays still go through the desktop, which must stay online.
+
+Things to know:
+
+* Before adopting, Botmux checks the terminal's identity (handle, PTY incarnation, workspace, local process ownership). Terminals without a stable identity are neither listed nor restored, so a reused terminal handle can't receive your input. Older relays without incarnation data can't use the direct route.
+* Sessions previously adopted through the desktop relay need one more `/adopt` to switch to the direct local route.
+* The Web Terminal shows a text screen: you can view and type, but source colors, exact cursor state, and mouse modes aren't kept. After the desktop disconnects, the screen is rebuilt from retained output; if that output starts in the middle of a redraw, the screen may be incomplete.
+* Orca/relay versions, terminal redraw behavior, and each CLI's transcript format affect compatibility. If sessions stop being listed, or the screen or replies look wrong after an upgrade, adopt again and report your version details.
+
+## What each CLI gets
+
+| CLI | What works |
+|---|---|
+| Claude Code, Codex, TRAE | Terminal I/O + structured replies + scrollable history rebuilt from the transcript |
+| MTR, Hermes, and other unverified CLIs | Basic terminal access only: live screen, Lark input, and Web Terminal work; structured replies and scrollable history aren't guaranteed |
+
+The last row isn't a terminal I/O limitation. Botmux simply can't reliably prove which transcript belongs to that terminal: MTR can't tell sessions apart when several share one directory, and an externally started Hermes session has no Botmux session marker. Botmux won't guess from "the newest session in the same directory", because that could send another terminal's conversation to Lark.
+
+## Limits
+
+An adopted process runs **on your machine** and its lifecycle isn't Botmux's to manage, so these boundaries apply:
+
+| Action | Result |
+|---|---|
+| `/relay` to another group | Not supported. To continue elsewhere, start a new session and hand off |
+| Fork, restart, or resume an adopted session | Not supported; Botmux won't touch your tmux pane or CLI process |
+| The CLI exits on its own | The session ends with it ("⏏ Adopted CLI session has exited.") and isn't relaunched |
+| `/adopt` on a bot with the file sandbox on | Rejected. A sandbox can only be applied at launch, not wrapped around a running process; sending a message instead starts a new sandboxed session |
+| The topic is waiting for you to pick a repo | Tap "Close session" on the card first, then `/adopt` again |
+| `/dismiss` while the group has an adopted session | The group isn't disbanded. `/detach` in that topic first, then `/dismiss` |
+
+After a daemon restart, Botmux first checks whether the adopted CLI is still there:
+
+* Confirmed gone → the session is closed.
+* Still running → it's reattached automatically, without posting a recovery card.
+* Can't tell right now (for example, a transient probe failure) → the session isn't closed, but it's held without reattaching. It's checked again on the **next daemon restart**, not automatically when your next message arrives.
+
+## Typical usage
+
+Claude Code is running in tmux on your office computer and you have to leave: send `/adopt` from Lark on your phone → pick the session → confirm, and it syncs right away. Keep watching and sending on the road; back at your desk, tap "⏏ Disconnect" and carry on in the terminal. It's not remote control; it's one session shared across devices.
+
+Related pages: [Slash commands](/botmux/en/slash-commands.md), [Relay](/botmux/en/relay.md), [File sandbox](/botmux/en/sandbox.md), [tmux](/botmux/en/tmux.md).
