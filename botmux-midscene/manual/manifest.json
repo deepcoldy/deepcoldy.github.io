@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "caseId": "9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88",
+      "name": "Navigate the core read-only Dashboard pages",
+      "project": "dashboard-smoke",
+      "status": "success",
+      "durationMs": 45107,
+      "attempts": 1,
+      "stepId": "3a33bbd4-85e2-4f4e-ac92-6598c95f18e3:steps:6",
+      "failure": null,
+      "reportPath": "dashboard/index.html",
+      "previewPath": "previews/case-preview-dashboard-smoke-9307872f124714444e98ffd3571f449a41cf4b3b84a7b0a6eca76c7fb32ade88.jpg"
+    },
+    {
+      "caseId": "259cf48d4b8d326d934097576a5c74c4809acc23a22603840f5cf176af1992ce",
+      "name": "OpenCode basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "success",
+      "durationMs": 113498,
+      "attempts": 1,
+      "stepId": "632c59f8-402c-4b2d-9e4f-905816041a14:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-clis-259cf48d4b8d326d934097576a5c74c4809acc23a22603840f5cf176af1992ce.jpg"
+    },
+    {
+      "caseId": "ba2706458b3f20b4bbec552f5220fc0ae53a7124d9eaf5d36fa3fe1008bc70fa",
+      "name": "Pi basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "success",
+      "durationMs": 109332,
+      "attempts": 1,
+      "stepId": "4e1675a6-a31b-4087-8601-6cc9d0a86fe3:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-clis-ba2706458b3f20b4bbec552f5220fc0ae53a7124d9eaf5d36fa3fe1008bc70fa.jpg"
+    },
+    {
+      "caseId": "6f9ccd74502ccc7811ff1123df2082d01af6e11036e52e2b58321add45d4ee02",
+      "name": "OhMyPi basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "success",
+      "durationMs": 113124,
+      "attempts": 1,
+      "stepId": "1e62d6eb-e144-41d7-9e50-97cbcf478c13:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-clis-6f9ccd74502ccc7811ff1123df2082d01af6e11036e52e2b58321add45d4ee02.jpg"
+    },
+    {
+      "caseId": "6b4282851fa7274ac10b7bc12201c8805cc7831a4bf307b0a940c44848951fea",
+      "name": "Kimi basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "success",
+      "durationMs": 103698,
+      "attempts": 1,
+      "stepId": "e465436c-51da-411b-b530-63c1da5e717b:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-clis-6b4282851fa7274ac10b7bc12201c8805cc7831a4bf307b0a940c44848951fea.jpg"
+    },
+    {
+      "caseId": "ab4d024c40e24b2b2fac75d40d6d8edf36bfd0e4815b64a42ae39e3dcc6c2228",
+      "name": "Gemini basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "failed",
+      "durationMs": 265741,
+      "attempts": 2,
+      "stepId": "4aaeceb2-f86e-45cf-b3a5-20e0f6a88961:steps:0",
+      "failure": "waitFor timeout: Based on the screenshot, the main content area displays a topic conversation. I am looking for a specific text bubble from \"Gemini\" containing the string \"ACK-e2e-gemini-179338441077…",
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-clis-ab4d024c40e24b2b2fac75d40d6d8edf36bfd0e4815b64a42ae39e3dcc6c2228.jpg"
+    },
+    {
+      "caseId": "b85c9130921c0dd701cd7ebf6e9c9f8bcc138b969749cac10e7d7a5ea66a3699",
+      "name": "Grok basic bot flow",
+      "project": "feishu-core-clis",
+      "status": "success",
+      "durationMs": 113438,
+      "attempts": 1,
+      "stepId": "594f3196-b32b-4f5d-8ab9-c481ae735ac8:steps:0",
+      "failure": null,
+      "reportPath": "feishu/index.html",
+      "previewPath": "previews/case-preview-feishu-core-clis-b85c9130921c0dd701cd7ebf6e9c9f8bcc138b969749cac10e7d7a5ea66a3699.jpg"
+    }
+  ]
+}
